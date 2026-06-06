@@ -292,8 +292,84 @@ def get_diversity_at(ma: float) -> int:
 
 
 def get_continents_at(ma: float) -> list:
-    """Return the continental configuration closest to the given time."""
-    for t in SNAPSHOT_TIMES:
-        if t >= ma:
-            return CONTINENTAL_SNAPSHOTS[t]
-    return CONTINENTAL_SNAPSHOTS[0]
+    """Snapshot lookup (used internally)."""
+    candidates = [t for t in SNAPSHOT_TIMES if t >= ma]
+    if not candidates:
+        return CONTINENTAL_SNAPSHOTS.get(0, [])
+    return CONTINENTAL_SNAPSHOTS[min(candidates)]
+
+
+# ── Animated continental interpolation ───────────────────────────────────────
+
+def _centroid(poly):
+    cx = sum(p[0] for p in poly) / len(poly)
+    cy = sum(p[1] for p in poly) / len(poly)
+    return cx, cy
+
+
+def _nearest(target_poly, candidates):
+    """Candidate whose centroid is nearest to target's centroid."""
+    if not candidates:
+        return None
+    tcx, tcy = _centroid(target_poly)
+    return min(candidates, key=lambda c: (
+        (_centroid(c["poly"])[0] - tcx) ** 2 +
+        (_centroid(c["poly"])[1] - tcy) ** 2
+    ))
+
+
+def get_interpolated_continents(ma: float) -> list:
+    """Return continents with smoothly interpolated positions and alpha values.
+
+    Each dict includes an 'alpha' key (0-255).  Between snapshots every
+    continent drifts toward its nearest counterpart in the adjacent
+    snapshot while crossfading, giving the appearance of active plate
+    motion.
+    """
+    older_t_list = [t for t in SNAPSHOT_TIMES if t >= ma]
+    newer_t_list = [t for t in SNAPSHOT_TIMES if t < ma]
+
+    if not older_t_list:
+        return []
+
+    older_t = min(older_t_list)          # closest past/present snapshot
+
+    if not newer_t_list:
+        return [dict(c, alpha=255) for c in CONTINENTAL_SNAPSHOTS[older_t]]
+
+    newer_t = max(newer_t_list)          # closest future snapshot
+
+    span = older_t - newer_t
+    frac = (older_t - ma) / span if span > 0 else 0.0   # 0 = older, 1 = newer
+
+    old_config = CONTINENTAL_SNAPSHOTS[older_t]
+    new_config = CONTINENTAL_SNAPSHOTS[newer_t]
+    result = []
+
+    # Old continents: drift towards nearest new counterpart, fade out
+    for oc in old_config:
+        nc = _nearest(oc["poly"], new_config)
+        if nc:
+            ocx, ocy = _centroid(oc["poly"])
+            ncx, ncy = _centroid(nc["poly"])
+            dx = (ncx - ocx) * frac
+            dy = (ncy - ocy) * frac
+        else:
+            dx, dy = 0.0, 0.0
+        moved = [(x + dx, y + dy) for x, y in oc["poly"]]
+        result.append({**oc, "poly": moved, "alpha": int(255 * (1.0 - frac))})
+
+    # New continents: arrive from nearest old counterpart, fade in
+    for nc in new_config:
+        oc = _nearest(nc["poly"], old_config)
+        if oc:
+            ncx, ncy = _centroid(nc["poly"])
+            ocx, ocy = _centroid(oc["poly"])
+            dx = (ocx - ncx) * (1.0 - frac)
+            dy = (ocy - ncy) * (1.0 - frac)
+        else:
+            dx, dy = 0.0, 0.0
+        moved = [(x + dx, y + dy) for x, y in nc["poly"]]
+        result.append({**nc, "poly": moved, "alpha": int(255 * frac)})
+
+    return result

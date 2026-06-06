@@ -1,19 +1,8 @@
 #!/usr/bin/env python3
 """
-Earth History Simulator
-========================
-Simulates 4.3 billion years of Earth history:
-  • Continental drift through geological eons
-  • Species diversification and mass extinctions
-  • Geological period labels and key events
-
-Controls
---------
-  SPACE       - Pause / Resume
-  LEFT/RIGHT  - Slow down / Speed up simulation
-  R           - Reset to the beginning (4.3 Ga)
-  G           - Toggle lat/lon grid
-  Mouse click on timeline - Jump to that point in time
+Earth History Simulator - Globe Edition
+4.3 billion years of Earth history rendered as an interactive globe.
+Controls: SPACE=pause  LEFT/RIGHT=speed  R=reset  G=grid  click timeline=jump
 """
 
 import pygame
@@ -24,674 +13,613 @@ import random
 
 from data import (
     PERIODS, DIVERSITY, MAX_DIVERSITY,
-    get_period_at, get_diversity_at, get_continents_at,
+    get_period_at, get_diversity_at, get_interpolated_continents,
 )
 
 pygame.init()
+pygame.display.set_caption("Earth History Simulator")
 
-# ── Window ────────────────────────────────────────────────────────────────────
 W, H = 1400, 860
 screen = pygame.display.set_mode((W, H), pygame.DOUBLEBUF)
-pygame.display.set_caption("Earth History Simulator")
-clock = pygame.time.Clock()
+clock  = pygame.time.Clock()
 
-# ── Fonts ─────────────────────────────────────────────────────────────────────
-def _mfont(size, bold=False):
-    for face in ("segoeui", "calibri", "arial", None):
+# ── Fonts ──────────────────────────────────────────────────────────────────────
+def _f(sz, bold=False):
+    for face in ("segoeui", "calibri", "arial"):
         try:
-            f = pygame.font.SysFont(face, size, bold=bold)
-            if f:
-                return f
+            return pygame.font.SysFont(face, sz, bold=bold)
         except Exception:
             pass
-    return pygame.font.Font(None, size)
+    return pygame.font.Font(None, sz)
 
-F_TITLE  = _mfont(36, bold=True)
-F_PERIOD = _mfont(26, bold=True)
-F_LG     = _mfont(20, bold=True)
-F_MD     = _mfont(16)
-F_SM     = _mfont(13)
-F_XS     = _mfont(11)
+F_TITLE  = _f(34, bold=True)
+F_PERIOD = _f(24, bold=True)
+F_LG     = _f(19, bold=True)
+F_MD     = _f(15)
+F_SM     = _f(12)
+F_XS     = _f(10)
 
-# ── Layout ────────────────────────────────────────────────────────────────────
-HDR_H   = 62      # top header
-TL_H    = 108     # bottom timeline strip
-PAD     = 12
+# ── Layout ─────────────────────────────────────────────────────────────────────
+HDR_H  = 62
+TL_H   = 105
+PAD    = 12
 
-MAP_X   = PAD
-MAP_Y   = HDR_H + PAD
-MAP_W   = 890
-MAP_H   = H - HDR_H - TL_H - 3 * PAD
+SPACE_W = 855
+SPACE_H = H - HDR_H - TL_H - 3 * PAD
+SPACE_X = PAD
+SPACE_Y = HDR_H + PAD
 
-INFO_X  = MAP_X + MAP_W + PAD
-INFO_Y  = MAP_Y
-INFO_W  = W - INFO_X - PAD
-INFO_H  = MAP_H
+INFO_X = SPACE_X + SPACE_W + PAD
+INFO_Y = SPACE_Y
+INFO_W = W - INFO_X - PAD
+INFO_H = SPACE_H
 
-TL_X    = PAD
-TL_Y    = H - TL_H - PAD
-TL_W    = W - 2 * PAD
+TL_X = PAD
+TL_Y = H - TL_H - PAD
+TL_W = W - 2 * PAD
 
-# ── Palette ───────────────────────────────────────────────────────────────────
-BG          = ( 6,  10,  25)
-PANEL       = (13,  18,  40)
-PANEL2      = (18,  24,  52)
-BORDER      = (38,  48,  88)
-BORDER2     = (55,  70, 120)
-WHITE       = (255, 255, 255)
-LGRAY       = (175, 180, 200)
-GRAY        = ( 95, 100, 128)
-GOLD        = (220, 185,  55)
-GOLD2       = (255, 215,  80)
-RED         = (235,  65,  55)
-GREEN       = ( 68, 208,  95)
-BLUE        = ( 68, 142, 232)
-CYAN        = ( 55, 215, 225)
-OCEAN_DARK  = ( 12,  38,  88)
-OCEAN_MID   = ( 18,  58, 118)
-OCEAN_LIGHT = ( 26,  82, 152)
-LAVA        = (210,  72,  18)
-LAVA2       = (255, 140,  20)
-ICE         = (195, 222, 252)
+GLOBE_CX = SPACE_X + SPACE_W // 2
+GLOBE_CY = SPACE_Y + SPACE_H // 2
+GLOBE_R  = min(SPACE_W, SPACE_H) // 2 - 16   # ~290
 
-# ── Simulation state ──────────────────────────────────────────────────────────
-START_MA     = 4300.0
-END_MA       = 0.0
+# ── Palette ────────────────────────────────────────────────────────────────────
+BG            = ( 4,  8, 22)
+PANEL         = (12, 16, 38)
+PANEL2        = (16, 22, 50)
+BORDER        = (36, 46, 86)
+BORDER2       = (52, 68, 118)
+WHITE         = (255, 255, 255)
+LGRAY         = (170, 175, 195)
+GRAY          = ( 88,  94, 122)
+DGRAY         = ( 42,  48,  72)
+GOLD          = (220, 183,  52)
+GOLD2         = (255, 213,  78)
+RED           = (232,  62,  52)
+GREEN         = ( 66, 210,  90)
+GREEN2        = ( 38, 168,  62)
+BLUE          = ( 65, 138, 232)
+CYAN          = ( 52, 215, 222)
+OCEAN_SHALLOW = ( 28,  95, 175)
+OCEAN_DEEP    = (  8,  30,  80)
+LAVA_HOT      = (255, 148,  18)
+LAVA_DARK     = (155,  38,   8)
+ICE_BRIGHT    = (215, 235, 255)
+ICE_DARK      = (155, 190, 235)
 
-SPEEDS       = [5, 15, 40, 100, 250, 600, 1500]   # Ma per real second
-speed_idx    = 3
-current_ma   = float(START_MA)
-paused       = False
-last_t       = _time.perf_counter()
-wave_t       = 0.0
-star_seed    = random.Random(99)
-stars        = [(star_seed.randint(0, W), star_seed.randint(0, H // 4),
-                 star_seed.random()) for _ in range(180)]
+# ── Pre-computed assets ────────────────────────────────────────────────────────
+R = GLOBE_R
 
-# Recent geological events displayed on screen
-event_queue  = []           # list of [text, ttl_frames]
-prev_period  = ""
+# Globe work surface (reused every frame)
+_globe_surf = pygame.Surface((R * 2, R * 2), pygame.SRCALPHA)
 
+# Circular clip mask — white circle, transparent outside
+_globe_mask = pygame.Surface((R * 2, R * 2), pygame.SRCALPHA)
+_globe_mask.fill((0, 0, 0, 0))
+pygame.draw.circle(_globe_mask, (255, 255, 255, 255), (R, R), R)
 
-# ── Utility ───────────────────────────────────────────────────────────────────
-def lerp(a, b, t):
-    return a + (b - a) * t
+# Star field: (x, y, brightness 0-1, twinkle_phase)
+_srng = random.Random(42)
+STARS = [
+    (_srng.randint(0, W), _srng.randint(0, H - TL_H - PAD),
+     _srng.random(), _srng.random() * 6.28)
+    for _ in range(240)
+]
 
-def clamp(v, lo, hi):
-    return max(lo, min(hi, v))
+# ── Simulation state ───────────────────────────────────────────────────────────
+START_MA    = 4300.0
+END_MA      = 0.0
+SPEEDS      = [5, 15, 40, 100, 250, 600, 1500]   # Ma per real second
+speed_idx   = 3
+current_ma  = float(START_MA)
+paused      = False
+show_grid   = False
+last_t      = _time.perf_counter()
+anim_t      = 0.0
+event_queue = []   # [[text, ttl_frames], ...]
+prev_period = ""
+_graph_cache = {}
 
-def mix(c1, c2, t):
-    return tuple(int(lerp(c1[i], c2[i], t)) for i in range(3))
+# ── Helpers ────────────────────────────────────────────────────────────────────
+def lerp(a, b, t): return a + (b - a) * t
+def clamp(v, lo, hi): return max(lo, min(hi, v))
+def mix(c1, c2, t): return tuple(int(lerp(c1[i], c2[i], clamp(t, 0, 1))) for i in range(3))
+
+def txt(surf, s, fnt, color, x, y, center=False, right=False):
+    img = fnt.render(str(s), True, color)
+    if center: x -= img.get_width() // 2
+    elif right: x -= img.get_width()
+    surf.blit(img, (x, y))
+    return img.get_width()
 
 def panel(surf, rect, color=PANEL, bcolor=BORDER, r=8):
     pygame.draw.rect(surf, color, rect, border_radius=r)
     pygame.draw.rect(surf, bcolor, rect, width=1, border_radius=r)
 
-def txt(surf, text, fnt, color, x, y, center=False, right=False):
-    s = fnt.render(str(text), True, color)
-    if center:
-        x -= s.get_width() // 2
-    elif right:
-        x -= s.get_width()
-    surf.blit(s, (x, y))
-    return s.get_width(), s.get_height()
-
 def fmt_ma(ma):
-    if ma < 0.001:
-        return "Present Day"
-    if ma < 1:
-        return f"{ma * 1000:.0f} thousand years ago"
-    if ma < 10:
-        return f"{ma:.2f} Ma ago"
-    if ma < 100:
-        return f"{ma:.1f} Ma ago"
-    if ma < 1000:
-        return f"{ma:.0f} Ma ago"
-    return f"{ma / 1000:.3f} Ga ago"
+    if ma < 0.001: return "Present Day"
+    if ma < 1:     return f"{ma*1000:.0f} ka ago"
+    if ma < 10:    return f"{ma:.2f} Ma ago"
+    if ma < 100:   return f"{ma:.1f} Ma ago"
+    if ma < 1000:  return f"{ma:.0f} Ma ago"
+    return f"{ma/1000:.3f} Ga ago"
 
 def fmt_species(n):
-    if n < 1000:
-        return str(n)
-    if n < 1_000_000:
-        return f"{n / 1000:.1f}k"
-    return f"{n / 1_000_000:.2f}M"
+    if n < 1000: return str(n)
+    if n < 1e6:  return f"{n/1000:.1f}k"
+    return f"{n/1e6:.2f}M"
 
-def atmosphere_color(ma):
-    """Sky/atmosphere color evolves with O2 level."""
-    if ma > 4000:       # Hadean magma ocean
-        return (60, 25, 12)
-    if ma > 3500:       # Early archean — CO2/N2 sky
-        return (40, 28, 18)
-    if ma > 2400:       # Archean murky
-        return (28, 32, 42)
-    if ma > 1800:       # GOE happening
-        return (22, 38, 62)
-    if ma > 700:        # Proterozoic pale blue
-        return (18, 48, 85)
-    if ma > 350:        # Phanerozoic, low O2
-        return (15, 52, 100)
-    # Modern-ish deep blue
-    return (12, 55, 110)
+# ── Era-dependent colour helpers ───────────────────────────────────────────────
+def atm_color(ma):
+    if ma > 4000: return (68, 22,  8)
+    if ma > 3000: return (40, 25, 15)
+    if ma > 2400: return (26, 28, 40)
+    if ma > 1800: return (18, 36, 66)
+    if ma >  700: return (14, 48, 95)
+    return (10, 55, 118)
 
-
-# ── Stars (for Hadean/early epochs) ───────────────────────────────────────────
-def draw_stars(surf, ma):
-    alpha = clamp(int((ma - 2000) / 2000 * 255), 0, 255)
-    if alpha < 4:
-        return
-    for sx, sy, br in stars:
-        if sy < HDR_H + MAP_H + PAD:
-            c = int(br * alpha)
-            pygame.draw.circle(surf, (c, c, c), (sx, sy), 1)
-
-
-# ── Map rendering ─────────────────────────────────────────────────────────────
-def map_rect():
-    return pygame.Rect(MAP_X, MAP_Y, MAP_W, MAP_H)
-
-def draw_ocean(surf, ma):
-    mr = map_rect()
-    # Ocean color evolves — early Earth is lava/dark, then brightens
+def ocean_pair(ma):
     if ma > 4200:
-        oc = mix(LAVA, (80, 20, 10), 0.5)
-    elif ma > 3800:
+        return LAVA_HOT, LAVA_DARK
+    if ma > 3800:
         t = (4200 - ma) / 400
-        oc = mix(LAVA, OCEAN_DARK, t)
-    else:
-        t = clamp((3800 - ma) / 3800, 0, 1)
-        oc = mix(OCEAN_DARK, OCEAN_MID, t * 0.6)
+        return mix(LAVA_HOT, OCEAN_SHALLOW, t), mix(LAVA_DARK, OCEAN_DEEP, t)
+    return OCEAN_SHALLOW, OCEAN_DEEP
 
-    # Background fill
-    surf.fill(oc, mr)
+def land_color(base, ma):
+    if ma > 430:   # before vascular land plants — bare rock
+        return mix(base, (125, 105, 72), 0.6)
+    return base
 
-    # Animated wave shimmer (for post-Hadean)
-    if ma < 3800:
-        for row in range(0, MAP_H, 8):
-            phase = (row * 0.04 + wave_t * 2) % (2 * math.pi)
-            intensity = int(12 + 8 * math.sin(phase))
-            col = tuple(clamp(oc[i] + intensity - 6, 0, 255) for i in range(3))
-            pygame.draw.line(surf, col,
-                             (MAP_X, MAP_Y + row),
-                             (MAP_X + MAP_W - 1, MAP_Y + row))
+def o2_frac(ma):
+    if ma > 2500: return 0.0
+    if ma > 2000: return lerp(0.0, 0.02, (2500-ma)/500) / 0.21
+    if ma >  540: return lerp(0.02, 0.10, (2000-ma)/1460) / 0.21
+    if ma >  300: return lerp(0.10, 0.35, (540-ma)/240) / 0.21
+    if ma >  200: return lerp(0.35, 0.16, (300-ma)/100) / 0.21
+    return clamp(lerp(0.16, 0.21, (200-ma)/200), 0, 1)
 
-    # Lava glow overlay for Hadean
-    if ma > 3500:
-        lava_alpha = clamp(int((ma - 3500) / 800 * 200), 0, 200)
-        lava_surf = pygame.Surface((MAP_W, MAP_H), pygame.SRCALPHA)
-        # Draw lava "cracks" as random bright lines
-        rng = random.Random(int(ma / 50))
-        for _ in range(12):
-            x1 = rng.randint(0, MAP_W)
-            y1 = rng.randint(0, MAP_H)
-            x2 = x1 + rng.randint(-80, 80)
-            y2 = y1 + rng.randint(-60, 60)
-            pygame.draw.line(lava_surf, (*LAVA2, lava_alpha), (x1, y1), (x2, y2), 2)
-        surf.blit(lava_surf, (MAP_X, MAP_Y))
+# ── Globe layer renderers ──────────────────────────────────────────────────────
+def _ocean(s, ma):
+    """Radial gradient ocean — concentric circles, no horizontal lines."""
+    shallow, deep = ocean_pair(ma)
+    step = 2
+    for i in range(R, 0, -step):
+        t = i / R        # 1 at edge, 0 at centre
+        col = mix(shallow, deep, t * 0.85)
+        pygame.draw.circle(s, col, (R, R), i)
 
 
-def draw_continents(surf, ma):
-    continents = get_continents_at(ma)
-    mr = map_rect()
-
-    for c in continents:
+def _continents(s, ma):
+    for c in get_interpolated_continents(ma):
         raw = c["poly"]
         if len(raw) < 3:
             continue
-        # Scale poly to map rect
-        pts = [(int(MAP_X + x * MAP_W), int(MAP_Y + y * MAP_H)) for x, y in raw]
+        pts = [(int(x * R * 2), int(y * R * 2)) for x, y in raw]
+        alpha = c.get("alpha", 255)
+        lc = land_color(c["color"], ma)
+        # Draw fill then border, both with this continent's alpha
+        pygame.draw.polygon(s, (*lc, alpha), pts)
+        border = tuple(max(0, lc[i] - 30) for i in range(3))
+        pygame.draw.polygon(s, (*border, min(alpha, 200)), pts, 2)
 
-        # Land color: greener in Phanerozoic, bare rock before land plants
-        land_col = c["color"]
-        if ma > 430:  # before land plants — brown/grey rock
-            land_col = tuple(int(land_col[i] * 0.75 + 40) for i in range(3))
 
-        pygame.draw.polygon(surf, land_col, pts)
-        # Subtle border
-        border_col = tuple(max(0, land_col[i] - 30) for i in range(3))
-        pygame.draw.polygon(surf, border_col, pts, 2)
-
-    # Ice caps during glaciations
+def _ice(s, ma):
     if 720 <= ma <= 635:   # Snowball Earth
-        cov = clamp((720 - ma) / 85, 0, 1)
-        ice_h = int(MAP_H * 0.15 + MAP_H * 0.38 * cov)
-        ice_surf = pygame.Surface((MAP_W, ice_h), pygame.SRCALPHA)
-        ice_surf.fill((*ICE, 190))
-        surf.blit(ice_surf, (MAP_X, MAP_Y))                         # north
-        surf.blit(ice_surf, (MAP_X, MAP_Y + MAP_H - ice_h))         # south
-
-    # Polar ice for modern-ish times
-    if ma < 2.6:
-        ice_surf = pygame.Surface((MAP_W, 28), pygame.SRCALPHA)
-        ice_surf.fill((*ICE, 160))
-        surf.blit(ice_surf, (MAP_X, MAP_Y))
-        surf.blit(ice_surf, (MAP_X, MAP_Y + MAP_H - 28))
-
-
-def draw_grid(surf):
-    g_col = (*LGRAY, 28)
-    gs = pygame.Surface((MAP_W, MAP_H), pygame.SRCALPHA)
-    for lx in range(0, MAP_W, MAP_W // 12):
-        pygame.draw.line(gs, g_col, (lx, 0), (lx, MAP_H))
-    for ly in range(0, MAP_H, MAP_H // 6):
-        pygame.draw.line(gs, g_col, (0, ly), (MAP_W, ly))
-    surf.blit(gs, (MAP_X, MAP_Y))
+        frac = clamp((720 - ma) / 85, 0, 1)
+        cap_h = int(R * 0.12 + R * 0.82 * frac)
+        n = pygame.Surface((R*2, cap_h), pygame.SRCALPHA)
+        n.fill((*ICE_BRIGHT, 215))
+        s.blit(n, (0, 0))
+        so = pygame.Surface((R*2, cap_h), pygame.SRCALPHA)
+        so.fill((*ICE_DARK, 215))
+        s.blit(so, (0, R*2 - cap_h))
+    elif ma < 2.6:         # modern poles
+        for offset in [0, R*2 - 30]:
+            cap = pygame.Surface((R*2, 30), pygame.SRCALPHA)
+            cap.fill((*ICE_BRIGHT, 185))
+            s.blit(cap, (0, offset))
 
 
-def draw_atmosphere_glow(surf, ma):
-    """Soft atmosphere halo around the map edges."""
-    ac = atmosphere_color(ma)
-    mr = map_rect()
-    for depth in range(12, 0, -1):
-        alpha = int(70 * (1 - depth / 12))
-        s = pygame.Surface((MAP_W + depth * 2, MAP_H + depth * 2), pygame.SRCALPHA)
-        pygame.draw.rect(s, (*ac, alpha),
-                         (0, 0, MAP_W + depth * 2, MAP_H + depth * 2),
-                         border_radius=10)
-        surf.blit(s, (MAP_X - depth, MAP_Y - depth))
+def _lava(s, ma, t):
+    """Lava cracks for Hadean/early Archean."""
+    if ma < 3800:
+        return
+    alpha = int(clamp((ma - 3800) / 500, 0, 1) * 210)
+    if alpha < 8:
+        return
+    rng = random.Random(int(ma / 40))
+    ls = pygame.Surface((R*2, R*2), pygame.SRCALPHA)
+    for _ in range(20):
+        x1 = rng.randint(R//3, R*5//3)
+        y1 = rng.randint(R//3, R*5//3)
+        x2 = x1 + rng.randint(-75, 75)
+        y2 = y1 + rng.randint(-65, 65)
+        pulse = int(alpha * (0.55 + 0.45 * math.sin(t * 3 + rng.random() * 6.28)))
+        col = (*mix(LAVA_DARK, LAVA_HOT, rng.random()), pulse)
+        pygame.draw.line(ls, col, (x1, y1), (x2, y2), 2)
+    for _ in range(10):
+        hx = rng.randint(20, R*2-20)
+        hy = rng.randint(20, R*2-20)
+        hr = rng.randint(4, 16)
+        pa = int(alpha * (0.5 + 0.5 * math.sin(t * 2.5 + rng.random() * 5)))
+        pygame.draw.circle(ls, (*LAVA_HOT, pa), (hx, hy), hr)
+    s.blit(ls, (0, 0))
 
 
-def draw_map_panel(surf, ma, show_grid_flag):
-    draw_atmosphere_glow(surf, ma)
-    panel(surf, map_rect(), color=(0, 0, 0), bcolor=BORDER2)
-    draw_ocean(surf, ma)
-    draw_continents(surf, ma)
-    if show_grid_flag:
-        draw_grid(surf)
-    # Panel border on top
-    pygame.draw.rect(surf, BORDER2, map_rect(), width=1, border_radius=8)
+def _particles(s, ma, t):
+    """Life particles on continents — count scales with log(diversity)."""
+    d = get_diversity_at(ma)
+    if d < 5:
+        return
+    log_frac = math.log10(max(d, 1)) / math.log10(MAX_DIVERSITY)
+    n_total = int(log_frac * 100)
+    if n_total < 1:
+        return
+    continents = get_interpolated_continents(ma)
+    if not continents:
+        return
+    rng = random.Random(int(ma // 12))
+    per = max(1, n_total // len(continents))
+    for c in continents:
+        poly = c["poly"]
+        if not poly:
+            continue
+        cx_n = sum(p[0] for p in poly) / len(poly)
+        cy_n = sum(p[1] for p in poly) / len(poly)
+        sx_n = max(abs(p[0] - cx_n) for p in poly) * 0.85
+        sy_n = max(abs(p[1] - cy_n) for p in poly) * 0.85
+        for i in range(per):
+            px = clamp(cx_n + rng.uniform(-sx_n, sx_n), 0.02, 0.98)
+            py = clamp(cy_n + rng.uniform(-sy_n, sy_n), 0.02, 0.98)
+            px += math.sin(t * 0.4 + i * 1.7) * 0.004
+            py += math.cos(t * 0.55 + i * 2.3) * 0.004
+            gx = int(px * R * 2)
+            gy = int(py * R * 2)
+            if (gx - R)**2 + (gy - R)**2 > (R * 0.96)**2:
+                continue
+            pulse = 0.45 + 0.55 * math.sin(t * 1.8 + i * 0.9)
+            a = int(90 + 140 * pulse)
+            sz = 1 if d < 100_000 else (2 if d < 2_000_000 else 3)
+            pygame.draw.circle(s, (*GREEN, a), (gx, gy), sz)
 
 
-# ── Species diversity graph ───────────────────────────────────────────────────
-_GRAPH_CACHE = {}
+def _specular(s):
+    """Soft specular highlight — makes globe look 3-D."""
+    hs = pygame.Surface((R*2, R*2), pygame.SRCALPHA)
+    hx, hy = int(R * 0.62), int(R * 0.58)
+    for radius in range(70, 4, -4):
+        a = int(22 * (1 - radius / 70) ** 1.5)
+        pygame.draw.circle(hs, (255, 255, 255, a), (hx, hy), radius)
+    s.blit(hs, (0, 0))
 
-def _build_graph_surf():
-    w, h = INFO_W - 4, INFO_H // 2 - 6
+
+def _grid(s):
+    gs = pygame.Surface((R*2, R*2), pygame.SRCALPHA)
+    lc = (200, 210, 230, 20)
+    for frac in [1/6, 2/6, 3/6, 4/6, 5/6]:
+        gv = int(frac * R * 2)
+        pygame.draw.line(gs, lc, (gv, 0), (gv, R*2))
+        pygame.draw.line(gs, lc, (0, gv), (R*2, gv))
+    eq = (200, 210, 230, 48)
+    pygame.draw.line(gs, eq, (0, R), (R*2, R))
+    pygame.draw.line(gs, eq, (R, 0), (R, R*2))
+    s.blit(gs, (0, 0))
+
+
+def render_globe(ma, t, grid_on):
+    _globe_surf.fill((0, 0, 0, 0))
+    _ocean(_globe_surf, ma)
+    _continents(_globe_surf, ma)
+    _ice(_globe_surf, ma)
+    _lava(_globe_surf, ma, t)
+    _particles(_globe_surf, ma, t)
+    if grid_on:
+        _grid(_globe_surf)
+    _specular(_globe_surf)
+    # Circular clip
+    _globe_surf.blit(_globe_mask, (0, 0), special_flags=pygame.BLEND_RGBA_MIN)
+    return _globe_surf
+
+
+# ── Atmosphere glow ─────────────────────────────────────────────────────────────
+def draw_atmosphere(surf, ma):
+    ac = atm_color(ma)
+    # 4 rings from large/faint to small/bright
+    for offset, alpha in [(44, 22), (28, 42), (16, 62), (8, 88)]:
+        gr = R + offset
+        gs = pygame.Surface((gr*2, gr*2), pygame.SRCALPHA)
+        pygame.draw.circle(gs, (*ac, alpha), (gr, gr), gr)
+        surf.blit(gs, (GLOBE_CX - gr, GLOBE_CY - gr))
+
+
+# ── Stars ───────────────────────────────────────────────────────────────────────
+def draw_stars(surf, t):
+    for sx, sy, br, phase in STARS:
+        dx, dy = sx - GLOBE_CX, sy - GLOBE_CY
+        if dx*dx + dy*dy < (R + 50)**2:
+            continue   # skip stars inside/behind globe
+        twinkle = 0.60 + 0.40 * math.sin(t * 1.1 + phase)
+        c = int(br * twinkle * 255)
+        if br > 0.82:
+            pygame.draw.line(surf, (c,c,c), (sx-2, sy), (sx+2, sy))
+            pygame.draw.line(surf, (c,c,c), (sx, sy-2), (sx, sy+2))
+        else:
+            pygame.draw.circle(surf, (c,c,c), (sx, sy), 1 if br < 0.5 else 2)
+
+
+# ── Diversity graph ─────────────────────────────────────────────────────────────
+def _build_graph(w, h):
     s = pygame.Surface((w, h), pygame.SRCALPHA)
     s.fill((0, 0, 0, 0))
+    ax, ay = 42, 10
+    gw = w - ax - 8
+    gh = h - ay - 28
 
-    # Axes
-    ax, ay = 36, 8
-    gw, gh = w - ax - 8, h - ay - 24
+    pygame.draw.rect(s, (*PANEL, 210), (ax, ay, gw, gh), border_radius=4)
 
-    # Background
-    pygame.draw.rect(s, (*PANEL, 220), (ax, ay, gw, gh))
-
-    # Grid lines
     for yi in range(5):
         gy = ay + int(gh * yi / 4)
-        pygame.draw.line(s, (*BORDER, 120), (ax, gy), (ax + gw, gy))
+        pygame.draw.line(s, (*BORDER, 90), (ax, gy), (ax+gw, gy))
 
-    # Diversity curve
     pts = []
-    steps = gw
-    ma_start, ma_end = DIVERSITY[0][0], DIVERSITY[-1][0]
-    for px in range(steps):
-        frac = px / (steps - 1)
-        ma = ma_start * (1 - frac)  # 4300→0
-        d = get_diversity_at(ma)
-        log_d = math.log10(max(d, 1)) / math.log10(MAX_DIVERSITY)
-        py = ay + gh - int(gh * log_d)
-        pts.append((ax + px, py))
+    ma_s = DIVERSITY[0][0]
+    for px in range(gw):
+        ma = ma_s * (1 - px / (gw - 1))
+        d  = get_diversity_at(ma)
+        ld = math.log10(max(d, 1)) / math.log10(MAX_DIVERSITY)
+        py = ay + gh - int(gh * ld)
+        pts.append((ax + px, clamp(py, ay, ay+gh)))
 
     if len(pts) > 1:
-        # Fill under curve
-        fill_pts = [(ax, ay + gh)] + pts + [(ax + gw, ay + gh)]
-        pygame.draw.polygon(s, (*GREEN, 35), fill_pts)
-        pygame.draw.lines(s, (*GREEN, 200), False, pts, 2)
+        pygame.draw.polygon(s, (*GREEN2, 28), [(ax, ay+gh)] + pts + [(ax+gw, ay+gh)])
+        pygame.draw.lines(s, (*GREEN, 55), False, pts, 3)   # glow
+        pygame.draw.lines(s, (*GREEN, 185), False, pts, 1)  # crisp line
 
-    # Mass extinction markers
-    extinctions = [
-        (444, "O"),  # Ordovician
-        (359, "D"),  # Devonian
-        (252, "P"),  # Permian
-        (201, "Tr"), # Triassic-Jurassic
-        (66,  "K"),  # K-Pg
-    ]
-    for ext_ma, label in extinctions:
-        frac = 1 - ext_ma / ma_start
+    for ext_ma, label in [(444,"O"), (359,"D"), (252,"P"), (201,"Tr"), (66,"K")]:
+        frac = 1 - ext_ma / ma_s
         ex = ax + int(frac * gw)
-        pygame.draw.line(s, (*RED, 180), (ex, ay), (ex, ay + gh), 1)
-        ls = F_XS.render(label, True, (*RED, 200))
-        s.blit(ls, (ex + 2, ay + 2))
+        pygame.draw.line(s, (*RED, 150), (ex, ay), (ex, ay+gh), 1)
+        ls = F_XS.render(label, True, (*RED, 210))
+        s.blit(ls, (ex+2, ay+3))
 
-    # Y-axis label
-    for yi, lab in enumerate(["1", "1k", "1M", "8.7M"]):
+    for yi, lab in enumerate(["1","1k","1M","8.7M"]):
         ly = ay + gh - int(gh * yi / 3)
         ls = F_XS.render(lab, True, GRAY)
-        s.blit(ls, (2, ly - 6))
+        s.blit(ls, (2, ly-6))
 
-    # X-axis ticks
-    for tick_ma in [4000, 3000, 2000, 1000, 500, 200, 0]:
-        frac = 1 - tick_ma / ma_start
+    for tick_ma in [4000, 3000, 2000, 1000, 500, 0]:
+        frac = 1 - tick_ma / ma_s
         tx = ax + int(frac * gw)
-        pygame.draw.line(s, BORDER, (tx, ay + gh), (tx, ay + gh + 4))
-        tl = F_XS.render(f"{tick_ma}" if tick_ma > 0 else "0", True, GRAY)
-        s.blit(tl, (tx - tl.get_width() // 2, ay + gh + 5))
+        pygame.draw.line(s, BORDER, (tx, ay+gh), (tx, ay+gh+5))
+        tl = F_XS.render(str(tick_ma), True, GRAY)
+        s.blit(tl, (tx - tl.get_width()//2, ay+gh+7))
 
-    # Axis lines
-    pygame.draw.line(s, BORDER2, (ax, ay), (ax, ay + gh), 1)
-    pygame.draw.line(s, BORDER2, (ax, ay + gh), (ax + gw, ay + gh), 1)
-
-    return s, ax, ay, gw, gh, ma_start
+    pygame.draw.line(s, BORDER2, (ax, ay), (ax, ay+gh), 1)
+    pygame.draw.line(s, BORDER2, (ax, ay+gh), (ax+gw, ay+gh), 1)
+    return s, ax, ay, gw, gh, DIVERSITY[0][0]
 
 
-def draw_diversity_graph(surf, ma):
-    gx, gy = INFO_X + 2, INFO_Y + 2
-    gh_rect = pygame.Rect(gx, gy, INFO_W - 4, INFO_H // 2 - 6)
-    panel(surf, gh_rect, color=PANEL2, bcolor=BORDER)
-
-    if "graph" not in _GRAPH_CACHE:
-        _GRAPH_CACHE["graph"] = _build_graph_surf()
-    gs, ax, _ay, gw, gh_px, ma_start = _GRAPH_CACHE["graph"]
-    surf.blit(gs, (gx, gy))
-
-    # Current position marker
-    frac = 1 - ma / ma_start
-    cx = gx + ax + int(frac * gw)
-    pygame.draw.line(surf, GOLD2,
-                     (cx, gy + _ay), (cx, gy + _ay + gh_px), 2)
-    d = get_diversity_at(ma)
-    log_d = math.log10(max(d, 1)) / math.log10(MAX_DIVERSITY)
-    cy = gy + _ay + gh_px - int(gh_px * log_d)
-    pygame.draw.circle(surf, GOLD2, (cx, cy), 5)
-    pygame.draw.circle(surf, WHITE, (cx, cy), 3)
-
-    # Title + current count
-    txt(surf, "SPECIES DIVERSITY (log scale)", F_SM, LGRAY, gx + ax + 2, gy + 2)
-    d_label = f"~{fmt_species(d)} species"
-    txt(surf, d_label, F_MD, GREEN, gx + INFO_W - 6, gy + 2, right=True)
-    txt(surf, "Ma", F_XS, GRAY, gx + ax + gw - 4, gy + _ay + gh_px + 15)
-
-
-# ── Info panel ────────────────────────────────────────────────────────────────
 def draw_info_panel(surf, ma):
-    period = get_period_at(ma)
+    gw_p = INFO_W - 4
+    gh_p = INFO_H // 2 - 4
+    gr   = pygame.Rect(INFO_X+2, INFO_Y+2, gw_p, gh_p)
+    panel(surf, gr, color=PANEL2, bcolor=BORDER)
 
-    base_y = INFO_Y + INFO_H // 2 + 2
-    rect = pygame.Rect(INFO_X + 2, base_y, INFO_W - 4, INFO_H // 2 - 2)
-    panel(surf, rect, color=PANEL2, bcolor=BORDER)
+    key = (gw_p, gh_p)
+    if key not in _graph_cache:
+        _graph_cache[key] = _build_graph(gw_p, gh_p)
+    gs, ax, ay, gw, gh, ma_s = _graph_cache[key]
+    surf.blit(gs, (INFO_X+2, INFO_Y+2))
 
-    y = base_y + 10
-    # Eon badge
-    eon_col = tuple(clamp(c + 40, 0, 255) for c in period["color"])
-    eon_rect = pygame.Rect(INFO_X + 10, y, INFO_W - 20, 24)
-    pygame.draw.rect(surf, period["color"], eon_rect, border_radius=4)
-    pygame.draw.rect(surf, eon_col, eon_rect, width=1, border_radius=4)
-    eon_text = period["eon"] if period["era"] == "—" else f"{period['eon']}  ·  {period['era']}"
-    txt(surf, eon_text, F_SM, WHITE, INFO_X + INFO_W // 2, y + 4, center=True)
-    y += 32
+    frac = 1 - ma / ma_s
+    cxg  = INFO_X + 2 + ax + int(frac * gw)
+    pygame.draw.line(surf, GOLD2, (cxg, INFO_Y+2+ay), (cxg, INFO_Y+2+ay+gh), 2)
+    d   = get_diversity_at(ma)
+    ld  = math.log10(max(d, 1)) / math.log10(MAX_DIVERSITY)
+    cyg = INFO_Y + 2 + ay + gh - int(gh * ld)
+    pygame.draw.circle(surf, GOLD2, (cxg, cyg), 5)
+    pygame.draw.circle(surf, WHITE, (cxg, cyg), 3)
 
-    # Period name
-    txt(surf, period["name"], F_PERIOD, WHITE, INFO_X + INFO_W // 2, y, center=True)
-    y += 34
+    txt(surf, "SPECIES DIVERSITY  (log scale)", F_SM, LGRAY, INFO_X+2+ax+2, INFO_Y+4)
+    txt(surf, f"~{fmt_species(d)}", F_LG, GREEN, INFO_X+INFO_W-6, INFO_Y+4, right=True)
 
-    # Time range
-    s_str = f"{period['start']} Ma" if period["start"] < 1000 else f"{period['start']/1000:.1f} Ga"
-    e_str = f"{period['end']} Ma" if period["end"] > 0 else "present"
-    range_txt = f"{s_str}  →  {e_str}"
-    txt(surf, range_txt, F_SM, GRAY, INFO_X + INFO_W // 2, y, center=True)
-    y += 22
+    # ── Period card (bottom half) ──────────────────────────────────────────────
+    py0 = INFO_Y + INFO_H // 2 + 2
+    panel(surf, pygame.Rect(INFO_X+2, py0, INFO_W-4, INFO_H//2-2), color=PANEL2, bcolor=BORDER)
 
-    # Description
-    txt(surf, period["desc"], F_MD, GOLD, INFO_X + INFO_W // 2, y, center=True)
+    p = get_period_at(ma)
+    y = py0 + 10
+
+    badge = pygame.Rect(INFO_X+10, y, INFO_W-20, 22)
+    pygame.draw.rect(surf, p["color"], badge, border_radius=4)
+    bright = tuple(min(255, c+50) for c in p["color"])
+    pygame.draw.rect(surf, bright, badge, width=1, border_radius=4)
+    eon_lbl = f"{p['eon']}  *  {p['era']}" if p["era"] != "-" and p["era"] != "—" else p["eon"]
+    txt(surf, eon_lbl, F_SM, WHITE, INFO_X+INFO_W//2, y+3, center=True)
+    y += 30
+
+    txt(surf, p["name"], F_PERIOD, WHITE, INFO_X+INFO_W//2, y, center=True)
+    y += 30
+
+    s_str = f"{int(p['start'])} Ma" if p["start"] < 1000 else f"{p['start']/1000:.1f} Ga"
+    e_str = f"{int(p['end'])} Ma"   if p["end"] > 0      else "present"
+    txt(surf, f"{s_str}  to  {e_str}", F_SM, GRAY, INFO_X+INFO_W//2, y, center=True)
+    y += 20
+
+    txt(surf, p["desc"], F_MD, GOLD, INFO_X+INFO_W//2, y, center=True)
     y += 24
 
-    # Divider
-    pygame.draw.line(surf, BORDER, (INFO_X + 12, y), (INFO_X + INFO_W - 12, y))
+    pygame.draw.line(surf, BORDER, (INFO_X+14, y), (INFO_X+INFO_W-14, y))
     y += 10
 
-    # Key event (word-wrapped at 32 chars)
-    ev = period["event"]
-    words = ev.split()
+    words = p["event"].split()
     lines, line = [], ""
     for w in words:
-        if len(line) + len(w) + 1 <= 34:
+        if len(line) + len(w) + 1 <= 36:
             line += ("" if not line else " ") + w
         else:
-            lines.append(line)
-            line = w
-    if line:
-        lines.append(line)
+            lines.append(line); line = w
+    if line: lines.append(line)
     for ln in lines[:3]:
-        txt(surf, ln, F_SM, LGRAY, INFO_X + 10, y)
-        y += 18
+        txt(surf, ln, F_SM, LGRAY, INFO_X+12, y)
+        y += 17
 
     y += 8
-    # Atmospheric O2 bar
-    o2_frac = _o2_fraction(ma)
-    txt(surf, "Atmospheric O2", F_SM, GRAY, INFO_X + 10, y)
+    txt(surf, "Atmospheric O2", F_SM, GRAY, INFO_X+12, y)
     y += 16
-    bar_w = INFO_W - 24
-    bar_rect = pygame.Rect(INFO_X + 10, y, bar_w, 10)
-    pygame.draw.rect(surf, BORDER, bar_rect, border_radius=3)
-    fill_w = max(2, int(bar_w * o2_frac))
-    o2_col = mix((30, 100, 200), (120, 220, 255), o2_frac)
-    pygame.draw.rect(surf, o2_col,
-                     pygame.Rect(INFO_X + 10, y, fill_w, 10), border_radius=3)
-    txt(surf, f"{o2_frac * 21:.1f}%", F_XS, LGRAY, INFO_X + 10 + bar_w + 2, y)
+    bw = INFO_W - 24
+    pygame.draw.rect(surf, DGRAY, pygame.Rect(INFO_X+10, y, bw, 10), border_radius=4)
+    o2 = o2_frac(ma)
+    fw = max(2, int(bw * o2))
+    oc = mix((28, 88, 200), (110, 210, 255), o2)
+    pygame.draw.rect(surf, oc, pygame.Rect(INFO_X+10, y, fw, 10), border_radius=4)
+    txt(surf, f"{o2*21:.1f}%", F_XS, LGRAY, INFO_X+12+bw+4, y)
     y += 18
 
-    # Scroll event log
     if event_queue:
-        txt(surf, "RECENT EVENTS", F_XS, GRAY, INFO_X + 10, y)
-        y += 14
-        for ev_txt, _ in event_queue[:3]:
-            txt(surf, f"> {ev_txt}", F_XS, CYAN, INFO_X + 12, y)
-            y += 14
+        txt(surf, "RECENT EVENTS", F_XS, GRAY, INFO_X+12, y)
+        y += 13
+        for et, _ in event_queue[:3]:
+            txt(surf, f"> {et[:38]}", F_XS, CYAN, INFO_X+14, y)
+            y += 13
 
 
-def _o2_fraction(ma):
-    """Rough atmospheric O2 as a fraction of modern (21%)."""
-    if ma > 2500:
-        return 0.0
-    if ma > 2000:
-        return lerp(0.0, 0.02, (2500 - ma) / 500) / 0.21
-    if ma > 540:
-        return lerp(0.02, 0.10, (2000 - ma) / 1460) / 0.21
-    if ma > 300:
-        return lerp(0.10, 0.35, (540 - ma) / 240) / 0.21
-    if ma > 200:
-        return lerp(0.35, 0.16, (300 - ma) / 100) / 0.21
-    return clamp(lerp(0.16, 0.21, (200 - ma) / 200), 0, 1)
-
-
-# ── Timeline ─────────────────────────────────────────────────────────────────
+# ── Timeline ───────────────────────────────────────────────────────────────────
 def draw_timeline(surf, ma):
-    tr = pygame.Rect(TL_X, TL_Y, TL_W, TL_H)
-    panel(surf, tr, color=PANEL, bcolor=BORDER)
+    panel(surf, pygame.Rect(TL_X, TL_Y, TL_W, TL_H), color=PANEL, bcolor=BORDER)
 
-    inner_x = TL_X + 8
-    inner_w = TL_W - 16
-    bar_y   = TL_Y + 30
-    bar_h   = 18
+    ix, iw = TL_X+10, TL_W-20
+    bar_y, bar_h = TL_Y+36, 20
 
-    # Draw each period as a colored segment
     for p in PERIODS:
-        frac_s = 1 - p["start"] / START_MA
-        frac_e = 1 - p["end"]   / START_MA
-        px = inner_x + int(frac_s * inner_w)
-        pw = max(1, int((frac_e - frac_s) * inner_w))
-        seg_rect = pygame.Rect(px, bar_y, pw, bar_h)
-        pygame.draw.rect(surf, p["color"], seg_rect)
-        # Name label if wide enough
-        if pw > 30:
+        fs = 1 - p["start"] / START_MA
+        fe = 1 - p["end"]   / START_MA
+        px = ix + int(fs * iw)
+        pw = max(1, int((fe - fs) * iw))
+        pygame.draw.rect(surf, p["color"], (px, bar_y, pw, bar_h))
+        if pw > 35:
             ls = F_XS.render(p["name"], True, WHITE)
             if ls.get_width() < pw - 4:
-                surf.blit(ls, (px + (pw - ls.get_width()) // 2, bar_y + 3))
+                surf.blit(ls, (px + (pw - ls.get_width())//2, bar_y+4))
 
-    # Period borders
-    for p in PERIODS:
-        frac_s = 1 - p["start"] / START_MA
-        px = inner_x + int(frac_s * inner_w)
-        pygame.draw.line(surf, PANEL, (px, bar_y), (px, bar_y + bar_h), 1)
-
-    # Eon separators + labels
-    eons = [
-        ("Hadean",       4500, 4000),
-        ("Archean",      4000, 2500),
-        ("Proterozoic",  2500, 538),
-        ("Phanerozoic",  538,  0),
-    ]
-    eon_y = bar_y + bar_h + 3
-    for ename, es, ee in eons:
+    for ename, es, ee in [("Hadean",4500,4000),("Archean",4000,2500),
+                           ("Proterozoic",2500,538),("Phanerozoic",538,0)]:
         fs = 1 - es / START_MA
         fe = 1 - ee / START_MA
-        ex = inner_x + int(fs * inner_w)
-        ew = max(2, int((fe - fs) * inner_w))
-        label = F_XS.render(ename, True, LGRAY)
-        if label.get_width() < ew - 4:
-            surf.blit(label, (ex + (ew - label.get_width()) // 2, eon_y))
-        pygame.draw.line(surf, BORDER2, (ex, bar_y), (ex, bar_y + bar_h + 12), 1)
+        ex = ix + int(fs * iw)
+        ew = max(2, int((fe - fs) * iw))
+        pygame.draw.line(surf, BORDER2, (ex, bar_y-2), (ex, bar_y+bar_h+14), 1)
+        el = F_XS.render(ename, True, LGRAY)
+        if el.get_width() < ew - 6:
+            surf.blit(el, (ex + (ew-el.get_width())//2, bar_y+bar_h+4))
 
-    # Time tick marks
-    tick_y = bar_y - 10
     for tick_ma in range(0, 4501, 500):
         frac = 1 - tick_ma / START_MA
-        tx = inner_x + int(frac * inner_w)
-        pygame.draw.line(surf, BORDER2, (tx, tick_y + 6), (tx, bar_y), 1)
-        label = f"{tick_ma}" if tick_ma > 0 else "0"
-        ls = F_XS.render(label, True, GRAY)
-        surf.blit(ls, (tx - ls.get_width() // 2, tick_y - 2))
+        tx = ix + int(frac * iw)
+        pygame.draw.line(surf, BORDER2, (tx, bar_y-10), (tx, bar_y), 1)
+        tl = F_XS.render(str(tick_ma) if tick_ma else "0", True, GRAY)
+        surf.blit(tl, (tx - tl.get_width()//2, bar_y-22))
 
-    # Current time marker
-    cur_frac = 1 - ma / START_MA
-    cx = inner_x + int(cur_frac * inner_w)
-    pygame.draw.line(surf, GOLD2, (cx, TL_Y + 4), (cx, TL_Y + TL_H - 4), 2)
-    # Triangle pointer
-    tri = [(cx, TL_Y + 4), (cx - 6, TL_Y + 14), (cx + 6, TL_Y + 14)]
-    pygame.draw.polygon(surf, GOLD2, tri)
-    # Time label above pointer
-    tl_label = fmt_ma(ma)
-    ls = F_SM.render(tl_label, True, GOLD2)
-    lx = clamp(cx - ls.get_width() // 2, TL_X + 2, TL_X + TL_W - ls.get_width() - 2)
-    surf.blit(ls, (lx, TL_Y + 4))
+    cf = 1 - ma / START_MA
+    cx = ix + int(cf * iw)
+    pygame.draw.line(surf, GOLD2, (cx, TL_Y+5), (cx, TL_Y+TL_H-5), 2)
+    pygame.draw.polygon(surf, GOLD2, [(cx, TL_Y+5), (cx-6, TL_Y+16), (cx+6, TL_Y+16)])
+    ls = F_SM.render(fmt_ma(ma), True, GOLD2)
+    lx = clamp(cx - ls.get_width()//2, TL_X+2, TL_X+TL_W-ls.get_width()-2)
+    surf.blit(ls, (lx, TL_Y+4))
 
 
-# ── Header ────────────────────────────────────────────────────────────────────
+# ── Header ─────────────────────────────────────────────────────────────────────
 def draw_header(surf, ma):
-    hr = pygame.Rect(0, 0, W, HDR_H)
-    surf.fill(PANEL2, hr)
-    pygame.draw.line(surf, BORDER, (0, HDR_H - 1), (W, HDR_H - 1))
-
-    period = get_period_at(ma)
-
-    # Title
-    txt(surf, "EARTH HISTORY SIMULATOR", F_TITLE, WHITE, PAD + 4, 12)
-
-    # Current time (large, centered)
-    time_s = fmt_ma(ma)
-    txt(surf, time_s, F_LG, GOLD, W // 2, 18, center=True)
-
-    # Period badge (right)
-    badge_s = f"{period['eon']}  ·  {period['name']}"
-    bw, _ = txt(surf, badge_s, F_LG, WHITE, W - PAD, 10, right=True)
-    # Speed indicator
-    speed_s = f"Speed: {SPEEDS[speed_idx]} Ma/s"
-    if paused:
-        speed_s = "|| PAUSED"
-    txt(surf, speed_s, F_SM, GRAY, W - PAD, 36, right=True)
-
-    # Control hints
-    hints = "SPACE: pause   </> : speed   R: reset   G: grid   click timeline: jump"
-    txt(surf, hints, F_XS, GRAY, PAD + 4, HDR_H - 16)
+    surf.fill(PANEL2, pygame.Rect(0, 0, W, HDR_H))
+    pygame.draw.line(surf, BORDER, (0, HDR_H-1), (W, HDR_H-1))
+    p = get_period_at(ma)
+    txt(surf, "EARTH HISTORY SIMULATOR", F_TITLE, WHITE, PAD+4, 12)
+    txt(surf, fmt_ma(ma), F_LG, GOLD, W//2, 18, center=True)
+    txt(surf, f"{p['eon']}  *  {p['name']}", F_LG, WHITE, W-PAD, 10, right=True)
+    spd = "|| PAUSED" if paused else f"Speed: {SPEEDS[speed_idx]} Ma/s"
+    txt(surf, spd, F_SM, GRAY, W-PAD, 36, right=True)
+    txt(surf, "SPACE=pause   </>=speed   R=reset   G=grid   click timeline=jump",
+        F_XS, GRAY, PAD+4, HDR_H-15)
 
 
-# ── Event notification overlay ────────────────────────────────────────────────
+# ── Event overlay ──────────────────────────────────────────────────────────────
 def draw_events(surf):
-    y = MAP_Y + 10
-    for ev_txt, ttl in event_queue:
-        alpha = min(255, ttl * 3)
-        s = F_MD.render(f"* {ev_txt}", True, CYAN)
-        s.set_alpha(alpha)
-        surf.blit(s, (MAP_X + MAP_W - s.get_width() - 12, y))
-        y += 22
+    ey = SPACE_Y + 12
+    for et, ttl in event_queue[:4]:
+        a = min(255, ttl * 4)
+        s = F_MD.render(f"* {et[:52]}", True, CYAN)
+        s.set_alpha(a)
+        surf.blit(s, (SPACE_X + SPACE_W - s.get_width() - 14, ey))
+        ey += 22
 
 
-# ── Main simulation tick ──────────────────────────────────────────────────────
+# ── Simulation tick ─────────────────────────────────────────────────────────────
 def tick(dt):
-    global current_ma, prev_period, event_queue, wave_t
+    global current_ma, prev_period, event_queue, anim_t
     if not paused:
         current_ma -= SPEEDS[speed_idx] * dt
         if current_ma < END_MA:
             current_ma = END_MA
-
-    wave_t += dt
-
-    # Advance event TTL
-    event_queue = [[t, f - 1] for t, f in event_queue if f > 1]
-
-    # Detect period change → push event
-    period = get_period_at(current_ma)
-    if period["name"] != prev_period:
-        prev_period = period["name"]
-        event_queue.insert(0, [period["event"][:60], 300])
-
+    anim_t += dt
+    event_queue = [[t, f-1] for t, f in event_queue if f > 1]
+    p = get_period_at(current_ma)
+    if p["name"] != prev_period:
+        prev_period = p["name"]
+        event_queue.insert(0, [p["event"][:60], 320])
     return current_ma <= END_MA
 
 
-# ── Main loop ─────────────────────────────────────────────────────────────────
+# ── Main ───────────────────────────────────────────────────────────────────────
 def main():
-    global current_ma, paused, speed_idx, last_t, show_grid
+    global current_ma, paused, speed_idx, last_t, show_grid, event_queue
 
-    running = True
-    while running:
+    while True:
         now = _time.perf_counter()
-        dt = min(now - last_t, 0.1)
+        dt  = min(now - last_t, 0.08)
         last_t = now
 
-        # ── Events ────────────────────────────────────────────────────────────
         for ev in pygame.event.get():
             if ev.type == pygame.QUIT:
-                running = False
-
+                pygame.quit(); sys.exit()
             elif ev.type == pygame.KEYDOWN:
-                if ev.key == pygame.K_SPACE:
-                    paused = not paused
-                elif ev.key == pygame.K_RIGHT:
-                    speed_idx = min(speed_idx + 1, len(SPEEDS) - 1)
-                elif ev.key == pygame.K_LEFT:
-                    speed_idx = max(speed_idx - 1, 0)
-                elif ev.key == pygame.K_r:
-                    current_ma = START_MA
-                    event_queue.clear()
-                elif ev.key in (pygame.K_g, pygame.K_SLASH):
-                    show_grid = not show_grid
-                elif ev.key == pygame.K_ESCAPE:
-                    running = False
-
+                if   ev.key == pygame.K_SPACE:  paused = not paused
+                elif ev.key == pygame.K_RIGHT:  speed_idx = min(speed_idx+1, len(SPEEDS)-1)
+                elif ev.key == pygame.K_LEFT:   speed_idx = max(speed_idx-1, 0)
+                elif ev.key == pygame.K_r:      current_ma = START_MA; event_queue.clear()
+                elif ev.key in (pygame.K_g, pygame.K_SLASH): show_grid = not show_grid
+                elif ev.key == pygame.K_ESCAPE: pygame.quit(); sys.exit()
             elif ev.type == pygame.MOUSEBUTTONDOWN:
                 mx, my = ev.pos
-                # Click on timeline to scrub
                 if TL_Y < my < TL_Y + TL_H:
-                    inner_x = TL_X + 8
-                    inner_w = TL_W - 16
-                    frac = clamp((mx - inner_x) / inner_w, 0, 1)
+                    frac = clamp((mx - TL_X-10) / (TL_W-20), 0, 1)
                     current_ma = START_MA * (1 - frac)
                     event_queue.clear()
 
-        # ── Simulate ──────────────────────────────────────────────────────────
         done = tick(dt)
 
-        # ── Draw ──────────────────────────────────────────────────────────────
+        # Draw
         screen.fill(BG)
-        draw_stars(screen, current_ma)
-        draw_map_panel(screen, current_ma, show_grid)
-        draw_diversity_graph(screen, current_ma)
+        draw_stars(screen, anim_t)
+        draw_atmosphere(screen, current_ma)
+        screen.blit(render_globe(current_ma, anim_t, show_grid),
+                    (GLOBE_CX - R, GLOBE_CY - R))
+        pygame.draw.circle(screen, BORDER2, (GLOBE_CX, GLOBE_CY), R, 2)
+        pygame.draw.rect(screen, BORDER,
+                         pygame.Rect(SPACE_X, SPACE_Y, SPACE_W, SPACE_H),
+                         width=1, border_radius=8)
         draw_info_panel(screen, current_ma)
+        draw_events(screen)
         draw_timeline(screen, current_ma)
         draw_header(screen, current_ma)
-        draw_events(screen)
 
-        # "REACHED PRESENT" banner
         if done:
-            s = F_PERIOD.render("— Reached Present Day —", True, GOLD2)
-            screen.blit(s, (W // 2 - s.get_width() // 2, H // 2 - 20))
+            s = F_PERIOD.render("-- Reached Present Day --", True, GOLD2)
+            s.set_alpha(200)
+            screen.blit(s, (W//2 - s.get_width()//2, GLOBE_CY - 14))
 
         pygame.display.flip()
         clock.tick(60)
-
-    pygame.quit()
-    sys.exit(0)
 
 
 if __name__ == "__main__":
