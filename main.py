@@ -185,104 +185,171 @@ def o2_frac(ma):
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# PILLOW GLOBE RENDERING  (high-quality, cached)
+# 3-D GLOBE RENDERING  (orthographic projection + Lambertian shading, cached)
 # ══════════════════════════════════════════════════════════════════════════════
 
+# Viewing parameters — Atlantic view, slightly north-tilted (classic globe look)
+GLOBE_LON0 = -20.0
+GLOBE_LAT0 =  20.0
 
-# ── Pre-baked static assets (computed once) ────────────────────────────────────
-_PIL_CIRC_MASK: Image.Image | None = None   # greyscale circular clip mask
-_PIL_SPECULAR:  Image.Image | None = None   # specular highlight RGBA
-_OCEAN_CACHE:   dict = {}                   # ocean key → PIL RGBA image (no alpha)
+# Equirectangular intermediate texture (continents painted here, then projected)
+W_TEX = 720
+H_TEX = 360
 
-def _get_circ_mask() -> Image.Image:
-    global _PIL_CIRC_MASK
-    if _PIL_CIRC_MASK is None:
-        m = Image.new("L", (RENDER_D, RENDER_D), 0)
-        ImageDraw.Draw(m).ellipse((0, 0, RENDER_D - 1, RENDER_D - 1), fill=255)
-        _PIL_CIRC_MASK = m
-    return _PIL_CIRC_MASK
+# Pre-computed viewing-angle trig (recalculate if you change GLOBE_LON0/LAT0)
+_cos_lat0 = math.cos(math.radians(GLOBE_LAT0))
+_sin_lat0 = math.sin(math.radians(GLOBE_LAT0))
+_lon0_rad  = math.radians(GLOBE_LON0)
+
+# Specular highlight (pre-baked once)
+_PIL_SPECULAR: Image.Image | None = None
 
 def _get_specular() -> Image.Image:
     global _PIL_SPECULAR
     if _PIL_SPECULAR is None:
-        sz  = RENDER_D; r = RENDER_R
-        s   = Image.new("RGBA", (sz, sz), (0, 0, 0, 0))
-        sd  = ImageDraw.Draw(s, "RGBA")
+        sz = RENDER_D; r = RENDER_R
+        s  = Image.new("RGBA", (sz, sz), (0, 0, 0, 0))
+        sd = ImageDraw.Draw(s, "RGBA")
         hx, hy = int(r * 0.60), int(r * 0.55)
-        mx  = int(r * 0.30)
+        mx = int(r * 0.30)
         for rad in range(mx, 2, -2):
             a = int(26 * (1 - rad / mx) ** 1.6)
             sd.ellipse((hx-rad, hy-rad, hx+rad, hy+rad), fill=(255, 255, 255, a))
         _PIL_SPECULAR = s
     return _PIL_SPECULAR
 
-def _get_ocean(ma: float) -> Image.Image:
-    """Numpy radial-gradient ocean, cached per distinct colour."""
-    # Ocean colour changes rarely — quantise key coarsely
-    s, d = ocean_pair(ma)
-    key  = (s, d)
-    if key not in _OCEAN_CACHE:
-        sz = RENDER_D; r = RENDER_R
-        yy, xx = np.ogrid[0:sz, 0:sz]
-        dist   = np.sqrt((xx - r) ** 2 + (yy - r) ** 2).astype(np.float32) / r
-        t_oc   = np.clip(dist * 0.82, 0, 1)
-        arr    = np.zeros((sz, sz, 3), dtype=np.uint8)
-        for ch in range(3):
-            arr[:, :, ch] = np.clip(s[ch]*(1-t_oc) + d[ch]*t_oc, 0, 255).astype(np.uint8)
-        _OCEAN_CACHE[key] = Image.fromarray(arr, "RGB")
-    return _OCEAN_CACHE[key].copy()
+
+def _make_equirect_tex(ma: float) -> np.ndarray:
+    """Build a (H_TEX, W_TEX, 4) RGBA equirectangular texture for time ma."""
+    shallow, deep = ocean_pair(ma)
+
+    # Latitude-gradient ocean base
+    yy  = np.linspace(0, 1, H_TEX, dtype=np.float32)          # 0=N, 1=S
+    t   = np.clip(np.abs(yy - 0.5) * 2 * 0.85, 0, 1)          # 0=equator, 1=pole
+    col = np.zeros((H_TEX, 3), dtype=np.float32)
+    for ch in range(3):
+        col[:, ch] = shallow[ch] * (1 - t) + deep[ch] * t
+    tex = np.zeros((H_TEX, W_TEX, 4), dtype=np.uint8)
+    tex[:, :, :3] = np.clip(col, 0, 255).astype(np.uint8)[:, np.newaxis, :]
+    tex[:, :,  3] = 255
+
+    tex_img = Image.fromarray(tex, "RGBA")
+    draw    = ImageDraw.Draw(tex_img, "RGBA")
+
+    # Land polygons — draw fading-out first so fading-in land appears on top
+    conts_sorted = sorted(get_interpolated_continents(ma),
+                          key=lambda c: c.get("alpha", 255))
+    for c in conts_sorted:
+        alpha = int(clamp(c.get("alpha", 255), 0, 255))
+        if alpha < 4:
+            continue
+        lc   = land_color(c["color"], ma)
+        edge = tuple(max(0, lc[i] - 28) for i in range(3))
+        for poly in c.get("polys", []):
+            if len(poly) < 3:
+                continue
+            pts = [(int(x * W_TEX), int(y * H_TEX)) for x, y in poly]
+            draw.polygon(pts, fill=(*lc, alpha))
+            draw.line(pts + [pts[0]], fill=(*edge, min(alpha, 190)), width=2)
+
+    # Ice caps (Snowball Earth or modern poles)
+    if 720 <= ma <= 635:
+        frac  = clamp((720 - ma) / 85, 0, 1)
+        cap_h = int(H_TEX * 0.05 + H_TEX * 0.42 * frac)
+        if cap_h > 0:
+            draw.rectangle([0, 0, W_TEX, cap_h], fill=(*ICE_BRIGHT, 220))
+            draw.rectangle([0, H_TEX - cap_h, W_TEX, H_TEX], fill=(*ICE_DARK, 215))
+    elif ma < 2.6:
+        cap_h = max(1, int(H_TEX * 0.03))
+        draw.rectangle([0, 0, W_TEX, cap_h], fill=(*ICE_BRIGHT, 190))
+        draw.rectangle([0, H_TEX - cap_h, W_TEX, H_TEX], fill=(*ICE_DARK, 185))
+
+    return np.array(tex_img)
+
+
+# ── Precomputed projection tables (view-angle fixed, computed once) ────────────
+# These are computed lazily on first call and reused for all frames.
+_PROJ_TABLES: dict | None = None
+
+def _build_proj_tables(R: int) -> dict:
+    """Precompute per-pixel projection lookup tables for the fixed viewing angle."""
+    D = R * 2
+    yi, xi = np.mgrid[0:D, 0:D]
+    nx = ((xi - R) / R).astype(np.float64)
+    ny = ((R - yi) / R).astype(np.float64)
+    r2 = nx * nx + ny * ny
+    inside = r2 <= 1.0
+
+    nxi = nx[inside]
+    nyi = ny[inside]
+    nzi = np.sqrt(np.maximum(0.0, 1.0 - nxi * nxi - nyi * nyi))
+
+    # Inverse orthographic: pixel → lat/lon
+    lat = np.arcsin(np.clip(nyi * _cos_lat0 + nzi * _sin_lat0, -1, 1))
+    lon = _lon0_rad + np.arctan2(nxi, nzi * _cos_lat0 - nyi * _sin_lat0)
+
+    # Texture sample indices (fixed since lon0/lat0 are fixed)
+    tx = np.clip(((lon / (2 * math.pi) + 0.5) % 1.0 * W_TEX).astype(np.int32), 0, W_TEX - 1)
+    ty = np.clip(((0.5 - lat / math.pi) * H_TEX).astype(np.int32), 0, H_TEX - 1)
+
+    # Lambertian shading (also fixed)
+    lx, ly, lz = 0.38, 0.52, 0.76
+    shade_raw = np.clip(nxi * lx + nyi * ly + nzi * lz, 0, 1)
+    shade = (0.28 + 0.72 * shade_raw).astype(np.float32)
+
+    # Atmospheric rim weight
+    r2_i    = (nxi * nxi + nyi * nyi).astype(np.float32)
+    rim_t   = np.clip((r2_i - 0.88) / 0.12, 0, 1).astype(np.float32)
+
+    # Combine shade + rim blend into single-pass coefficients so _ortho_project
+    # needs only one float multiply + add over the inside pixels instead of three
+    # separate boolean-index passes.
+    #   rgb_final = tex_rgb * combined_factor + rim_add
+    rim_blend       = rim_t * 0.6
+    combined_factor = (shade * (1.0 - rim_blend)).astype(np.float32)
+    atm             = np.array([100.0, 160.0, 255.0], dtype=np.float32)
+    rim_add         = (atm * rim_blend[:, np.newaxis]).astype(np.float32)
+
+    return dict(inside=inside, tx=tx, ty=ty,
+                combined_factor=combined_factor, rim_add=rim_add, D=D)
+
+
+def _get_proj_tables(R: int) -> dict:
+    global _PROJ_TABLES
+    if _PROJ_TABLES is None:
+        _PROJ_TABLES = _build_proj_tables(R)
+    return _PROJ_TABLES
+
+
+def _ortho_project(tex: np.ndarray, R: int) -> np.ndarray:
+    """Project equirectangular texture onto sphere using precomputed tables."""
+    p = _get_proj_tables(R)
+    inside   = p["inside"]
+    tx, ty   = p["tx"],  p["ty"]
+    comb_f   = p["combined_factor"]
+    rim_add  = p["rim_add"]
+    D        = p["D"]
+
+    # Sample texture directly into float, apply shade + rim in one pass
+    sampled = tex[ty, tx]                              # (N, 4) uint8
+    rgb = sampled[:, :3].astype(np.float32)
+    rgb = np.clip(rgb * comb_f[:, np.newaxis] + rim_add, 0, 255).astype(np.uint8)
+
+    # Single write to output array
+    out = np.zeros((D, D, 4), dtype=np.uint8)
+    out[inside, :3] = rgb
+    out[inside,  3] = 255
+    return out
 
 
 def _pil_build_globe(ma: float) -> pygame.Surface:
-    """Render the globe to a pygame Surface using numpy + Pillow."""
-    sz   = RENDER_D
-
-    # ── Ocean (cached numpy gradient) ────────────────────────────────────────
-    base = _get_ocean(ma).convert("RGBA")   # adds alpha channel (all 255)
-    draw = ImageDraw.Draw(base, "RGBA")
-
-    # ── Continents ───────────────────────────────────────────────────────────
-    for c in get_interpolated_continents(ma):
-        poly = c["poly"]
-        if len(poly) < 3:
-            continue
-        alpha = int(clamp(c.get("alpha", 255), 0, 255))
-        lc    = land_color(c["color"], ma)
-        pts   = [(x * sz, y * sz) for x, y in poly]
-        draw.polygon(pts, fill=(*lc, alpha))
-        edge  = tuple(max(0, lc[i] - 30) for i in range(3))
-        draw.line(pts + [pts[0]], fill=(*edge, min(alpha, 200)),
-                  width=max(2, sz // 200))
-
-    # ── Ice caps ─────────────────────────────────────────────────────────────
-    if 720 <= ma <= 635:
-        frac  = clamp((720 - ma) / 85, 0, 1)
-        cap_h = int(sz * 0.10 + sz * 0.84 * frac)
-        if cap_h > 0:
-            _paste_rect(base, ICE_BRIGHT, 220, 0, 0, sz, cap_h)
-            _paste_rect(base, ICE_DARK,   215, 0, sz - cap_h, sz, cap_h)
-    elif ma < 2.6:
-        cap_h = max(2, int(sz * 0.05))
-        _paste_rect(base, ICE_BRIGHT, 190, 0, 0, sz, cap_h)
-        _paste_rect(base, ICE_DARK,   185, 0, sz - cap_h, sz, cap_h)
-
-    # ── Circular clip ─────────────────────────────────────────────────────────
-    _, _, _, a_ch = base.split()
-    a_ch = ImageChops.multiply(a_ch, _get_circ_mask())
-    base.putalpha(a_ch)
-
-    # ── Specular highlight (pre-baked) ────────────────────────────────────────
+    """Build the 3-D globe surface for time ma."""
+    tex  = _make_equirect_tex(ma)
+    proj = _ortho_project(tex, RENDER_R)
+    base = Image.fromarray(proj, "RGBA")
     base = Image.alpha_composite(base, _get_specular())
-
-    # ── Convert to pygame Surface ─────────────────────────────────────────────
     surf = pygame.image.fromstring(base.tobytes(), (GLOBE_D, GLOBE_D), "RGBA")
     return surf.convert_alpha()
-
-
-def _paste_rect(img, color, alpha, x, y, w, h):
-    """Paste a solid-colour RGBA rectangle onto img in-place."""
-    patch = Image.new("RGBA", (w, h), (*color, alpha))
-    img.paste(patch, (x, y), patch)
 
 
 def _cache_key(ma: float) -> int:
@@ -290,13 +357,29 @@ def _cache_key(ma: float) -> int:
 
 
 def get_globe_surf(ma: float) -> pygame.Surface:
-    """Return a cached (or freshly rendered) Pillow-based globe surface."""
     key = _cache_key(ma)
     if key not in _globe_cache:
         if len(_globe_cache) >= CACHE_MAX:
             _globe_cache.pop(next(iter(_globe_cache)))
         _globe_cache[key] = _pil_build_globe(ma)
     return _globe_cache[key]
+
+
+def _ll_to_globe_px(x_norm: float, y_norm: float):
+    """Convert normalised equirect (0-1) coords to globe pixel (px, py).
+    Returns None if the point is on the back hemisphere (not visible).
+    """
+    lon = x_norm * 2 * math.pi - math.pi
+    lat = math.pi * 0.5 - y_norm * math.pi
+    d_lon  = lon - _lon0_rad
+    c_lat  = math.cos(lat)
+    s_lat  = math.sin(lat)
+    cos_c  = _sin_lat0 * s_lat + _cos_lat0 * c_lat * math.cos(d_lon)
+    if cos_c < 0:
+        return None
+    sx = c_lat * math.sin(d_lon)
+    sy = _cos_lat0 * s_lat - _sin_lat0 * c_lat * math.cos(d_lon)
+    return int(GLOBE_R + GLOBE_R * sx), int(GLOBE_R - GLOBE_R * sy)
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -339,21 +422,23 @@ def _overlay_particles(s, ma, t):
     rng = random.Random(int(ma // 12))
     per = max(1, n_total // len(continents))
     for c in continents:
-        poly = c["poly"]
-        if not poly:
+        all_pts = [p for poly in c.get("polys", []) for p in poly]
+        if not all_pts:
             continue
-        cx_n = sum(p[0] for p in poly) / len(poly)
-        cy_n = sum(p[1] for p in poly) / len(poly)
-        sx_n = max(abs(p[0] - cx_n) for p in poly) * 0.85
-        sy_n = max(abs(p[1] - cy_n) for p in poly) * 0.85
+        cx_n = sum(p[0] for p in all_pts) / len(all_pts)
+        cy_n = sum(p[1] for p in all_pts) / len(all_pts)
+        sx_n = max(abs(p[0] - cx_n) for p in all_pts) * 0.80
+        sy_n = max(abs(p[1] - cy_n) for p in all_pts) * 0.80
         for i in range(per):
-            px = clamp(cx_n + rng.uniform(-sx_n, sx_n), 0.02, 0.98)
-            py = clamp(cy_n + rng.uniform(-sy_n, sy_n), 0.02, 0.98)
-            px += math.sin(t * 0.4 + i * 1.7) * 0.004
-            py += math.cos(t * 0.55 + i * 2.3) * 0.004
-            gx = int(px * GLOBE_D)
-            gy = int(py * GLOBE_D)
-            if (gx - GLOBE_R) ** 2 + (gy - GLOBE_R) ** 2 > (GLOBE_R * 0.96) ** 2:
+            px = clamp(cx_n + rng.uniform(-sx_n, sx_n), 0.01, 0.99)
+            py = clamp(cy_n + rng.uniform(-sy_n, sy_n), 0.01, 0.99)
+            px += math.sin(t * 0.4 + i * 1.7) * 0.003
+            py += math.cos(t * 0.55 + i * 2.3) * 0.003
+            pos = _ll_to_globe_px(px, py)
+            if pos is None:
+                continue
+            gx, gy = pos
+            if (gx - GLOBE_R) ** 2 + (gy - GLOBE_R) ** 2 > (GLOBE_R * 0.94) ** 2:
                 continue
             pulse = 0.45 + 0.55 * math.sin(t * 1.8 + i * 0.9)
             a  = int(90 + 140 * pulse)

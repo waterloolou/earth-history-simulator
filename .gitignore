@@ -11,3 +11,5 @@ build/
 .idea/
 .vscode/
 *.swp
+*.png
+ne_land_110m.geojson
