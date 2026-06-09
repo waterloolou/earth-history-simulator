@@ -837,30 +837,66 @@ def _make_equirect_tex(ma: float) -> np.ndarray:
     tex_img = Image.fromarray(tex, "RGBA")
     draw    = ImageDraw.Draw(tex_img, "RGBA")
 
-    # Land polygons — draw fading-out first so fading-in land appears on top.
-    # Each ring gets its own biome colour based on that ring's latitude centroid,
-    # so large continents show natural latitudinal variation.
     conts_sorted = sorted(get_interpolated_continents(ma),
                           key=lambda c: c.get("alpha", 255))
-    for c in conts_sorted:
-        alpha = int(clamp(c.get("alpha", 255), 0, 255))
-        if alpha < 4:
-            continue
-        for poly in c.get("polys", []):
-            if len(poly) < 3:
-                continue
-            cy   = sum(p[1] for p in poly) / len(poly)   # ring's y-centroid
-            lc   = biome_color(cy, ma)
-            pts  = [(int(x * W_TEX), int(y * H_TEX)) for x, y in poly]
-            draw.polygon(pts, fill=(*lc, alpha))
-            # No polygon outlines — softer blended edges look more photorealistic
 
-    # Soften continent/biome boundaries before adding crisp mountain + ice overlays
-    # Ancient eras use heavier blur because the polygon shapes are coarser
-    blur_r  = (1.5 if ma < 65 else
-               2.5 if ma < 300 else
-               3.5 if ma < 750 else
-               4.5 if ma < 2500 else 6.0)
+    if ma > 750:
+        # ── Gaussian-blob continents (pre-Scotese era, no polygon hard edges) ───
+        # Each polygon is drawn into an isolated mask and blurred by a radius
+        # proportional to its own footprint.  The blurred masks are accumulated
+        # into a float height field; thresholding gives smooth organic coastlines.
+        accumulated = np.zeros((H_TEX, W_TEX), dtype=np.float32)
+
+        for c in conts_sorted:
+            a_frac = c.get("alpha", 255) / 255.0
+            if a_frac < 0.02:
+                continue
+            for poly in c.get("polys", []):
+                if len(poly) < 3:
+                    continue
+                pts_px = [(int(x * W_TEX), int(y * H_TEX)) for x, y in poly]
+                xs = [p[0] for p in pts_px]
+                ys = [p[1] for p in pts_px]
+                geo_mean = ((max(xs) - min(xs) + 1) * (max(ys) - min(ys) + 1)) ** 0.4
+                br = max(14, min(32, int(geo_mean * 0.30)))
+
+                pm = Image.new("L", (W_TEX, H_TEX), 0)
+                ImageDraw.Draw(pm).polygon(pts_px, fill=255)
+                pm_b = pm.filter(ImageFilter.GaussianBlur(radius=br))
+                accumulated += np.array(pm_b, dtype=np.float32) / 255.0 * a_frac
+
+        land_mask = accumulated > 0.30
+
+        # Biome colours painted per latitude strip — no polygon edges possible
+        cy_arr    = np.linspace(0, 1, H_TEX, dtype=np.float32)
+        brows     = np.array([biome_color(float(cy), ma) for cy in cy_arr],
+                             dtype=np.uint8)           # H × 3
+        biome_2d  = brows[:, np.newaxis, :].repeat(W_TEX, axis=1)   # H × W × 3
+        ocean_rgb = np.array(tex_img)[:, :, :3]
+        rgb_out   = np.where(land_mask[:, :, np.newaxis], biome_2d, ocean_rgb)
+        tex_img   = Image.fromarray(
+            np.concatenate([rgb_out,
+                            np.full((H_TEX, W_TEX, 1), 255, dtype=np.uint8)],
+                           axis=2).astype(np.uint8), "RGBA")
+
+        blur_r = 2.5   # light pass just for colour-transition softening
+
+    else:
+        # ── Standard biome-coloured polygons (0–750 Ma; Scotese overrides later) ─
+        for c in conts_sorted:
+            alpha = int(clamp(c.get("alpha", 255), 0, 255))
+            if alpha < 4:
+                continue
+            for poly in c.get("polys", []):
+                if len(poly) < 3:
+                    continue
+                cy  = sum(p[1] for p in poly) / len(poly)
+                lc  = biome_color(cy, ma)
+                pts = [(int(x * W_TEX), int(y * H_TEX)) for x, y in poly]
+                draw.polygon(pts, fill=(*lc, alpha))
+
+        blur_r = 1.5 if ma < 65 else (2.5 if ma < 300 else 3.5)
+
     tex_img = tex_img.filter(ImageFilter.GaussianBlur(radius=blur_r))
     draw    = ImageDraw.Draw(tex_img, "RGBA")
 
