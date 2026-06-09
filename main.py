@@ -299,6 +299,13 @@ def biome_color(cy: float, ma: float) -> tuple:
     t_temperate = min(t_subpolar - 8.0, 35.0 * band_scale)
     t_subtrop   = max( 8.0, 22.0 * band_scale)
 
+    # ── Archean basalt / greenstone belt (pre-2500 Ma) ─────────────────────
+    # Early Archean crust was thin, dark, basaltic — no red-bed oxidation yet.
+    if ma > 2500:
+        if lat > t_polar:     return ( 98,  90,  80)   # dark grey basalt (polar)
+        if lat > t_temperate: return ( 88,  80,  68)   # greenstone belt
+        return                       ( 80,  72,  60)   # dark tropical basalt
+
     # ── Pre-vegetation: red-bed bare rock ───────────────────────────────────
     if not v_plant:
         if lat > t_polar:     return (182, 174, 162)
@@ -850,7 +857,10 @@ def _make_equirect_tex(ma: float) -> np.ndarray:
 
     # Soften continent/biome boundaries before adding crisp mountain + ice overlays
     # Ancient eras use heavier blur because the polygon shapes are coarser
-    blur_r  = 1.5 if ma < 65 else (2.5 if ma < 300 else 3.5)
+    blur_r  = (1.5 if ma < 65 else
+               2.5 if ma < 300 else
+               3.5 if ma < 750 else
+               4.5 if ma < 2500 else 6.0)
     tex_img = tex_img.filter(ImageFilter.GaussianBlur(radius=blur_r))
     draw    = ImageDraw.Draw(tex_img, "RGBA")
 

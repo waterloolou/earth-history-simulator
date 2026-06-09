@@ -154,6 +154,7 @@ def _smoothstep(x: float) -> float:
 # ── Land colour palette ───────────────────────────────────────────────────────
 _LAND   = (132, 108, 58)    # generic ancient land
 _LAND2  = (118,  95, 48)    # older/darker craton
+_ARCH   = ( 82,  74, 62)    # Archean basalt / greenstone belt (dark grey-brown)
 _SUPERC = (148, 120, 60)    # supercontinent warm tone
 _LAUR   = (130, 115, 60)    # Laurasia
 _GOND   = (125, 108, 55)    # Gondwana
@@ -170,16 +171,48 @@ CONTINENTAL_SNAPSHOTS: dict = {
     # 4300 Ma -- Magma ocean, no stable crust
     4300: [],
 
-    # 3500 Ma -- Scattered Archean protocratons
+    # 4000 Ma -- First tiny slivers of stable crust crystallising from the magma
+    # (Acasta-type gneiss, ~4.0 Ga; Jack Hills zircons ~4.4 Ga hint at tiny patches)
+    4000: [
+        dict(name="Proto-Craton A", color=_ARCH, polys=[_from_ll([
+            (-48,62),(-42,60),(-36,62),(-34,66),(-38,70),
+            (-44,70),(-50,66)])]),
+        dict(name="Proto-Craton B", color=_ARCH, polys=[_from_ll([
+            (116,-20),(120,-18),(124,-20),(126,-24),
+            (122,-28),(116,-26)])]),
+    ],
+
+    # 3500 Ma -- Scattered Archean protocratons (Vaalbara, Ur, Arctica, Kaapvaal)
+    # Shapes are irregularly outlined to avoid the "hexagon" look.
     3500: [
-        dict(name="Vaalbara",  color=_LAND2, polys=[_from_ll([
-            (20,-24),(28,-20),(36,-24),(40,-32),(36,-40),(28,-42),(20,-38),(14,-32)])]),
-        dict(name="Ur",        color=_LAND2, polys=[_from_ll([
-            (62,-22),(72,-18),(80,-25),(82,-34),(75,-42),(66,-40),(58,-33),(56,-25)])]),
-        dict(name="Arctica",   color=_LAND2, polys=[_from_ll([
-            (-95,58),(-78,62),(-60,58),(-50,62),(-55,70),(-72,74),(-92,70),(-98,64)])]),
-        dict(name="Kaapvaal",  color=_LAND2, polys=[_from_ll([
-            (24,-25),(32,-22),(38,-28),(36,-35),(28,-38),(22,-34)])]),
+        dict(name="Vaalbara",  color=_ARCH, polys=[_from_ll([
+            (16,-22),(22,-18),(28,-16),(34,-18),(40,-24),(42,-30),
+            (40,-36),(36,-42),(28,-44),(20,-42),(14,-36),(12,-28)])]),
+        dict(name="Ur",        color=_ARCH, polys=[_from_ll([
+            (58,-20),(64,-16),(70,-14),(76,-16),(82,-22),(84,-30),
+            (82,-38),(76,-44),(68,-46),(60,-42),(54,-34),(52,-26)])]),
+        dict(name="Arctica",   color=_ARCH, polys=[_from_ll([
+            (-100,56),(-90,54),(-78,56),(-66,58),(-54,58),(-46,62),
+            (-48,68),(-58,72),(-72,74),(-86,70),(-98,64)])]),
+        dict(name="Kaapvaal",  color=_ARCH, polys=[_from_ll([
+            (22,-24),(28,-20),(34,-20),(38,-24),(40,-30),
+            (38,-36),(32,-40),(26,-40),(20,-36),(18,-30)])]),
+    ],
+
+    # 3000 Ma -- Archean cratons growing; Vaalbara still mostly intact,
+    # Kenorland nucleus forming in the Canadian Shield
+    3000: [
+        dict(name="Vaalbara",  color=_ARCH, polys=[_from_ll([
+            (14,-20),(22,-14),(30,-12),(40,-16),(48,-22),(52,-30),
+            (50,-40),(44,-48),(34,-52),(22,-50),(12,-44),(8,-34),(10,-24)])]),
+        dict(name="Ur",        color=_ARCH, polys=[_from_ll([
+            (56,-16),(66,-10),(76,-10),(86,-16),(92,-26),(90,-36),
+            (84,-44),(74,-50),(62,-48),(52,-40),(48,-30),(50,-22)])]),
+        dict(name="Proto-Kenorland", color=_ARCH, polys=[_from_ll([
+            (-100,52),(-88,48),(-76,50),(-64,54),(-52,56),(-44,60),
+            (-46,68),(-60,72),(-76,72),(-92,66),(-104,60)])]),
+        dict(name="Atlantica", color=_ARCH, polys=[_from_ll([
+            (-32,8),(-22,4),(-10,6),(-4,14),(-6,22),(-16,26),(-28,22)])]),
     ],
 
     # 2500 Ma -- Kenorland + fragments
