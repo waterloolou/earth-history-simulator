@@ -146,6 +146,11 @@ def clamp(v, lo, hi):
     return max(lo, min(hi, v))
 
 
+def _smoothstep(x: float) -> float:
+    x = clamp(x, 0.0, 1.0)
+    return x * x * (3.0 - 2.0 * x)
+
+
 # ── Land colour palette ───────────────────────────────────────────────────────
 _LAND   = (132, 108, 58)    # generic ancient land
 _LAND2  = (118,  95, 48)    # older/darker craton
@@ -305,7 +310,7 @@ def _init_geo():
 def _fallback_modern():
     """Rough-but-correct polygon outlines if geo data unavailable."""
     _G = (78, 142, 68)
-    _I = (205, 228, 255)
+    _I = (255, 255, 255)
     return [
         dict(name="North America", color=_G, polys=[_from_ll([
             (-168,72),(-140,60),(-130,52),(-124,36),(-110,24),(-90,16),
@@ -403,11 +408,14 @@ def _shift_polys(polys: list, dx: float, dy: float) -> list:
 
 
 def get_interpolated_continents(ma: float) -> list:
-    """Continents with smoothly interpolated positions and alpha values.
+    """Continents with smoothly interpolated positions.
 
-    Each returned dict includes an 'alpha' key (0-255).  Continents drift
-    toward their counterparts in the adjacent snapshot (centroid-based),
-    creating the appearance of active plate motion.
+    Each returned dict has an 'alpha' key (0-255).  For most of each
+    transition interval only ONE snapshot's continents are visible (alpha=255),
+    drifting toward the next snapshot's positions via a smoothstep curve.
+    A brief 15%-wide crossfade window at the midpoint handles changes in
+    continent count cleanly — so the ghostly double-image of the old approach
+    never appears.
     """
     older_list = [t for t in SNAPSHOT_TIMES if t >= ma]
     newer_list = [t for t in SNAPSHOT_TIMES if t < ma]
@@ -421,44 +429,49 @@ def get_interpolated_continents(ma: float) -> list:
         snap = CONTINENTAL_SNAPSHOTS[older_t]
         return [dict(c, alpha=255) for c in (snap or [])]
 
-    newer_t = max(newer_list)
-    span    = older_t - newer_t
-    frac    = (older_t - ma) / span if span > 0 else 0.0  # 0=older, 1=newer
+    newer_t  = max(newer_list)
+    span     = older_t - newer_t
+    frac     = (older_t - ma) / span if span > 0 else 0.0   # 0=older_t, 1=newer_t
+    ease     = _smoothstep(frac)
 
     old_config = CONTINENTAL_SNAPSHOTS[older_t] or []
     new_config = CONTINENTAL_SNAPSHOTS[newer_t] or []
+
+    # Old continents drift eased fraction of the way toward nearest new centroid.
+    # New continents arrive from the same direction (complement of old drift).
+    #   drift_old  = ease * 0.5   → 0 at frac=0, 0.5 at frac=1
+    #   drift_new  = (1-ease)*0.5 → 0.5 at frac=0, 0 at frac=1
+    drift_old = ease * 0.5
+    drift_new = (1.0 - ease) * 0.5
+
+    # Crossfade occupies the middle 15% of the span (7.5% on each side of 0.5)
+    BLEND = 0.15
+    lo, hi = 0.5 - BLEND / 2, 0.5 + BLEND / 2
+
     result: list = []
 
-    # Old continents: drift towards nearest new, fade out
-    for oc in old_config:
-        nc = _nearest(oc, new_config)
-        if nc:
-            ocx, ocy = _continent_centroid(oc)
-            ncx, ncy = _continent_centroid(nc)
-            dx = (ncx - ocx) * frac
-            dy = (ncy - ocy) * frac
-        else:
+    if frac < hi:   # old continents still relevant
+        a_old = 255 if frac <= lo else int(255 * (hi - frac) / BLEND)
+        for oc in old_config:
+            nc = _nearest(oc, new_config)
             dx, dy = 0.0, 0.0
-        result.append({
-            **oc,
-            "polys": _shift_polys(oc["polys"], dx, dy),
-            "alpha": int(255 * (1.0 - frac)),
-        })
+            if nc:
+                ocx, ocy = _continent_centroid(oc)
+                ncx, ncy = _continent_centroid(nc)
+                dx = (ncx - ocx) * drift_old
+                dy = (ncy - ocy) * drift_old
+            result.append({**oc, "polys": _shift_polys(oc["polys"], dx, dy), "alpha": a_old})
 
-    # New continents: arrive from nearest old, fade in
-    for nc in new_config:
-        oc = _nearest(nc, old_config)
-        if oc:
-            ncx, ncy = _continent_centroid(nc)
-            ocx, ocy = _continent_centroid(oc)
-            dx = (ocx - ncx) * (1.0 - frac)
-            dy = (ocy - ncy) * (1.0 - frac)
-        else:
+    if frac > lo:   # new continents becoming relevant
+        a_new = 255 if frac >= hi else int(255 * (frac - lo) / BLEND)
+        for nc in new_config:
+            oc = _nearest(nc, old_config)
             dx, dy = 0.0, 0.0
-        result.append({
-            **nc,
-            "polys": _shift_polys(nc["polys"], dx, dy),
-            "alpha": int(255 * frac),
-        })
+            if oc:
+                ncx, ncy = _continent_centroid(nc)
+                ocx, ocy = _continent_centroid(oc)
+                dx = (ocx - ncx) * drift_new
+                dy = (ocy - ncy) * drift_new
+            result.append({**nc, "polys": _shift_polys(nc["polys"], dx, dy), "alpha": a_new})
 
     return result

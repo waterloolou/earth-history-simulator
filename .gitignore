@@ -13,3 +13,6 @@ build/
 *.swp
 *.png
 ne_land_110m.geojson
+blue_marble.jpg
+cloud_layer.jpg
+paleo_textures/

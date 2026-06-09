@@ -23,8 +23,8 @@ PLATE_COLOR = {
     "india":          (168, 142, 72),
     "se_asia":        (100, 150, 70),
     "australia":      (192, 150, 72),
-    "greenland":      (205, 225, 250),
-    "antarctica":     (218, 235, 255),
+    "greenland":      (240, 248, 255),
+    "antarctica":     (255, 255, 255),
     "other":          (100, 150, 75),
 }
 
