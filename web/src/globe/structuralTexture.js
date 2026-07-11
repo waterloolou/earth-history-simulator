@@ -83,41 +83,88 @@ function polyBoundingBoxPx(poly, w, h) {
   return [minX, minY, maxX, maxY];
 }
 
-function rasterizePolyMask(poly, w, h) {
-  const c = makeCanvas(w, h);
+/** Rasterize + blur one polygon into `accumulated` (a full-image w*h buffer),
+ * doing the canvas allocation, getImageData, and box blur only inside the
+ * polygon's bounding box padded by the blur's finite support (3*radius for a
+ * 3-pass box blur). A 3-pass box blur is exactly zero beyond 3*radius from any
+ * lit pixel, so the padded-region result is bit-identical to blurring the full
+ * image -- but for a typical continent covering a fraction of the 720x360 map,
+ * it replaces a full-frame rasterize+blur with a small-window one (the dominant
+ * cost of build() before this optimization; see PLAN.md's caching notes). */
+function splatPolyRegion(accumulated, poly, w, h, aFrac, radius) {
+  let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+  for (const [x, y] of poly) {
+    const px = x * w, py = y * h;
+    if (px < minX) minX = px; if (px > maxX) maxX = px;
+    if (py < minY) minY = py; if (py > maxY) maxY = py;
+  }
+  const pad = 3 * radius + 2; // finite support of a 3-pass box blur, +slack
+  const x0 = Math.max(0, Math.floor(minX) - pad);
+  const y0 = Math.max(0, Math.floor(minY) - pad);
+  const x1 = Math.min(w, Math.ceil(maxX) + pad + 1);
+  const y1 = Math.min(h, Math.ceil(maxY) + pad + 1);
+  const sw = x1 - x0, sh = y1 - y0;
+  if (sw < 1 || sh < 1) return;
+
+  // Rasterize the polygon into a sub-window canvas (coords offset by x0,y0).
+  const c = makeCanvas(sw, sh);
   const ctx = c.getContext("2d");
   ctx.fillStyle = "#fff";
   ctx.beginPath();
   poly.forEach(([x, y], i) => {
-    const px = x * w, py = y * h;
+    const px = x * w - x0, py = y * h - y0;
     if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
   });
   ctx.closePath();
   ctx.fill();
-  const { data } = ctx.getImageData(0, 0, w, h);
-  const mask = new Float32Array(w * h);
+  const { data } = ctx.getImageData(0, 0, sw, sh);
+  const mask = new Float32Array(sw * sh);
   for (let i = 0, p = 0; i < mask.length; i++, p += 4) mask[i] = data[p] / 255;
-  return mask;
+
+  // boxBlur clamps at buffer edges; where the sub-window abuts the true image
+  // edge this matches the full-image behavior, and where it abuts padding the
+  // edge value is 0 (same as reading zeros beyond), so the result is identical.
+  const blurred = boxBlur(mask, sw, sh, radius);
+  for (let sy = 0; sy < sh; sy++) {
+    const dstRow = (y0 + sy) * w + x0;
+    const srcRow = sy * sw;
+    for (let sx = 0; sx < sw; sx++) accumulated[dstRow + sx] += blurred[srcRow + sx] * aFrac;
+  }
 }
 
 /** Simple value-noise FBM (5 sine octaves), stable per 10-Ma bucket, matching
  * main.py's _terrain_noise_for()'s spirit (not a literal port of numpy RNG
  * output, which can't be reproduced bit-for-bit in JS -- an independent noise
- * field with the same statistical character is sufficient here). */
+ * field with the same statistical character is sufficient here).
+ *
+ * Perf: the per-pixel term `sin(xx)*cos(yy)` is separable -- xx depends only on
+ * x, yy only on y -- so each octave is built from one sin per column and one
+ * cos per row (~(w+h) trig calls) instead of one sin+cos per pixel (~2*w*h).
+ * Output is bit-identical; the transcendental-call count drops ~360x. The
+ * finished field is also memoized on its 10-Ma seed, since several consecutive
+ * 3-Ma structural-cache buckets resolve to the same noise seed. */
+const _terrainNoiseCache = new Map(); // seed -> Float32Array
+const TERRAIN_NOISE_CACHE_MAX = 8;
+
 function terrainNoise(ma, w, h) {
   const seed = Math.floor(ma / 10) * 10 + 9999;
+  const cached = _terrainNoiseCache.get(seed);
+  if (cached) return cached;
+
   let s = seed;
   const rand = () => { s = (s * 1103515245 + 12345) & 0x7fffffff; return s / 0x7fffffff; };
   const noise = new Float32Array(w * h);
+  const sinX = new Float32Array(w);
+  const cosY = new Float32Array(h);
   let amp = 1.0, freq = 3;
   for (let o = 0; o < 5; o++) {
     const px = rand() * 6.28318, py = rand() * 6.28318;
+    for (let x = 0; x < w; x++) sinX[x] = Math.sin(px + freq * 6.28318 * (x / w));
+    for (let y = 0; y < h; y++) cosY[y] = Math.cos(py + freq * 6.28318 * (y / h));
     for (let y = 0; y < h; y++) {
-      const yy = py + freq * 6.28318 * (y / h);
-      for (let x = 0; x < w; x++) {
-        const xx = px + freq * 6.28318 * (x / w);
-        noise[y * w + x] += amp * Math.sin(xx) * Math.cos(yy);
-      }
+      const ampCosY = amp * cosY[y];
+      const rowOff = y * w;
+      for (let x = 0; x < w; x++) noise[rowOff + x] += ampCosY * sinX[x];
     }
     amp *= 0.55;
     freq = Math.floor(freq * 1.9) + 1;
@@ -130,6 +177,11 @@ function terrainNoise(ma, w, h) {
   const blurred = boxBlur(norm, w, h, 4);
   const result = new Float32Array(w * h);
   for (let i = 0; i < result.length; i++) result[i] = 0.80 + 0.40 * blurred[i];
+
+  _terrainNoiseCache.set(seed, result);
+  if (_terrainNoiseCache.size > TERRAIN_NOISE_CACHE_MAX) {
+    _terrainNoiseCache.delete(_terrainNoiseCache.keys().next().value);
+  }
   return result;
 }
 
@@ -168,9 +220,8 @@ export class StructuralTextureBuilder {
         const [minX, minY, maxX, maxY] = polyBoundingBoxPx(poly, w, h);
         const geoMean = Math.pow((maxX - minX + 1) * (maxY - minY + 1), 0.4);
         const br = Math.max(14, Math.min(32, Math.round(geoMean * 0.30)));
-        const mask = rasterizePolyMask(poly, w, h);
-        const blurred = boxBlur(mask, w, h, Math.max(1, Math.round(br / 2.2)));
-        for (let i = 0; i < accumulated.length; i++) accumulated[i] += blurred[i] * aFrac;
+        const radius = Math.max(1, Math.round(br / 2.2));
+        splatPolyRegion(accumulated, poly, w, h, aFrac, radius);
       }
     }
 
