@@ -36,9 +36,18 @@ export class MapView {
     }).addTo(this.map);
 
     // chunkedLoading spreads large marker inserts across animation frames so
-    // setEvents() never blocks the main thread for a full second on the ~6.9k
-    // geolocated events (see addLayers bulk insert below).
-    this.cluster = L.markerClusterGroup({ maxClusterRadius: 45, chunkedLoading: true });
+    // setEvents() never blocks the main thread for a full second on the now
+    // ~23.8k geolocated events (see addLayers bulk insert below). chunkInterval
+    // caps how long each chunk runs before yielding: markercluster defaults to
+    // 200ms, which on the grown "All Events"/"World History"/"People" sets
+    // produced measured ~200-300ms main-thread freezes on mode entry. 50ms
+    // keeps each yielded chunk near a single frame's budget so entering a large
+    // map mode stays responsive instead of hitching for a third of a second.
+    this.cluster = L.markerClusterGroup({
+      maxClusterRadius: 45,
+      chunkedLoading: true,
+      chunkInterval: 50,
+    });
     this.map.addLayer(this.cluster);
     this._markersByEventId = new Map();
     this._onSelect = null;
