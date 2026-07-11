@@ -11,8 +11,21 @@ build/
 .idea/
 .vscode/
 *.swp
-*.png
-ne_land_110m.geojson
-blue_marble.jpg
-cloud_layer.jpg
-paleo_textures/
+
+# Legacy pygame app dev screenshots -- not used by any code path
+globe3d_*.png
+test_*.png
+
+# Legacy pygame app runtime asset cache -- downloaded on first run (see geo.py/main.py).
+# A separate, committed copy for the web app lives under web/public/textures/.
+/ne_land_110m.geojson
+/blue_marble.jpg
+/cloud_layer.jpg
+/paleo_textures/
+
+# Generated at build time by scripts/export_data.py -- never committed
+web/public/data/
+web/public/textures/plate_offset.png
+
+# Wikidata sync output that hasn't been triaged/merged yet
+data/wikidata_review.json

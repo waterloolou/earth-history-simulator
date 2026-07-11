@@ -1,0 +1,542 @@
+[
+  {
+    "id": "hist-giza-pyramid",
+    "title": "Great Pyramid of Giza completed",
+    "category": "historical", "subtype": "monument", "viz_mode": "map",
+    "time": {"year": -2560, "precision": "century"},
+    "place": {"lat": 29.9792, "lon": 31.1342, "region": "Giza, Egypt"},
+    "description": "Conventional Egyptological estimate for completion of the Great Pyramid, tomb of Pharaoh Khufu; exact year is not precisely known.",
+    "wiki": {"title": "Great Pyramid of Giza", "url": "https://en.wikipedia.org/wiki/Great_Pyramid_of_Giza"},
+    "source": "seed"
+  },
+  {
+    "id": "hist-hammurabi-code",
+    "title": "Code of Hammurabi promulgated",
+    "category": "historical", "subtype": "law", "viz_mode": "map",
+    "time": {"year": -1754, "precision": "century"},
+    "place": {"lat": 32.5422, "lon": 44.4207, "region": "Babylon, Mesopotamia"},
+    "description": "One of the earliest and best-preserved written legal codes, issued by the Babylonian king Hammurabi.",
+    "wiki": {"title": "Code of Hammurabi", "url": "https://en.wikipedia.org/wiki/Code_of_Hammurabi"},
+    "source": "seed"
+  },
+  {
+    "id": "hist-rome-founded",
+    "title": "Traditional founding of Rome",
+    "category": "historical", "subtype": "founding", "viz_mode": "map",
+    "time": {"year": -753, "month": 4, "day": 21, "precision": "year"},
+    "place": {"lat": 41.9028, "lon": 12.4964, "region": "Rome, Italy"},
+    "description": "Legendary date (April 21, 753 BCE) traditionally ascribed to Rome's founding by Romulus; not a historically verified event.",
+    "wiki": {"title": "Founding of Rome", "url": "https://en.wikipedia.org/wiki/Founding_of_Rome"},
+    "source": "seed"
+  },
+  {
+    "id": "hist-marathon",
+    "title": "Battle of Marathon",
+    "category": "historical", "subtype": "battle", "viz_mode": "map",
+    "time": {"year": -490, "precision": "year"},
+    "place": {"lat": 38.1621, "lon": 23.9695, "region": "Marathon, Greece"},
+    "description": "Athenian-led Greek forces defeated the first Persian invasion of Greece under Darius I.",
+    "wiki": {"title": "Battle of Marathon", "url": "https://en.wikipedia.org/wiki/Battle_of_Marathon"},
+    "source": "seed"
+  },
+  {
+    "id": "sci-archimedes-principle",
+    "title": "Archimedes' principle of buoyancy",
+    "category": "scientific", "subtype": "discovery", "viz_mode": "map",
+    "time": {"year": -250, "precision": "century"},
+    "place": {"lat": 37.0755, "lon": 15.2866, "region": "Syracuse, Sicily"},
+    "description": "Archimedes formulates the principle relating buoyant force to displaced fluid weight.",
+    "wiki": {"title": "Archimedes' principle", "url": "https://en.wikipedia.org/wiki/Archimedes%27_principle"},
+    "source": "seed"
+  },
+  {
+    "id": "cult-confucius-birth",
+    "title": "Birth of Confucius",
+    "category": "cultural", "subtype": "birth", "viz_mode": "map",
+    "time": {"year": -551, "month": 9, "day": 28, "precision": "year"},
+    "place": {"lat": 35.6, "lon": 116.9914, "region": "Qufu, China"},
+    "description": "Traditional birth date of the Chinese philosopher whose teachings shaped East Asian ethics and governance for millennia.",
+    "wiki": {"title": "Confucius", "url": "https://en.wikipedia.org/wiki/Confucius"},
+    "source": "seed"
+  },
+  {
+    "id": "cult-buddha-enlightenment",
+    "title": "Enlightenment of the Buddha",
+    "category": "cultural", "subtype": "religious", "viz_mode": "map",
+    "time": {"year": -528, "precision": "century"},
+    "place": {"lat": 24.6961, "lon": 84.9911, "region": "Bodh Gaya, India"},
+    "description": "Traditional (though disputed) date for Siddhartha Gautama's enlightenment under the Bodhi tree, founding event of Buddhism.",
+    "wiki": {"title": "Gautama Buddha", "url": "https://en.wikipedia.org/wiki/Gautama_Buddha"},
+    "source": "seed"
+  },
+  {
+    "id": "hist-alexander-death",
+    "title": "Death of Alexander the Great",
+    "category": "historical", "subtype": "death", "viz_mode": "map",
+    "time": {"year": -323, "month": 6, "day": 10, "precision": "day"},
+    "place": {"lat": 32.5422, "lon": 44.4207, "region": "Babylon"},
+    "description": "Death of Alexander III of Macedon in Babylon, precipitating the breakup of his empire among the Diadochi.",
+    "wiki": {"title": "Alexander the Great", "url": "https://en.wikipedia.org/wiki/Alexander_the_Great"},
+    "source": "seed"
+  },
+  {
+    "id": "hist-caesar-assassination",
+    "title": "Assassination of Julius Caesar",
+    "category": "historical", "subtype": "assassination", "viz_mode": "map",
+    "time": {"year": -44, "month": 3, "day": 15, "precision": "day"},
+    "place": {"lat": 41.8955, "lon": 12.4823, "region": "Rome (Theatre of Pompey)"},
+    "description": "Julius Caesar was stabbed to death by a group of senators, including Brutus and Cassius, on the Ides of March.",
+    "wiki": {"title": "Assassination of Julius Caesar", "url": "https://en.wikipedia.org/wiki/Assassination_of_Julius_Caesar"},
+    "source": "seed"
+  },
+  {
+    "id": "hist-vesuvius-pompeii",
+    "title": "Eruption of Vesuvius destroys Pompeii",
+    "category": "historical", "subtype": "disaster", "viz_mode": "map",
+    "time": {"year": 79, "month": 8, "day": 24, "precision": "day"},
+    "place": {"lat": 40.7461, "lon": 14.4989, "region": "Pompeii, Italy"},
+    "description": "Mount Vesuvius erupted, burying Pompeii and Herculaneum in ash; the traditional August date is disputed by some modern scholars in favor of an autumn eruption.",
+    "wiki": {"title": "Eruption of Mount Vesuvius in 79 AD", "url": "https://en.wikipedia.org/wiki/Eruption_of_Mount_Vesuvius_in_79_AD"},
+    "source": "seed"
+  },
+  {
+    "id": "sci-ptolemy-almagest",
+    "title": "Ptolemy compiles the Almagest",
+    "category": "scientific", "subtype": "publication", "viz_mode": "map",
+    "time": {"year": 150, "precision": "century"},
+    "place": {"lat": 31.2001, "lon": 29.9187, "region": "Alexandria, Egypt"},
+    "description": "Claudius Ptolemy's geocentric astronomical treatise, the authoritative model of the cosmos in Europe and the Islamic world for over a millennium.",
+    "wiki": {"title": "Almagest", "url": "https://en.wikipedia.org/wiki/Almagest"},
+    "source": "seed"
+  },
+  {
+    "id": "sci-cai-lun-paper",
+    "title": "Cai Lun refines papermaking",
+    "category": "scientific", "subtype": "invention", "viz_mode": "map",
+    "time": {"year": 105, "precision": "decade"},
+    "place": {"lat": 34.3416, "lon": 108.9398, "region": "China (Han court)"},
+    "description": "Traditional date for Cai Lun's improved papermaking process, reported to the Han imperial court.",
+    "wiki": {"title": "Cai Lun", "url": "https://en.wikipedia.org/wiki/Cai_Lun"},
+    "source": "seed"
+  },
+  {
+    "id": "hist-rome-fall",
+    "title": "Fall of the Western Roman Empire",
+    "category": "historical", "subtype": "politics", "viz_mode": "map",
+    "time": {"year": 476, "precision": "year"},
+    "place": {"lat": 44.4184, "lon": 12.2035, "region": "Ravenna, Italy"},
+    "description": "Deposition of Romulus Augustulus by Odoacer, conventionally marking the end of the Western Roman Empire.",
+    "wiki": {"title": "Fall of the Western Roman Empire", "url": "https://en.wikipedia.org/wiki/Fall_of_the_Western_Roman_Empire"},
+    "source": "seed"
+  },
+  {
+    "id": "hist-hijra",
+    "title": "Hijra: Muhammad's migration to Medina",
+    "category": "historical", "subtype": "religious", "viz_mode": "map",
+    "time": {"year": 622, "precision": "year"},
+    "place": {"lat": 24.4672, "lon": 39.6024, "region": "Medina, Arabia"},
+    "description": "Muhammad and his followers migrated from Mecca to Medina, an event marking year 1 of the Islamic calendar.",
+    "wiki": {"title": "Hijrah", "url": "https://en.wikipedia.org/wiki/Hijrah"},
+    "source": "seed"
+  },
+  {
+    "id": "hist-hastings",
+    "title": "Battle of Hastings",
+    "category": "historical", "subtype": "battle", "viz_mode": "map",
+    "time": {"year": 1066, "month": 10, "day": 14, "precision": "day"},
+    "place": {"lat": 50.9097, "lon": 0.4876, "region": "Hastings, England"},
+    "description": "William, Duke of Normandy, defeated King Harold II, beginning the Norman conquest of England.",
+    "wiki": {"title": "Battle of Hastings", "url": "https://en.wikipedia.org/wiki/Battle_of_Hastings"},
+    "source": "seed"
+  },
+  {
+    "id": "hist-magna-carta",
+    "title": "Magna Carta sealed",
+    "category": "historical", "subtype": "treaty", "viz_mode": "map",
+    "time": {"year": 1215, "month": 6, "day": 15, "precision": "day"},
+    "place": {"lat": 51.4481, "lon": -0.5624, "region": "Runnymede, England"},
+    "description": "King John sealed the Magna Carta, limiting royal authority and establishing early principles of due process.",
+    "wiki": {"title": "Magna Carta", "url": "https://en.wikipedia.org/wiki/Magna_Carta"},
+    "source": "seed"
+  },
+  {
+    "id": "hist-black-death",
+    "title": "Black Death reaches Europe",
+    "category": "historical", "subtype": "disaster", "viz_mode": "map",
+    "time": {"year": 1347, "precision": "year"},
+    "place": {"lat": 38.1938, "lon": 15.5540, "region": "Messina, Sicily"},
+    "description": "Plague-carrying ships arrived in Messina, marking the start of the Black Death's spread across Europe, which killed an estimated third of the population.",
+    "wiki": {"title": "Black Death", "url": "https://en.wikipedia.org/wiki/Black_Death"},
+    "source": "seed"
+  },
+  {
+    "id": "sci-gutenberg-press",
+    "title": "Gutenberg's printing press",
+    "category": "scientific", "subtype": "invention", "viz_mode": "map",
+    "time": {"year": 1440, "precision": "decade"},
+    "place": {"lat": 49.9929, "lon": 8.2473, "region": "Mainz, Germany"},
+    "description": "Johannes Gutenberg developed the movable-type printing press in Mainz, transforming the spread of written knowledge in Europe.",
+    "wiki": {"title": "Johannes Gutenberg", "url": "https://en.wikipedia.org/wiki/Johannes_Gutenberg"},
+    "source": "seed"
+  },
+  {
+    "id": "hist-constantinople-fall",
+    "title": "Fall of Constantinople",
+    "category": "historical", "subtype": "battle", "viz_mode": "map",
+    "time": {"year": 1453, "month": 5, "day": 29, "precision": "day"},
+    "place": {"lat": 41.0082, "lon": 28.9784, "region": "Constantinople"},
+    "description": "Ottoman forces under Mehmed II captured Constantinople, ending the Byzantine Empire.",
+    "wiki": {"title": "Fall of Constantinople", "url": "https://en.wikipedia.org/wiki/Fall_of_Constantinople"},
+    "source": "seed"
+  },
+  {
+    "id": "hist-columbus-1492",
+    "title": "Columbus reaches the Americas",
+    "category": "historical", "subtype": "exploration", "viz_mode": "map",
+    "time": {"year": 1492, "month": 10, "day": 12, "precision": "day"},
+    "place": {"lat": 24.0, "lon": -74.5, "region": "The Bahamas"},
+    "description": "Christopher Columbus's expedition made landfall in the Bahamas, beginning sustained European contact with the Americas.",
+    "wiki": {"title": "Christopher Columbus", "url": "https://en.wikipedia.org/wiki/Christopher_Columbus"},
+    "source": "seed"
+  },
+  {
+    "id": "sci-copernicus-heliocentrism",
+    "title": "Copernicus publishes De revolutionibus",
+    "category": "scientific", "subtype": "publication", "viz_mode": "map",
+    "time": {"year": 1543, "precision": "year"},
+    "place": {"lat": 54.3667, "lon": 19.6667, "region": "Frombork, Poland"},
+    "description": "Nicolaus Copernicus's treatise proposing a heliocentric model of the solar system was published near his death.",
+    "wiki": {"title": "De revolutionibus orbium coelestium", "url": "https://en.wikipedia.org/wiki/De_revolutionibus_orbium_coelestium"},
+    "source": "seed"
+  },
+  {
+    "id": "hist-luther-theses",
+    "title": "Luther's Ninety-Five Theses",
+    "category": "historical", "subtype": "religious", "viz_mode": "map",
+    "time": {"year": 1517, "month": 10, "day": 31, "precision": "day"},
+    "place": {"lat": 51.8663, "lon": 12.6440, "region": "Wittenberg, Germany"},
+    "description": "Martin Luther's traditional posting of the Ninety-Five Theses in Wittenberg, a catalyst for the Protestant Reformation.",
+    "wiki": {"title": "Ninety-five Theses", "url": "https://en.wikipedia.org/wiki/Ninety-five_Theses"},
+    "source": "seed"
+  },
+  {
+    "id": "sci-galileo-telescope",
+    "title": "Galileo's telescopic observations",
+    "category": "scientific", "subtype": "discovery", "viz_mode": "map",
+    "time": {"year": 1610, "precision": "year"},
+    "place": {"lat": 45.4064, "lon": 11.8768, "region": "Padua, Italy"},
+    "description": "Galileo Galilei's telescopic observations of the Moon, Jupiter's moons, and the phases of Venus provided strong support for heliocentrism.",
+    "wiki": {"title": "Galileo Galilei", "url": "https://en.wikipedia.org/wiki/Galileo_Galilei"},
+    "source": "seed"
+  },
+  {
+    "id": "sci-newton-principia",
+    "title": "Newton publishes the Principia",
+    "category": "scientific", "subtype": "publication", "viz_mode": "map",
+    "time": {"year": 1687, "month": 7, "day": 5, "precision": "day"},
+    "place": {"lat": 52.2043, "lon": 0.1218, "region": "Cambridge, England"},
+    "description": "Isaac Newton's Philosophiæ Naturalis Principia Mathematica established the laws of motion and universal gravitation.",
+    "wiki": {"title": "Philosophiæ Naturalis Principia Mathematica", "url": "https://en.wikipedia.org/wiki/Philosophiae_Naturalis_Principia_Mathematica"},
+    "source": "seed"
+  },
+  {
+    "id": "hist-declaration-independence",
+    "title": "US Declaration of Independence",
+    "category": "historical", "subtype": "independence", "viz_mode": "map",
+    "time": {"year": 1776, "month": 7, "day": 4, "precision": "day"},
+    "place": {"lat": 39.9496, "lon": -75.1503, "region": "Philadelphia, USA"},
+    "description": "The Second Continental Congress adopted the Declaration of Independence, formally announcing separation from Great Britain.",
+    "wiki": {"title": "United States Declaration of Independence", "url": "https://en.wikipedia.org/wiki/United_States_Declaration_of_Independence"},
+    "source": "seed"
+  },
+  {
+    "id": "hist-bastille",
+    "title": "Storming of the Bastille",
+    "category": "historical", "subtype": "revolution", "viz_mode": "map",
+    "time": {"year": 1789, "month": 7, "day": 14, "precision": "day"},
+    "place": {"lat": 48.8531, "lon": 2.3695, "region": "Paris, France"},
+    "description": "Parisian revolutionaries stormed the Bastille fortress, a defining event of the French Revolution.",
+    "wiki": {"title": "Storming of the Bastille", "url": "https://en.wikipedia.org/wiki/Storming_of_the_Bastille"},
+    "source": "seed"
+  },
+  {
+    "id": "sci-oxygen-discovery",
+    "title": "Priestley isolates oxygen",
+    "category": "scientific", "subtype": "discovery", "viz_mode": "map",
+    "time": {"year": 1774, "month": 8, "day": 1, "precision": "day"},
+    "place": {"lat": 51.3, "lon": -1.98, "region": "Wiltshire, England"},
+    "description": "Joseph Priestley isolated and identified oxygen gas, independently of Carl Wilhelm Scheele's earlier work.",
+    "wiki": {"title": "Joseph Priestley", "url": "https://en.wikipedia.org/wiki/Joseph_Priestley"},
+    "source": "seed"
+  },
+  {
+    "id": "cult-beethoven-ninth",
+    "title": "Premiere of Beethoven's Ninth Symphony",
+    "category": "cultural", "subtype": "artwork", "viz_mode": "map",
+    "time": {"year": 1824, "month": 5, "day": 7, "precision": "day"},
+    "place": {"lat": 48.2082, "lon": 16.3738, "region": "Vienna, Austria"},
+    "description": "Ludwig van Beethoven's Ninth Symphony, featuring the 'Ode to Joy,' premiered in Vienna while the composer was almost completely deaf.",
+    "wiki": {"title": "Symphony No. 9 (Beethoven)", "url": "https://en.wikipedia.org/wiki/Symphony_No._9_(Beethoven)"},
+    "source": "seed"
+  },
+  {
+    "id": "sci-first-photograph",
+    "title": "Earliest surviving photograph",
+    "category": "scientific", "subtype": "invention", "viz_mode": "map",
+    "time": {"year": 1827, "precision": "year"},
+    "place": {"lat": 47.3667, "lon": 4.8333, "region": "Saint-Loup-de-Varennes, France"},
+    "description": "Nicéphore Niépce produced 'View from the Window at Le Gras,' the oldest surviving photograph made in a camera.",
+    "wiki": {"title": "View from the Window at Le Gras", "url": "https://en.wikipedia.org/wiki/View_from_the_Window_at_Le_Gras"},
+    "source": "seed"
+  },
+  {
+    "id": "sci-darwin-origin",
+    "title": "Darwin publishes On the Origin of Species",
+    "category": "scientific", "subtype": "publication", "viz_mode": "map",
+    "time": {"year": 1859, "month": 11, "day": 24, "precision": "day"},
+    "place": {"lat": 51.5074, "lon": -0.1278, "region": "London, England"},
+    "description": "Charles Darwin's On the Origin of Species introduced the theory of evolution by natural selection.",
+    "wiki": {"title": "On the Origin of Species", "url": "https://en.wikipedia.org/wiki/On_the_Origin_of_Species"},
+    "source": "seed"
+  },
+  {
+    "id": "hist-waterloo",
+    "title": "Battle of Waterloo",
+    "category": "historical", "subtype": "battle", "viz_mode": "map",
+    "time": {"year": 1815, "month": 6, "day": 18, "precision": "day"},
+    "place": {"lat": 50.6796, "lon": 4.4008, "region": "Waterloo, Belgium"},
+    "description": "A coalition led by the Duke of Wellington and Gebhard von Blücher defeated Napoleon, ending his rule as Emperor of the French.",
+    "wiki": {"title": "Battle of Waterloo", "url": "https://en.wikipedia.org/wiki/Battle_of_Waterloo"},
+    "source": "seed"
+  },
+  {
+    "id": "hist-emancipation-proclamation",
+    "title": "Emancipation Proclamation takes effect",
+    "category": "historical", "subtype": "law", "viz_mode": "map",
+    "time": {"year": 1863, "month": 1, "day": 1, "precision": "day"},
+    "place": {"lat": 38.9072, "lon": -77.0369, "region": "Washington, D.C., USA"},
+    "description": "President Abraham Lincoln's Emancipation Proclamation declared enslaved people in Confederate states to be free.",
+    "wiki": {"title": "Emancipation Proclamation", "url": "https://en.wikipedia.org/wiki/Emancipation_Proclamation"},
+    "source": "seed"
+  },
+  {
+    "id": "sci-xray-discovery",
+    "title": "Röntgen discovers X-rays",
+    "category": "scientific", "subtype": "discovery", "viz_mode": "map",
+    "time": {"year": 1895, "month": 11, "day": 8, "precision": "day"},
+    "place": {"lat": 49.7913, "lon": 9.9534, "region": "Würzburg, Germany"},
+    "description": "Wilhelm Röntgen discovered a new form of electromagnetic radiation, which he called X-rays, earning the first Nobel Prize in Physics.",
+    "wiki": {"title": "Wilhelm Röntgen", "url": "https://en.wikipedia.org/wiki/Wilhelm_R%C3%B6ntgen"},
+    "source": "seed"
+  },
+  {
+    "id": "cult-lumiere-cinema",
+    "title": "First public film screening",
+    "category": "cultural", "subtype": "invention", "viz_mode": "map",
+    "time": {"year": 1895, "month": 12, "day": 28, "precision": "day"},
+    "place": {"lat": 48.8566, "lon": 2.3522, "region": "Paris, France"},
+    "description": "The Lumière brothers held the first commercial public screening of projected motion pictures at the Grand Café in Paris.",
+    "wiki": {"title": "Auguste and Louis Lumière", "url": "https://en.wikipedia.org/wiki/Auguste_and_Louis_Lumi%C3%A8re"},
+    "source": "seed"
+  },
+  {
+    "id": "sci-wright-flight",
+    "title": "First powered flight",
+    "category": "scientific", "subtype": "invention", "viz_mode": "map",
+    "time": {"year": 1903, "month": 12, "day": 17, "precision": "day"},
+    "place": {"lat": 36.0134, "lon": -75.6674, "region": "Kitty Hawk, North Carolina, USA"},
+    "description": "Orville and Wilbur Wright achieved the first sustained, controlled, powered flight of a heavier-than-air aircraft.",
+    "wiki": {"title": "Wright Flyer", "url": "https://en.wikipedia.org/wiki/Wright_Flyer"},
+    "source": "seed"
+  },
+  {
+    "id": "sci-einstein-special-relativity",
+    "title": "Einstein's special relativity",
+    "category": "scientific", "subtype": "discovery", "viz_mode": "map",
+    "time": {"year": 1905, "precision": "year"},
+    "place": {"lat": 46.9480, "lon": 7.4474, "region": "Bern, Switzerland"},
+    "description": "Albert Einstein published 'On the Electrodynamics of Moving Bodies,' introducing special relativity.",
+    "wiki": {"title": "Special relativity", "url": "https://en.wikipedia.org/wiki/Special_relativity"},
+    "source": "seed"
+  },
+  {
+    "id": "hist-franz-ferdinand",
+    "title": "Assassination of Archduke Franz Ferdinand",
+    "category": "historical", "subtype": "assassination", "viz_mode": "map",
+    "time": {"year": 1914, "month": 6, "day": 28, "precision": "day"},
+    "place": {"lat": 43.8563, "lon": 18.4131, "region": "Sarajevo"},
+    "description": "The assassination of Archduke Franz Ferdinand of Austria triggered the July Crisis leading to World War I.",
+    "wiki": {"title": "Assassination of Archduke Franz Ferdinand", "url": "https://en.wikipedia.org/wiki/Assassination_of_Archduke_Franz_Ferdinand"},
+    "source": "seed"
+  },
+  {
+    "id": "sci-einstein-general-relativity",
+    "title": "Einstein's general relativity",
+    "category": "scientific", "subtype": "discovery", "viz_mode": "map",
+    "time": {"year": 1915, "month": 11, "precision": "month"},
+    "place": {"lat": 52.5200, "lon": 13.4050, "region": "Berlin, Germany"},
+    "description": "Albert Einstein presented the field equations of general relativity to the Prussian Academy of Sciences.",
+    "wiki": {"title": "General relativity", "url": "https://en.wikipedia.org/wiki/General_relativity"},
+    "source": "seed"
+  },
+  {
+    "id": "hist-wwi-armistice",
+    "title": "Armistice ends World War I",
+    "category": "historical", "subtype": "treaty", "viz_mode": "map",
+    "time": {"year": 1918, "month": 11, "day": 11, "precision": "day"},
+    "place": {"lat": 49.4167, "lon": 2.7833, "region": "Compiègne, France"},
+    "description": "The Armistice of 11 November 1918 ended fighting on the Western Front, effectively concluding World War I.",
+    "wiki": {"title": "Armistice of 11 November 1918", "url": "https://en.wikipedia.org/wiki/Armistice_of_11_November_1918"},
+    "source": "seed"
+  },
+  {
+    "id": "sci-penicillin",
+    "title": "Fleming discovers penicillin",
+    "category": "scientific", "subtype": "discovery", "viz_mode": "map",
+    "time": {"year": 1928, "month": 9, "precision": "month"},
+    "place": {"lat": 51.5074, "lon": -0.1278, "region": "London, England"},
+    "description": "Alexander Fleming noticed a mold, Penicillium, killing bacteria in a petri dish, leading to the development of the first antibiotic.",
+    "wiki": {"title": "Alexander Fleming", "url": "https://en.wikipedia.org/wiki/Alexander_Fleming"},
+    "source": "seed"
+  },
+  {
+    "id": "hist-pearl-harbor",
+    "title": "Attack on Pearl Harbor",
+    "category": "historical", "subtype": "battle", "viz_mode": "map",
+    "time": {"year": 1941, "month": 12, "day": 7, "precision": "day"},
+    "place": {"lat": 21.3469, "lon": -157.9797, "region": "Pearl Harbor, Hawaii"},
+    "description": "Japan's surprise attack on the US Pacific Fleet at Pearl Harbor brought the United States into World War II.",
+    "wiki": {"title": "Attack on Pearl Harbor", "url": "https://en.wikipedia.org/wiki/Attack_on_Pearl_Harbor"},
+    "source": "seed"
+  },
+  {
+    "id": "sci-chicago-pile",
+    "title": "First self-sustaining nuclear chain reaction",
+    "category": "scientific", "subtype": "discovery", "viz_mode": "map",
+    "time": {"year": 1942, "month": 12, "day": 2, "precision": "day"},
+    "place": {"lat": 41.7943, "lon": -87.6017, "region": "Chicago, USA"},
+    "description": "Enrico Fermi's team achieved the first controlled, self-sustaining nuclear chain reaction beneath the University of Chicago's Stagg Field.",
+    "wiki": {"title": "Chicago Pile-1", "url": "https://en.wikipedia.org/wiki/Chicago_Pile-1"},
+    "source": "seed"
+  },
+  {
+    "id": "hist-dday",
+    "title": "D-Day landings in Normandy",
+    "category": "historical", "subtype": "battle", "viz_mode": "map",
+    "time": {"year": 1944, "month": 6, "day": 6, "precision": "day"},
+    "place": {"lat": 49.3400, "lon": -0.6300, "region": "Normandy, France"},
+    "description": "Allied forces launched the largest seaborne invasion in history, opening the Western Front against Nazi Germany.",
+    "wiki": {"title": "Normandy landings", "url": "https://en.wikipedia.org/wiki/Normandy_landings"},
+    "source": "seed"
+  },
+  {
+    "id": "hist-hiroshima",
+    "title": "Atomic bombing of Hiroshima",
+    "category": "historical", "subtype": "disaster", "viz_mode": "map",
+    "time": {"year": 1945, "month": 8, "day": 6, "precision": "day"},
+    "place": {"lat": 34.3853, "lon": 132.4553, "region": "Hiroshima, Japan"},
+    "description": "The United States dropped the first atomic bomb used in war on Hiroshima, killing tens of thousands and hastening Japan's surrender.",
+    "wiki": {"title": "Atomic bombings of Hiroshima and Nagasaki", "url": "https://en.wikipedia.org/wiki/Atomic_bombings_of_Hiroshima_and_Nagasaki"},
+    "source": "seed"
+  },
+  {
+    "id": "hist-wwii-end",
+    "title": "Japan formally surrenders, ending World War II",
+    "category": "historical", "subtype": "treaty", "viz_mode": "map",
+    "time": {"year": 1945, "month": 9, "day": 2, "precision": "day"},
+    "place": {"lat": 35.4437, "lon": 139.6380, "region": "Tokyo Bay, Japan"},
+    "description": "Japan's formal surrender aboard the USS Missouri in Tokyo Bay ended the Second World War.",
+    "wiki": {"title": "Surrender of Japan", "url": "https://en.wikipedia.org/wiki/Surrender_of_Japan"},
+    "source": "seed"
+  },
+  {
+    "id": "sci-dna-structure",
+    "title": "Watson and Crick describe DNA's double helix",
+    "category": "scientific", "subtype": "discovery", "viz_mode": "map",
+    "time": {"year": 1953, "month": 4, "day": 25, "precision": "day"},
+    "place": {"lat": 52.2043, "lon": 0.1218, "region": "Cambridge, England"},
+    "description": "James Watson and Francis Crick, building on Rosalind Franklin's X-ray data, published the double-helix structure of DNA in Nature.",
+    "wiki": {"title": "DNA", "url": "https://en.wikipedia.org/wiki/DNA"},
+    "source": "seed"
+  },
+  {
+    "id": "sci-gagarin-spaceflight",
+    "title": "First human spaceflight (Yuri Gagarin)",
+    "category": "scientific", "subtype": "spaceflight", "viz_mode": "map",
+    "time": {"year": 1961, "month": 4, "day": 12, "precision": "day"},
+    "place": {"lat": 45.9646, "lon": 63.3052, "region": "Baikonur Cosmodrome, Kazakhstan"},
+    "description": "Soviet cosmonaut Yuri Gagarin became the first human to journey into outer space aboard Vostok 1.",
+    "wiki": {"title": "Vostok 1", "url": "https://en.wikipedia.org/wiki/Vostok_1"},
+    "source": "seed"
+  },
+  {
+    "id": "sci-apollo-11",
+    "title": "Apollo 11 Moon landing",
+    "category": "scientific", "subtype": "spaceflight", "viz_mode": "map",
+    "time": {"year": 1969, "month": 7, "day": 20, "precision": "day"},
+    "place": {"lat": 28.5729, "lon": -80.6490, "region": "Kennedy Space Center, USA (launch site; landing on the Moon)"},
+    "description": "Neil Armstrong and Buzz Aldrin became the first humans to walk on the Moon; the mission launched from Kennedy Space Center.",
+    "wiki": {"title": "Apollo 11", "url": "https://en.wikipedia.org/wiki/Apollo_11"},
+    "source": "seed"
+  },
+  {
+    "id": "sci-www-invented",
+    "title": "Invention of the World Wide Web",
+    "category": "scientific", "subtype": "invention", "viz_mode": "map",
+    "time": {"year": 1989, "month": 3, "day": 12, "precision": "day"},
+    "place": {"lat": 46.2044, "lon": 6.1432, "region": "CERN, Geneva, Switzerland"},
+    "description": "Tim Berners-Lee submitted his proposal for an information management system at CERN, the origin of the World Wide Web.",
+    "wiki": {"title": "World Wide Web", "url": "https://en.wikipedia.org/wiki/World_Wide_Web"},
+    "source": "seed"
+  },
+  {
+    "id": "hist-berlin-wall-fall",
+    "title": "Fall of the Berlin Wall",
+    "category": "historical", "subtype": "politics", "viz_mode": "map",
+    "time": {"year": 1989, "month": 11, "day": 9, "precision": "day"},
+    "place": {"lat": 52.5163, "lon": 13.3777, "region": "Berlin, Germany"},
+    "description": "East German authorities opened the border crossings, and jubilant crowds began dismantling the Berlin Wall, symbolizing the end of the Cold War divide.",
+    "wiki": {"title": "Fall of the Berlin Wall", "url": "https://en.wikipedia.org/wiki/Fall_of_the_Berlin_Wall"},
+    "source": "seed"
+  },
+  {
+    "id": "sci-human-genome",
+    "title": "Human Genome Project completed",
+    "category": "scientific", "subtype": "discovery", "viz_mode": "map",
+    "time": {"year": 2003, "month": 4, "day": 14, "precision": "day"},
+    "place": {"lat": null, "lon": null, "region": "International collaboration"},
+    "description": "The international Human Genome Project announced completion of a essentially full sequence of the human genome.",
+    "wiki": {"title": "Human Genome Project", "url": "https://en.wikipedia.org/wiki/Human_Genome_Project"},
+    "source": "seed"
+  },
+  {
+    "id": "hist-sept-11",
+    "title": "September 11 attacks",
+    "category": "historical", "subtype": "disaster", "viz_mode": "map",
+    "time": {"year": 2001, "month": 9, "day": 11, "precision": "day"},
+    "place": {"lat": 40.7115, "lon": -74.0134, "region": "New York City, USA"},
+    "description": "Coordinated terrorist attacks destroyed the World Trade Center towers and struck the Pentagon, killing nearly 3,000 people.",
+    "wiki": {"title": "September 11 attacks", "url": "https://en.wikipedia.org/wiki/September_11_attacks"},
+    "source": "seed"
+  },
+  {
+    "id": "sci-ligo-gravitational-waves",
+    "title": "First direct detection of gravitational waves",
+    "category": "scientific", "subtype": "discovery", "viz_mode": "map",
+    "time": {"year": 2015, "month": 9, "day": 14, "precision": "day"},
+    "place": {"lat": 46.4744, "lon": -119.4079, "region": "LIGO Hanford, Washington, USA"},
+    "description": "The LIGO observatories directly detected gravitational waves from a binary black hole merger, confirming a key prediction of general relativity.",
+    "wiki": {"title": "First observation of gravitational waves", "url": "https://en.wikipedia.org/wiki/First_observation_of_gravitational_waves"},
+    "source": "seed"
+  },
+  {
+    "id": "sci-black-hole-image",
+    "title": "First image of a black hole",
+    "category": "scientific", "subtype": "discovery", "viz_mode": "map",
+    "time": {"year": 2019, "month": 4, "day": 10, "precision": "day"},
+    "place": {"lat": null, "lon": null, "region": "Event Horizon Telescope global collaboration"},
+    "description": "The Event Horizon Telescope collaboration released the first-ever direct image of a black hole's silhouette, at the center of galaxy M87.",
+    "wiki": {"title": "Event Horizon Telescope", "url": "https://en.wikipedia.org/wiki/Event_Horizon_Telescope"},
+    "source": "seed"
+  }
+]
