@@ -295,15 +295,16 @@ export class Timeline {
       const dxPx = x - this._dragStartX;
 
       if (this._dragButton === 2 || ev.shiftKey) {
-        // pan
+        // pan -- route through _clampWindow so a drag is floored at the present
+        // (loMa >= 0) exactly like the wheel/step paths; clamping only the high
+        // edge here let a drag toward "now" push loMa negative into empty
+        // "future" space.
         const span = this._dragStartWindow.hiMa - this._dragStartWindow.loMa;
         const deltaMa = -(dxPx / this._plotW()) * span;
-        let newLo = this._dragStartWindow.loMa + deltaMa;
-        let newHi = this._dragStartWindow.hiMa + deltaMa;
-        if (newHi > this.fullHiMa) {
-          const over = newHi - this.fullHiMa;
-          newHi -= over; newLo -= over;
-        }
+        const [newLo, newHi] = this._clampWindow(
+          this._dragStartWindow.loMa + deltaMa,
+          this._dragStartWindow.hiMa + deltaMa,
+        );
         this.loMa = newLo; this.hiMa = newHi;
         this._animToLo = newLo; this._animToHi = newHi; this._animActive = false;
         this._fireWindowChange();

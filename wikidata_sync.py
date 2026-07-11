@@ -136,9 +136,15 @@ CATEGORIES = {
         "place_path": "wdt:P495/wdt:P625",  # country of origin's centroid
         "sitelink_min": 60,
     },
+    # Use "literary work" (Q7725634), not "book" (Q571): Q571 is the
+    # physical/conceptual object, and individual novels/works are almost never
+    # instance-of it, so wdt:P31/wdt:P279* wd:Q571 returned only ~24 items --
+    # a de-facto empty category. Q7725634 is the class Wikidata actually uses
+    # for books/literary works; with sitelink_min 30 it returns ~950 in ~13s
+    # (feasibility-tested against WDQS, same as the others).
     "book": {
         "category": "cultural", "subtype": "book",
-        "class_qids": ["wd:Q571"], "date_prop": "wdt:P577",
+        "class_qids": ["wd:Q7725634"], "date_prop": "wdt:P577",
         "place_path": "wdt:P495/wdt:P625",
         "sitelink_min": 30,
     },
