@@ -179,6 +179,18 @@ def _parse_date(date_str: str) -> tuple[int | None, int | None, int | None]:
     if not m:
         return None, None, None
     year, month, day = int(m.group(1)), int(m.group(2)), int(m.group(3))
+    # WDQS serializes dates in XSD/ISO-8601 *astronomical* year numbering, which
+    # HAS a year zero: "-0062" is 63 BCE, not 62 BCE (astronomical year 0 = 1
+    # BCE, -1 = 2 BCE, ...). The rest of this app -- the hand-curated seed events
+    # and the historical-basemaps border snapshots -- uses *historical* numbering
+    # with no year zero, where a negative year N renders directly as "N BCE"
+    # (events.js / bordersLayer.js both do `${-year} BCE`). Convert astronomical
+    # -> historical here so one BCE-display convention holds everywhere:
+    # 1 BCE (astro 0) -> -1, 63 BCE (astro -62) -> -63. Without this, every
+    # BCE Wikidata event rendered one year too recent (e.g. Augustus's 63 BCE
+    # birth showed as "62 BCE").
+    if year <= 0:
+        year -= 1
     if month == 0:
         month = None
     if day == 0:
