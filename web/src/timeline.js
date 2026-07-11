@@ -21,6 +21,24 @@ const MARKER_SPAN_THRESHOLD_MA = 0.05;   // ~50,000 years
 export const MAP_HANDOFF_SPAN_MA = 0.01; // ~10,000 years: mode auto-switches to map below this
 const MAX_MARKERS_DRAWN = 400; // hard cap on per-frame draw calls regardless of dataset size
 
+const ANIM_MS = 260; // duration of eased zoom/pan/drill/reset transitions
+const OVERVIEW_H = 10; // height (px) of the "you are here" minimap strip
+
+function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+function lerp(a, b, t) { return a + (b - a) * t; }
+
+/** Human-friendly "how much time is on screen" label, e.g. "~500 years",
+ * "~2.3 Ma", "~380 million years". Mirrors formatMa's unit choices so the
+ * span readout and the playhead label read consistently. */
+function formatSpan(spanMa) {
+  const years = spanMa * 1_000_000;
+  if (years < 2) return "< 1 year";
+  if (years < 1_000) return `~${Math.round(years)} years`;
+  if (years < 1_000_000) return `~${Math.round(years / 1000).toLocaleString()}k years`;
+  if (spanMa < 1000) return `~${spanMa >= 100 ? Math.round(spanMa) : spanMa.toFixed(1)} Ma`;
+  return `~${(spanMa / 1000).toFixed(2)} Ga`;
+}
+
 export class Timeline {
   constructor(canvas, periods) {
     this.canvas = canvas;
@@ -33,6 +51,13 @@ export class Timeline {
     this.events = [];
     this.currentMa = this.fullHiMa;
 
+    // Eased-transition state: render() lerps loMa/hiMa toward these targets
+    // over ANIM_MS instead of jump-cutting, so zoom/pan/drill/reset all feel
+    // like one continuous motion instead of a series of abrupt redraws.
+    this._animFromLo = this.loMa; this._animFromHi = this.hiMa;
+    this._animToLo = this.loMa; this._animToHi = this.hiMa;
+    this._animStartT = 0; this._animActive = false;
+
     this._onSeek = null;
     this._onWindowChange = null;
     this._onHoverEvent = null;
@@ -43,6 +68,7 @@ export class Timeline {
     this._dragStartWindow = null;
     this._lastClickTime = 0;
     this._markerHitboxes = []; // {x, y, r, event}
+    this._hoveringOverview = false;
 
     this._bindEvents();
     this._resizeObserver = new ResizeObserver(() => this._syncCanvasSize());
@@ -83,12 +109,27 @@ export class Timeline {
   }
 
   getWindow() { return { loMa: this.loMa, hiMa: this.hiMa }; }
+  currentSpanMa() { return this.hiMa - this.loMa; }
 
   reset() {
     this.zoomStack = [];
-    this.loMa = 0;
-    this.hiMa = this.fullHiMa;
-    this._fireWindowChange();
+    this._animateTo(0, this.fullHiMa);
+  }
+
+  /** Jump straight to a "recent history" view centered on the present, at a
+   * span comfortably inside the map-handoff threshold -- a direct answer to
+   * "how do I get to today" without needing to land a precise scroll-zoom-to-
+   * cursor gesture (zoom-to-cursor converges near, not exactly at, whatever
+   * point was under the pointer, same as any map app's zoom-to-cursor). */
+  jumpToPresent() {
+    this.zoomStack.push({ loMa: this.loMa, hiMa: this.hiMa });
+    this._animateTo(0, MAP_HANDOFF_SPAN_MA * 0.6);
+  }
+
+  /** Zoom in/out by `factor` centered on the current playhead -- used by the
+   * +/- buttons (mouse-wheel zoom-to-cursor still works independently). */
+  zoomStep(factor) {
+    this.zoomAt(factor, this.currentMa);
   }
 
   _syncCanvasSize() {
@@ -104,7 +145,8 @@ export class Timeline {
   // ── coordinate mapping ──────────────────────────────────────────────────
   _padX() { return 10; }
   _plotW() { return Math.max(1, this._cssW - this._padX() * 2); }
-  _barY() { return 36; }
+  _overviewY() { return 4; }
+  _barY() { return this._overviewY() + OVERVIEW_H + 10; }
   _barH() { return 20; }
 
   maToX(ma) {
@@ -117,6 +159,16 @@ export class Timeline {
     return this.hiMa - frac * (this.hiMa - this.loMa);
   }
 
+  /** Full-range (not viewport-relative) mapping, used by the overview strip. */
+  _overviewMaToX(ma) {
+    const frac = (this.fullHiMa - ma) / this.fullHiMa;
+    return this._padX() + frac * this._plotW();
+  }
+  _overviewXToMa(x) {
+    const frac = (x - this._padX()) / this._plotW();
+    return this.fullHiMa * (1 - frac);
+  }
+
   // ── zoom / pan / drill ──────────────────────────────────────────────────
   zoomAt(factor, pivotMa) {
     let newLo = pivotMa - (pivotMa - this.loMa) / factor;
@@ -124,35 +176,42 @@ export class Timeline {
     if (newHi - newLo < MIN_SPAN_MA) return;
     if (newHi > this.fullHiMa) newHi = this.fullHiMa;
     newLo = Math.max(newLo, -1e12); // allow future dates in principle; no hard floor
-    this.loMa = newLo;
-    this.hiMa = newHi;
-    this._fireWindowChange();
+    this._animateTo(newLo, newHi);
   }
 
   panByMa(deltaMa) {
-    this.loMa += deltaMa;
-    this.hiMa += deltaMa;
-    if (this.hiMa > this.fullHiMa) {
-      const overshoot = this.hiMa - this.fullHiMa;
-      this.hiMa -= overshoot;
-      this.loMa -= overshoot;
+    let newLo = this.loMa + deltaMa;
+    let newHi = this.hiMa + deltaMa;
+    if (newHi > this.fullHiMa) {
+      const overshoot = newHi - this.fullHiMa;
+      newHi -= overshoot;
+      newLo -= overshoot;
     }
+    // Panning is a direct-manipulation drag, not a discrete action -- follow
+    // the pointer immediately rather than easing (easing here would make the
+    // view visibly lag behind the mouse).
+    this.loMa = newLo;
+    this.hiMa = newHi;
+    this._animToLo = newLo; this._animToHi = newHi; this._animActive = false;
     this._fireWindowChange();
   }
 
   drillInto(period) {
     this.zoomStack.push({ loMa: this.loMa, hiMa: this.hiMa });
-    this.loMa = period.end;
-    this.hiMa = period.start;
-    this._fireWindowChange();
+    this._animateTo(period.end, period.start);
   }
 
   back() {
     const prev = this.zoomStack.pop();
     if (!prev) { this.reset(); return; }
-    this.loMa = prev.loMa;
-    this.hiMa = prev.hiMa;
-    this._fireWindowChange();
+    this._animateTo(prev.loMa, prev.hiMa);
+  }
+
+  _animateTo(lo, hi) {
+    this._animFromLo = this.loMa; this._animFromHi = this.hiMa;
+    this._animToLo = lo; this._animToHi = hi;
+    this._animStartT = performance.now();
+    this._animActive = true;
   }
 
   _fireWindowChange() {
@@ -175,6 +234,19 @@ export class Timeline {
       const rect = c.getBoundingClientRect();
       const x = ev.clientX - rect.left;
       const y = ev.clientY - rect.top;
+
+      // Overview ("you are here") strip: click-to-recenter at the current
+      // zoom span, a quick way to jump elsewhere without losing your zoom level.
+      if (y >= this._overviewY() && y <= this._overviewY() + OVERVIEW_H) {
+        const centerMa = this._overviewXToMa(x);
+        const span = this.currentSpanMa();
+        let newLo = centerMa - span / 2, newHi = centerMa + span / 2;
+        if (newHi > this.fullHiMa) { newLo -= newHi - this.fullHiMa; newHi = this.fullHiMa; }
+        if (newLo < 0) { newHi -= newLo; newLo = 0; }
+        this._animateTo(newLo, newHi);
+        return;
+      }
+
       const now = performance.now();
       const isDoubleClick = now - this._lastClickTime < 320;
       this._lastClickTime = now;
@@ -200,9 +272,10 @@ export class Timeline {
 
     window.addEventListener("mousemove", (ev) => {
       if (!this._dragging) {
-        // hover detection for markers
         const rect = c.getBoundingClientRect();
         const x = ev.clientX - rect.left, y = ev.clientY - rect.top;
+        this._hoveringOverview = y >= this._overviewY() && y <= this._overviewY() + OVERVIEW_H;
+        // hover detection for markers
         const hit = this._markerHitboxes.find((h) => Math.hypot(h.x - x, h.y - y) <= h.r + 2);
         if (this._onHoverEvent) this._onHoverEvent(hit ? hit.event : null);
         return;
@@ -215,12 +288,14 @@ export class Timeline {
         // pan
         const span = this._dragStartWindow.hiMa - this._dragStartWindow.loMa;
         const deltaMa = -(dxPx / this._plotW()) * span;
-        this.loMa = this._dragStartWindow.loMa + deltaMa;
-        this.hiMa = this._dragStartWindow.hiMa + deltaMa;
-        if (this.hiMa > this.fullHiMa) {
-          const over = this.hiMa - this.fullHiMa;
-          this.hiMa -= over; this.loMa -= over;
+        let newLo = this._dragStartWindow.loMa + deltaMa;
+        let newHi = this._dragStartWindow.hiMa + deltaMa;
+        if (newHi > this.fullHiMa) {
+          const over = newHi - this.fullHiMa;
+          newHi -= over; newLo -= over;
         }
+        this.loMa = newLo; this.hiMa = newHi;
+        this._animToLo = newLo; this._animToHi = newHi; this._animActive = false;
         this._fireWindowChange();
       } else {
         const ma = this.xToMa(x);
@@ -236,6 +311,17 @@ export class Timeline {
   // ── drawing ──────────────────────────────────────────────────────────────
   render(currentMa) {
     if (currentMa != null) this.currentMa = currentMa;
+
+    // Advance the eased zoom/pan/drill/reset transition, if one is in flight.
+    if (this._animActive) {
+      const t = Math.min(1, (performance.now() - this._animStartT) / ANIM_MS);
+      const eased = easeOutCubic(t);
+      this.loMa = lerp(this._animFromLo, this._animToLo, eased);
+      this.hiMa = lerp(this._animFromHi, this._animToHi, eased);
+      if (t >= 1) this._animActive = false;
+      this._fireWindowChange();
+    }
+
     const ctx = this.ctx;
     const w = this._cssW, h = this._cssH;
     ctx.clearRect(0, 0, w, h);
@@ -301,15 +387,18 @@ export class Timeline {
       }
     }
 
-    // playhead cursor
+    // playhead cursor -- the vertical line runs the full height (crossing the
+    // overview strip too, showing at a glance where "now" sits in both the
+    // zoomed-in view and the full-range minimap); the arrowhead marker sits
+    // in the gap between the overview strip and the period bar.
     const cx = this.maToX(this.currentMa);
     ctx.strokeStyle = "#ffd54e";
     ctx.lineWidth = 2;
-    ctx.beginPath(); ctx.moveTo(cx, 4); ctx.lineTo(cx, h - 4); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx, this._overviewY()); ctx.lineTo(cx, h - 4); ctx.stroke();
     ctx.lineWidth = 1;
     ctx.fillStyle = "#ffd54e";
     ctx.beginPath();
-    ctx.moveTo(cx, 4); ctx.lineTo(cx - 6, 14); ctx.lineTo(cx + 6, 14); ctx.closePath();
+    ctx.moveTo(cx, barY - 2); ctx.lineTo(cx - 5, barY - 9); ctx.lineTo(cx + 5, barY - 9); ctx.closePath();
     ctx.fill();
 
     ctx.font = "12px Segoe UI, sans-serif";
@@ -318,5 +407,39 @@ export class Timeline {
     let lx = cx - lw / 2;
     lx = Math.max(2, Math.min(w - lw - 2, lx));
     ctx.fillText(label, lx, h - 6);
+
+    // zoom-span readout, right-aligned on the same baseline as the playhead label
+    ctx.fillStyle = "#585e7a";
+    ctx.font = "11px Segoe UI, sans-serif";
+    const spanLabel = `Showing ${formatSpan(span)}`;
+    ctx.fillText(spanLabel, w - ix - ctx.measureText(spanLabel).width, h - 6);
+
+    this._drawOverview(ctx, w);
+  }
+
+  /** Slim "you are here" strip above the main bar: the full 0..fullHiMa range
+   * in miniature, with the current viewport highlighted, so zooming in deep
+   * never leaves you wondering where in all of history you actually are.
+   * Click-to-recenter is wired in _bindEvents(). */
+  _drawOverview(ctx, w) {
+    const oy = this._overviewY(), ix = this._padX(), iw = this._plotW();
+    ctx.fillStyle = "#181c3a";
+    ctx.fillRect(ix, oy, iw, OVERVIEW_H);
+
+    for (const p of this.periods) {
+      const px = this._overviewMaToX(p.start);
+      const pxEnd = this._overviewMaToX(p.end);
+      ctx.fillStyle = `rgb(${p.color[0]},${p.color[1]},${p.color[2]})`;
+      ctx.fillRect(px, oy, Math.max(1, pxEnd - px), OVERVIEW_H);
+    }
+
+    const vx0 = clampPx(this._overviewMaToX(Math.min(this.hiMa, this.fullHiMa)), ix, ix + iw);
+    const vx1 = clampPx(this._overviewMaToX(Math.max(this.loMa, 0)), ix, ix + iw);
+    const vw = Math.max(2, vx1 - vx0);
+    ctx.strokeStyle = this._hoveringOverview ? "#ffffff" : "#ffd54e";
+    ctx.lineWidth = this._hoveringOverview ? 2 : 1.5;
+    ctx.strokeRect(vx0, oy - 1, vw, OVERVIEW_H + 2);
   }
 }
+
+function clampPx(v, lo, hi) { return v < lo ? lo : (v > hi ? hi : v); }

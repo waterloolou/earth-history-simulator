@@ -28,7 +28,7 @@
     <span id="time-readout">4300 Ma ago</span>
     <span id="period-readout"></span>
   </div>
-  <div id="header-hint">scroll timeline = zoom &middot; drag timeline = scrub &middot; shift-drag = pan &middot; double-click period = drill in &middot; drag globe = rotate</div>
+  <div id="header-hint">scroll or +/&minus; = zoom &middot; drag timeline = scrub &middot; shift-drag = pan &middot; double-click period = drill in &middot; drag globe = rotate</div>
 </header>
 
 <main id="app-main">
@@ -72,8 +72,13 @@
 
 <footer id="timeline-panel">
   <canvas id="timeline-canvas"></canvas>
-  <button id="timeline-back-btn" class="hidden">&lsaquo; Back</button>
-  <button id="timeline-reset-btn">Reset</button>
+  <button id="timeline-back-btn" class="hidden" title="Back to previous zoom level">&lsaquo; Back</button>
+  <div id="timeline-zoom-controls">
+    <button id="timeline-zoom-out-btn" title="Zoom out">&minus;</button>
+    <button id="timeline-zoom-in-btn" title="Zoom in">+</button>
+    <button id="timeline-today-btn" title="Jump to recent history">Today</button>
+  </div>
+  <button id="timeline-reset-btn" title="Reset to the full 4.5-billion-year view">Reset</button>
 </footer>
 
 <script type="module" src="src/main.js"></script>

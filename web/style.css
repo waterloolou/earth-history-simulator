@@ -97,13 +97,21 @@ body { display: flex; flex-direction: column; }
 }
 #timeline-canvas { width: 100%; height: 100%; display: block; cursor: grab; }
 #timeline-canvas:active { cursor: grabbing; }
-#timeline-back-btn, #timeline-reset-btn {
-  position: absolute; top: 8px; background: var(--panel2); color: var(--lgray);
+#timeline-back-btn, #timeline-reset-btn, #timeline-zoom-controls button {
+  background: var(--panel2); color: var(--lgray);
   border: 1px solid var(--border2); border-radius: 6px; padding: 4px 10px; cursor: pointer;
   font-size: 12px; font-family: var(--font);
 }
+#timeline-back-btn, #timeline-reset-btn { position: absolute; top: 8px; }
 #timeline-back-btn { left: 8px; }
 #timeline-back-btn.hidden { display: none; }
+#timeline-reset-btn { right: 8px; }
+#timeline-zoom-controls {
+  position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
+  display: flex; gap: 4px;
+}
+#timeline-zoom-controls button { padding: 4px 12px; font-size: 14px; line-height: 1; }
+#timeline-today-btn { font-size: 12px !important; }
 #timeline-reset-btn { right: 8px; }
 
 /* Leaflet popup styling to match the app's dark theme */

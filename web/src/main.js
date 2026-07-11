@@ -52,6 +52,9 @@ function cacheEls() {
   els.timelineCanvas = q("timeline-canvas");
   els.timelineBackBtn = q("timeline-back-btn");
   els.timelineResetBtn = q("timeline-reset-btn");
+  els.timelineZoomInBtn = q("timeline-zoom-in-btn");
+  els.timelineZoomOutBtn = q("timeline-zoom-out-btn");
+  els.timelineTodayBtn = q("timeline-today-btn");
   els.timeReadout = q("time-readout");
   els.periodReadout = q("period-readout");
   els.periodBadge = q("period-badge");
@@ -193,11 +196,19 @@ function bindControls() {
     currentMa = timeline.fullHiMa;
   });
   els.timelineBackBtn.addEventListener("click", () => timeline.back());
+  els.timelineZoomInBtn.addEventListener("click", () => timeline.zoomStep(1.6));
+  els.timelineZoomOutBtn.addEventListener("click", () => timeline.zoomStep(1 / 1.6));
+  els.timelineTodayBtn.addEventListener("click", () => {
+    timeline.jumpToPresent();
+    currentMa = 0;
+  });
 
   window.addEventListener("keydown", (ev) => {
     if (ev.code === "Space") { paused = !paused; ev.preventDefault(); }
     else if (ev.code === "ArrowRight") speedIdx = Math.min(speedIdx + 1, SPEEDS.length - 1);
     else if (ev.code === "ArrowLeft") speedIdx = Math.max(speedIdx - 1, 0);
+    else if (ev.code === "Equal" || ev.code === "NumpadAdd") timeline.zoomStep(1.6);
+    else if (ev.code === "Minus" || ev.code === "NumpadSubtract") timeline.zoomStep(1 / 1.6);
     else if (ev.code === "KeyR") { timeline.reset(); currentMa = timeline.fullHiMa; }
     else if (ev.code === "KeyW") {
       const mode = MODE_BY_ID[activeModeId];
