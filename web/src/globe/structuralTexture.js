@@ -103,7 +103,7 @@ function splatPolyRegion(accumulated, poly, w, h, aFrac, radius) {
   if (sw < 1 || sh < 1) return;
 
   const c = makeCanvas(sw, sh);
-  const ctx = c.getContext("2d");
+  const ctx = c.getContext("2d", { willReadFrequently: true });
   ctx.fillStyle = "#fff";
   ctx.beginPath();
   poly.forEach(([x, y], i) => {
@@ -212,7 +212,10 @@ function iceCapsFor(ma, h) {
 export class StructuralTextureBuilder {
   constructor() {
     this.canvas = makeCanvas(W_TEX, H_TEX);
-    this.ctx = this.canvas.getContext("2d");
+    // willReadFrequently: build() does several getImageData readbacks per frame
+    // (ocean base, composite re-read for noise) -- flag the context so the
+    // browser keeps it on a CPU-readback-friendly path instead of warning.
+    this.ctx = this.canvas.getContext("2d", { willReadFrequently: true });
   }
 
   /** Build the equirect texture for time `ma` (any value, 0-4500). Returns
