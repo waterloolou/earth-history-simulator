@@ -28,7 +28,7 @@ jobs:
         run: pip install numpy Pillow pygame
 
       - name: Export static data + plate-offset texture
-        run: python scripts/export_data.py --out web/public/data --textures-out web/public/textures
+        run: python scripts/export_data.py --out web/public/data
 
       - name: Assemble site
         run: |

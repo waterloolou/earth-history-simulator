@@ -1,13 +1,10 @@
 // shaders.js -- GLSL vertex/fragment shaders for the deep-time globe.
 //
-// Photographic-blend layers (Scotese keyframe crossfade, Blue Marble blend +
-// plate-drift displacement, cloud scroll) live here as cheap per-fragment
-// texture ops driven by scalar uniforms recomputed from `ma` every frame --
-// see PLAN.md's "deep-time globe mode" section for the rationale.
-//
-// Lighting formula (`color * (0.10 + 0.90*ndotl)`) and the rim-glow band
-// (`r^2 > 0.84`, blend strength 0.80) are a direct port of main.py's
-// _build_proj_tables()/_ortho_project() (main.py lines 1029-1098).
+// The globe now renders through ONE pipeline for the entire timeline (see
+// structuralTexture.js for why) -- this shader's job is just to map that
+// Canvas2D texture onto the sphere, blend a scrolling cloud layer over it, and
+// apply consistent Lambertian shading + atmospheric rim-glow so lighting never
+// changes character as you scrub through time.
 
 export const vertexShader = /* glsl */ `
 varying vec2 vUv;
@@ -25,23 +22,14 @@ precision highp float;
 varying vec2 vUv;
 varying vec3 vNormalView;
 
-uniform sampler2D uStructuralTex;   // procedural texture, meaningful only when uUseScotese ~ 0
-uniform sampler2D uScoteseLoTex;
-uniform sampler2D uScoteseHiTex;
-uniform float uScoteseFrac;         // blend factor between Lo/Hi keyframes
-uniform float uUseScotese;          // 0.0 (ma>750, use structural) or 1.0 (ma<=750)
-
-uniform sampler2D uBlueMarbleTex;
-uniform sampler2D uPlateOffsetTex;
-uniform float uBMWeight;            // 0..1, Blue Marble blend weight (ma<65)
-uniform float uPlateFrac;           // 0..1, plate-drift displacement fraction (ma/65)
+uniform sampler2D uStructuralTex;
 
 uniform sampler2D uCloudTex;
 uniform float uCloudOpacity;
-uniform float uCloudScrollU;        // 0..1 horizontal scroll offset
+uniform float uCloudScrollU;
 
-uniform vec3 uLightDir;             // fixed, screen/view-space light direction
-uniform float uLonOffset;           // initial texture longitude alignment
+uniform vec3 uLightDir;
+uniform float uLonOffset;
 
 vec2 wrapUv(vec2 uv) {
   return vec2(fract(uv.x), clamp(uv.y, 0.0, 1.0));
@@ -50,22 +38,7 @@ vec2 wrapUv(vec2 uv) {
 void main() {
   vec2 uv = wrapUv(vUv + vec2(uLonOffset, 0.0));
 
-  vec3 structuralColor = texture2D(uStructuralTex, uv).rgb;
-
-  vec3 scoteseLo = texture2D(uScoteseLoTex, uv).rgb;
-  vec3 scoteseHi = texture2D(uScoteseHiTex, uv).rgb;
-  vec3 scoteseColor = mix(scoteseLo, scoteseHi, uScoteseFrac);
-
-  vec3 baseColor = mix(structuralColor, scoteseColor, uUseScotese);
-
-  // Blue Marble blend with plate-drift displacement (ma < 65), only relevant
-  // when uUseScotese ~ 1 (Blue Marble only ever overlays the Scotese branch).
-  if (uBMWeight > 0.001) {
-    vec2 offset = (texture2D(uPlateOffsetTex, uv).rg - 0.5) / 4.0;
-    vec2 displacedUv = wrapUv(uv - offset * uPlateFrac);
-    vec3 bm = texture2D(uBlueMarbleTex, displacedUv).rgb;
-    baseColor = mix(baseColor, bm, uBMWeight);
-  }
+  vec3 baseColor = texture2D(uStructuralTex, uv).rgb;
 
   // Cloud layer, scrolled horizontally, blended toward white.
   vec2 cloudUv = wrapUv(uv + vec2(uCloudScrollU, 0.0));
@@ -73,10 +46,9 @@ void main() {
   float cloudAlpha = cloud * uCloudOpacity;
   baseColor = mix(baseColor, vec3(1.0), cloudAlpha);
 
-  // Lambertian shading -- direct port of _build_proj_tables()'s
-  // shade = 0.10 + 0.90*max(dot(n,l),0), computed in view space so the light
-  // stays screen-locked as the globe mesh rotates (a sphere's view-space
-  // normal field from a fixed orthographic camera is rotation-invariant).
+  // Lambertian shading, computed in view space so the light stays
+  // screen-locked as the globe mesh rotates (a sphere's view-space normal
+  // field from a fixed orthographic camera is rotation-invariant).
   vec3 n = normalize(vNormalView);
   float ndotl = max(dot(n, normalize(uLightDir)), 0.0);
   float shade = 0.10 + 0.90 * ndotl;

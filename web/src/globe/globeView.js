@@ -1,28 +1,22 @@
 // globeView.js -- Three.js scene, camera, sphere + shader material, texture
 // caching, and the custom drag-rotate/inertia controller for the deep-time
 // globe. See PLAN.md's "Deep-time globe mode" section for the architecture.
+//
+// Renders through ONE pipeline for the whole timeline (structuralTexture.js),
+// so this class only needs to cache/rebuild that one texture type plus the
+// (always-present) cloud overlay -- no more separate Scotese/Blue-Marble
+// texture sets or plate-drift displacement machinery.
 
 import * as THREE from "three";
 import { vertexShader, fragmentShader } from "./shaders.js";
 import { StructuralTextureBuilder } from "./structuralTexture.js";
 import { ContinentModel } from "./continents.js";
 
-const SCOTESE_MAS = [
-  0, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 66,
-  75, 80, 90, 100, 105, 110, 120, 130, 140, 150, 160, 170, 180,
-  200, 220, 240, 250, 260, 270, 280, 290, 300, 310, 320, 330, 340,
-  350, 360, 370, 380, 390, 400, 410, 420, 430, 440, 450, 460, 470,
-  480, 490, 500, 510, 520, 530, 540, 600, 690, 750,
-];
-const PT_MAX_MA = 750;
-
 const STRUCTURAL_CACHE_STEP = 3;
 const STRUCTURAL_CACHE_MAX = 60;
-const SCOTESE_CACHE_MAX = 24;
 
 const LIGHT_DIR = new THREE.Vector3(0.38, 0.52, 0.76).normalize();
 const SPIN_DECAY = 3.5; // matches main.py's exp(-3.5*dt)
-const DEG_PER_UNIT = 1; // degrees-per-pixel scale is computed from container size
 
 function makeDummyTexture(color = [8, 20, 40]) {
   const c = document.createElement("canvas");
@@ -58,15 +52,10 @@ export class GlobeView {
 
     this.structuralBuilder = new StructuralTextureBuilder();
     this._structuralCache = new Map(); // maBucket -> THREE.CanvasTexture
-    this._scoteseCache = new Map();    // exactMa -> THREE.Texture
-    this._scoteseLoader = new THREE.TextureLoader();
     this._lastStructuralBucket = null;
-    this._pendingScoteseLoads = new Set();
 
     this._continentModel = null;
-    this._blueMarbleTex = null;
     this._cloudTex = null;
-    this._plateOffsetTex = null;
 
     this._dummyTex = makeDummyTexture();
 
@@ -87,34 +76,16 @@ export class GlobeView {
   }
 
   async load() {
-    const [continentsData] = await Promise.all([
-      fetch(`${this.dataBase}/continents.json`).then((r) => r.json()),
-    ]);
+    const continentsData = await fetch(`${this.dataBase}/continents.json`).then((r) => r.json());
     this._continentModel = new ContinentModel(continentsData);
 
-    const loader = this._scoteseLoader;
-    const [bm, cloud, plateOffset] = await Promise.all([
-      loadTexture(loader, `${this.texturesBase}/blue_marble.jpg`),
-      loadTexture(loader, `${this.texturesBase}/cloud_layer.jpg`),
-      loadTexture(loader, `${this.texturesBase}/plate_offset.png`).catch(() => this._dummyTex),
-    ]);
-    for (const t of [bm, cloud, plateOffset]) {
-      t.wrapS = THREE.RepeatWrapping;
-      t.wrapT = THREE.ClampToEdgeWrapping;
-      // Sample raw byte values with NO sRGB->linear decode. The custom
-      // ShaderMaterial composites in sRGB byte-space (mirroring main.py's uint8
-      // pipeline: rgb = tex_bytes * shade) and never re-encodes on output, so
-      // tagging these sRGB gamma-darkens the whole globe to near-black. It would
-      // also corrupt plate_offset.png, which stores displacement DATA, not color.
-      // This matches the Scotese keyframe textures, which are already left raw.
-      t.colorSpace = THREE.NoColorSpace ?? THREE.LinearSRGBColorSpace;
-    }
-    this._blueMarbleTex = bm;
+    const loader = new THREE.TextureLoader();
+    const cloud = await loadTexture(loader, `${this.texturesBase}/cloud_layer.jpg`);
+    cloud.wrapS = THREE.RepeatWrapping;
+    cloud.wrapT = THREE.ClampToEdgeWrapping;
+    cloud.colorSpace = THREE.NoColorSpace ?? THREE.LinearSRGBColorSpace;
     this._cloudTex = cloud;
-    this._plateOffsetTex = plateOffset;
-    this.material.uniforms.uBlueMarbleTex.value = bm;
     this.material.uniforms.uCloudTex.value = cloud;
-    this.material.uniforms.uPlateOffsetTex.value = plateOffset;
   }
 
   _buildGlobeMesh() {
@@ -122,14 +93,6 @@ export class GlobeView {
     this.material = new THREE.ShaderMaterial({
       uniforms: {
         uStructuralTex: { value: this._dummyTex },
-        uScoteseLoTex: { value: this._dummyTex },
-        uScoteseHiTex: { value: this._dummyTex },
-        uScoteseFrac: { value: 0 },
-        uUseScotese: { value: 0 },
-        uBlueMarbleTex: { value: this._dummyTex },
-        uPlateOffsetTex: { value: this._dummyTex },
-        uBMWeight: { value: 0 },
-        uPlateFrac: { value: 0 },
         uCloudTex: { value: this._dummyTex },
         uCloudOpacity: { value: 0.5 },
         uCloudScrollU: { value: 0 },
@@ -249,39 +212,6 @@ export class GlobeView {
     }
   }
 
-  // ── texture selection for a given Ma ─────────────────────────────────────
-  _scoteseFor(ma) {
-    if (ma > PT_MAX_MA) return null;
-    let lo = SCOTESE_MAS[0], hi = SCOTESE_MAS[SCOTESE_MAS.length - 1];
-    for (const m of SCOTESE_MAS) if (m <= ma) lo = m;
-    for (let i = SCOTESE_MAS.length - 1; i >= 0; i--) if (SCOTESE_MAS[i] >= ma) hi = SCOTESE_MAS[i];
-    return { lo, hi, frac: hi === lo ? 0 : (ma - lo) / (hi - lo) };
-  }
-
-  _getScoteseTexture(maKey) {
-    if (this._scoteseCache.has(maKey)) return this._scoteseCache.get(maKey);
-    if (!this._pendingScoteseLoads.has(maKey)) {
-      this._pendingScoteseLoads.add(maKey);
-      this._scoteseLoader.load(
-        `${this.texturesBase}/scotese/${maKey}.jpg`,
-        (tex) => {
-          tex.wrapS = THREE.RepeatWrapping;
-          tex.wrapT = THREE.ClampToEdgeWrapping;
-          this._scoteseCache.set(maKey, tex);
-          if (this._scoteseCache.size > SCOTESE_CACHE_MAX) {
-            const oldestKey = this._scoteseCache.keys().next().value;
-            this._scoteseCache.get(oldestKey)?.dispose();
-            this._scoteseCache.delete(oldestKey);
-          }
-          this._pendingScoteseLoads.delete(maKey);
-        },
-        undefined,
-        () => this._pendingScoteseLoads.delete(maKey)
-      );
-    }
-    return null; // not yet loaded -- caller keeps using whatever was last bound
-  }
-
   _getStructuralTexture(ma) {
     const bucket = Math.floor(ma / STRUCTURAL_CACHE_STEP) * STRUCTURAL_CACHE_STEP;
     if (this._structuralCache.has(bucket)) return this._structuralCache.get(bucket);
@@ -293,6 +223,7 @@ export class GlobeView {
     const tex = new THREE.CanvasTexture(copy);
     tex.wrapS = THREE.RepeatWrapping;
     tex.wrapT = THREE.ClampToEdgeWrapping;
+    tex.colorSpace = THREE.NoColorSpace ?? THREE.LinearSRGBColorSpace;
     tex.needsUpdate = true;
     this._structuralCache.set(bucket, tex);
     if (this._structuralCache.size > STRUCTURAL_CACHE_MAX) {
@@ -308,41 +239,22 @@ export class GlobeView {
   setMa(ma) {
     const u = this.material.uniforms;
 
-    if (ma > PT_MAX_MA) {
-      u.uUseScotese.value = 0;
-      const bucket = Math.floor(ma / STRUCTURAL_CACHE_STEP) * STRUCTURAL_CACHE_STEP;
-      if (bucket !== this._lastStructuralBucket) {
-        const tex = this._getStructuralTexture(ma);
-        if (tex) { u.uStructuralTex.value = tex; this._lastStructuralBucket = bucket; }
-      }
-    } else {
-      u.uUseScotese.value = 1;
-      const { lo, hi, frac } = this._scoteseFor(ma);
-      const loTex = this._getScoteseTexture(lo);
-      const hiTex = lo === hi ? loTex : this._getScoteseTexture(hi);
-      if (loTex) u.uScoteseLoTex.value = loTex;
-      if (hiTex) u.uScoteseHiTex.value = hiTex;
-      u.uScoteseFrac.value = frac;
+    const bucket = Math.floor(ma / STRUCTURAL_CACHE_STEP) * STRUCTURAL_CACHE_STEP;
+    if (bucket !== this._lastStructuralBucket) {
+      const tex = this._getStructuralTexture(ma);
+      if (tex) { u.uStructuralTex.value = tex; this._lastStructuralBucket = bucket; }
     }
 
-    // Blue Marble blend (ma < 65)
-    if (ma < 65 && this._blueMarbleTex) {
-      const frac = ma / 65.0;
-      const smooth = frac * frac * (3.0 - 2.0 * frac);
-      u.uBMWeight.value = Math.max(0, 1.0 - smooth);
-      u.uPlateFrac.value = Math.max(0, Math.min(1, frac));
-    } else {
-      u.uBMWeight.value = 0;
-    }
-
-    // Cloud opacity per era (matches main.py's cloud_opac branches)
+    // Cloud opacity per era (matches main.py's cloud_opac branches) -- kept
+    // as the one atmospheric element that varies with era, tying the whole
+    // timeline together visually rather than signaling a rendering-style switch.
     let cloudOpac;
     if (ma >= 635 && ma <= 720) cloudOpac = 0.18;
     else if (ma >= 2050 && ma <= 2400) cloudOpac = 0.20;
     else if (ma >= 435 && ma <= 450) cloudOpac = 0.28;
     else if (ma >= 260 && ma <= 360) cloudOpac = 0.30;
     else if (ma < 2.6) cloudOpac = 0.38;
-    else if (ma < 65 && u.uBMWeight.value > 0) cloudOpac = Math.max(0.48, u.uBMWeight.value * 0.80);
+    else if (ma < 65) cloudOpac = 0.50;
     else if (ma < 300) cloudOpac = 0.55;
     else if (ma < 1000) cloudOpac = 0.58;
     else cloudOpac = 0.63;

@@ -1,27 +1,30 @@
-// structuralTexture.js -- Canvas2D procedural equirect texture builder, ONLY
-// used for ma > 750 (deep Precambrian, before Scotese/PALEOMAP coverage begins).
+// structuralTexture.js -- Canvas2D procedural equirect texture builder.
 //
-// Why only ma > 750: in main.py's _make_equirect_tex(), the Scotese texture
-// (when available, ma <= 750) fully REPLACES the procedurally-drawn RGB
-// (main.py line 958: `raw[:, :, :3] = paleo`) -- so every procedural step
-// (polygon/blob continents, mountains, ice caps, terrain noise) is only ever
-// visible for ma > 750, where Scotese has no coverage. Porting that dead code
-// path for ma <= 750 would be wasted work producing an identical final image
-// (Scotese/Blue Marble/clouds, handled entirely in the GLSL layer -- see
-// shaders.js) to what a "faithful" but pointless port would produce, so this
-// module only implements the ma > 750 branch.
-//
-// Matches main.py's Gaussian-blob-splatting branch (lines 843-882), the
-// Huronian ice cap (the only ice-cap window with ma > 750, lines 907-913),
-// and the deep-Precambrian terrain-noise/depth-dimming enhancement
-// (lines 960-984). The Neoproterozoic/Ordovician/Carboniferous-Permian/
-// Quaternary ice caps and the ma<=750 polygon-draw branch are intentionally
-// omitted -- they are always overwritten by Scotese in the reference app.
+// Unified renderer used for the ENTIRE timeline (0-4500 Ma), not just the deep
+// past. Earlier versions of this app switched between three visually distinct
+// rendering styles as you scrubbed through time (procedural blob continents,
+// then real Scotese/PALEOMAP paleogeography photos, then NASA Blue Marble
+// satellite imagery) -- accurate to the original pygame app, but it read as
+// three different apps stitched together. This version always renders through
+// the same illustrated-biome-map pipeline (continent shapes -> biome color by
+// latitude/era -> mountains -> ice caps -> terrain texture), so the ONLY thing
+// that changes continuously across the whole timeline is the underlying
+// continent shape data (blob-splatted for deep time where shapes are genuinely
+// just an artist's approximation, real Natural Earth polygons for 0/65 Ma,
+// hand-authored polygons for the keyframes between) and how much blur/noise is
+// applied (more for deep time, where the "fuzziness" honestly reflects how
+// little is actually known about exact coastlines that far back; down to a
+// light touch for the present day, where real coastlines stay crisp).
 
 import { oceanPair, biomeColor } from "./biome.js";
 import { drawMountains } from "./mountains.js";
 
 const W_TEX = 720, H_TEX = 360;
+const ICE_BRIGHT = [255, 255, 255];
+const ICE_DARK = [220, 235, 255];
+
+function lerp(a, b, t) { return a + (b - a) * t; }
+function clamp(v, lo, hi) { return v < lo ? lo : (v > hi ? hi : v); }
 
 function makeCanvas(w, h) {
   const c = document.createElement("canvas");
@@ -30,9 +33,7 @@ function makeCanvas(w, h) {
 }
 
 /** Separable box blur (3 passes ~= Gaussian), operating on a Float32Array
- * single-channel buffer of size w*h, values in [0, 1]. Matches the plan's
- * "3-pass box blur with polygon-specific radius" approach in place of a
- * literal per-polygon Gaussian convolution. */
+ * single-channel buffer of size w*h, values in [0, 1]. */
 function boxBlur(src, w, h, radius) {
   if (radius < 1) return src;
   let buf = src;
@@ -73,24 +74,19 @@ function boxBlurPass(src, w, h, horizontal, radius) {
 
 function clampIdx(i, n) { return i < 0 ? 0 : (i >= n ? n - 1 : i); }
 
-function polyBoundingBoxPx(poly, w, h) {
-  let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
-  for (const [x, y] of poly) {
-    const px = x * w, py = y * h;
-    if (px < minX) minX = px; if (px > maxX) maxX = px;
-    if (py < minY) minY = py; if (py > maxY) maxY = py;
-  }
-  return [minX, minY, maxX, maxY];
+/** How "uncertain"/artistic the continent shapes should look at this Ma,
+ * 0 (present day, crisp real coastlines) -> 1 (deep time, soft artistic blobs).
+ * Smoothstep so the whole timeline transitions gradually with no seam. */
+function uncertaintyFrac(ma) {
+  const t = clamp(ma / 4500, 0, 1);
+  return t * t * (3.0 - 2.0 * t);
 }
 
 /** Rasterize + blur one polygon into `accumulated` (a full-image w*h buffer),
  * doing the canvas allocation, getImageData, and box blur only inside the
  * polygon's bounding box padded by the blur's finite support (3*radius for a
- * 3-pass box blur). A 3-pass box blur is exactly zero beyond 3*radius from any
- * lit pixel, so the padded-region result is bit-identical to blurring the full
- * image -- but for a typical continent covering a fraction of the 720x360 map,
- * it replaces a full-frame rasterize+blur with a small-window one (the dominant
- * cost of build() before this optimization; see PLAN.md's caching notes). */
+ * 3-pass box blur) -- bit-identical to blurring the full image, but far
+ * cheaper for a continent covering a fraction of the 720x360 map. */
 function splatPolyRegion(accumulated, poly, w, h, aFrac, radius) {
   let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
   for (const [x, y] of poly) {
@@ -98,7 +94,7 @@ function splatPolyRegion(accumulated, poly, w, h, aFrac, radius) {
     if (px < minX) minX = px; if (px > maxX) maxX = px;
     if (py < minY) minY = py; if (py > maxY) maxY = py;
   }
-  const pad = 3 * radius + 2; // finite support of a 3-pass box blur, +slack
+  const pad = 3 * radius + 2;
   const x0 = Math.max(0, Math.floor(minX) - pad);
   const y0 = Math.max(0, Math.floor(minY) - pad);
   const x1 = Math.min(w, Math.ceil(maxX) + pad + 1);
@@ -106,7 +102,6 @@ function splatPolyRegion(accumulated, poly, w, h, aFrac, radius) {
   const sw = x1 - x0, sh = y1 - y0;
   if (sw < 1 || sh < 1) return;
 
-  // Rasterize the polygon into a sub-window canvas (coords offset by x0,y0).
   const c = makeCanvas(sw, sh);
   const ctx = c.getContext("2d");
   ctx.fillStyle = "#fff";
@@ -121,9 +116,6 @@ function splatPolyRegion(accumulated, poly, w, h, aFrac, radius) {
   const mask = new Float32Array(sw * sh);
   for (let i = 0, p = 0; i < mask.length; i++, p += 4) mask[i] = data[p] / 255;
 
-  // boxBlur clamps at buffer edges; where the sub-window abuts the true image
-  // edge this matches the full-image behavior, and where it abuts padding the
-  // edge value is 0 (same as reading zeros beyond), so the result is identical.
   const blurred = boxBlur(mask, sw, sh, radius);
   for (let sy = 0; sy < sh; sy++) {
     const dstRow = (y0 + sy) * w + x0;
@@ -132,18 +124,10 @@ function splatPolyRegion(accumulated, poly, w, h, aFrac, radius) {
   }
 }
 
-/** Simple value-noise FBM (5 sine octaves), stable per 10-Ma bucket, matching
- * main.py's _terrain_noise_for()'s spirit (not a literal port of numpy RNG
- * output, which can't be reproduced bit-for-bit in JS -- an independent noise
- * field with the same statistical character is sufficient here).
- *
- * Perf: the per-pixel term `sin(xx)*cos(yy)` is separable -- xx depends only on
- * x, yy only on y -- so each octave is built from one sin per column and one
- * cos per row (~(w+h) trig calls) instead of one sin+cos per pixel (~2*w*h).
- * Output is bit-identical; the transcendental-call count drops ~360x. The
- * finished field is also memoized on its 10-Ma seed, since several consecutive
- * 3-Ma structural-cache buckets resolve to the same noise seed. */
-const _terrainNoiseCache = new Map(); // seed -> Float32Array
+/** Simple value-noise FBM (5 sine octaves), stable per 10-Ma bucket. Perf: the
+ * per-pixel term sin(xx)*cos(yy) is separable, so each octave costs ~(w+h)
+ * trig calls instead of ~2*w*h; the finished field is memoized per seed. */
+const _terrainNoiseCache = new Map();
 const TERRAIN_NOISE_CACHE_MAX = 8;
 
 function terrainNoise(ma, w, h) {
@@ -172,17 +156,57 @@ function terrainNoise(ma, w, h) {
   let min = Infinity, max = -Infinity;
   for (const v of noise) { if (v < min) min = v; if (v > max) max = v; }
   const range = max - min || 1e-8;
-  const norm = new Float32Array(w * h);
-  for (let i = 0; i < noise.length; i++) norm[i] = (noise[i] - min) / range;
-  const blurred = boxBlur(norm, w, h, 4);
   const result = new Float32Array(w * h);
-  for (let i = 0; i < result.length; i++) result[i] = 0.80 + 0.40 * blurred[i];
+  for (let i = 0; i < noise.length; i++) result[i] = (noise[i] - min) / range;
+  const blurred = boxBlur(result, w, h, 4);
 
-  _terrainNoiseCache.set(seed, result);
+  _terrainNoiseCache.set(seed, blurred);
   if (_terrainNoiseCache.size > TERRAIN_NOISE_CACHE_MAX) {
     _terrainNoiseCache.delete(_terrainNoiseCache.keys().next().value);
   }
-  return result;
+  return blurred;
+}
+
+/** Ice cap coverage for `ma`, as a list of {north, south} cap heights (0-1
+ * fraction of texture height) and colors. Ported from main.py's five
+ * glaciation windows (lines 906-948); previously only the Huronian window
+ * (entirely > 750 Ma) was reachable since Scotese overwrote everything else --
+ * now that this builder draws the whole timeline, all five apply for real. */
+function iceCapsFor(ma, h) {
+  const caps = []; // {y0, y1, color, alpha}
+  if (ma >= 2050 && ma <= 2400) {
+    let frac = clamp(1.0 - Math.abs(ma - 2250) / 150.0, 0, 1);
+    frac = Math.max(0.30, frac);
+    const capH = Math.max(5, Math.round(h * 0.08 + h * 0.38 * frac));
+    caps.push({ y0: 0, y1: capH, color: ICE_BRIGHT, alpha: 0.843 });
+    caps.push({ y0: h - capH, y1: h, color: ICE_DARK, alpha: 0.824 });
+  } else if (ma >= 635 && ma <= 720) {
+    let frac = clamp((720 - ma) / 85.0, 0, 1);
+    frac = Math.max(0.28, frac);
+    const capH = Math.max(5, Math.round(h * 0.08 + h * 0.40 * frac));
+    caps.push({ y0: 0, y1: capH, color: ICE_BRIGHT, alpha: 0.882 });
+    caps.push({ y0: h - capH, y1: h, color: ICE_DARK, alpha: 0.863 });
+  } else if (ma >= 435 && ma <= 450) {
+    const frac = 1.0 - Math.abs(ma - 442.5) / 7.5;
+    const capH = Math.max(1, Math.round(h * 0.02 + h * 0.08 * frac));
+    caps.push({ y0: h - capH, y1: h, color: ICE_BRIGHT, alpha: 0.765 });
+  } else if (ma >= 260 && ma <= 360) {
+    let frac = ma >= 300 ? (360 - ma) / 60 : (ma - 260) / 40;
+    frac = Math.pow(clamp(frac, 0, 1), 0.6);
+    const capH = Math.max(1, Math.round(h * 0.03 + h * 0.12 * frac));
+    caps.push({ y0: h - capH, y1: h, color: ICE_BRIGHT, alpha: 0.804 });
+  } else if (ma < 34) {
+    if (ma < 2.6) {
+      const capH = Math.max(1, Math.round(h * 0.03));
+      caps.push({ y0: 0, y1: capH, color: ICE_BRIGHT, alpha: 0.745 });
+      caps.push({ y0: h - capH, y1: h, color: ICE_DARK, alpha: 0.725 });
+    } else {
+      const frac = clamp(1.0 - ma / 34.0, 0, 1);
+      const capH = Math.max(1, Math.round(h * 0.020 + h * 0.012 * frac));
+      caps.push({ y0: h - capH, y1: h, color: ICE_DARK, alpha: 0.675 });
+    }
+  }
+  return caps;
 }
 
 export class StructuralTextureBuilder {
@@ -191,13 +215,13 @@ export class StructuralTextureBuilder {
     this.ctx = this.canvas.getContext("2d");
   }
 
-  /** Build the ma>750 procedural texture. Returns the internal canvas (reused
-   * across calls -- callers must finish using/uploading it before the next
-   * build() call, matching the single-buffer reuse pattern of a GPU texture
-   * upload). */
+  /** Build the equirect texture for time `ma` (any value, 0-4500). Returns
+   * the internal canvas (reused across calls -- callers must finish
+   * using/uploading it before the next build() call). */
   build(ma, continentModel) {
     const ctx = this.ctx;
     const w = W_TEX, h = H_TEX;
+    const uncertainty = uncertaintyFrac(ma); // 0=crisp present day, 1=fuzzy deep time
 
     // ── ocean gradient base ────────────────────────────────────────────────
     const [shallow, deep] = oceanPair(ma);
@@ -209,17 +233,27 @@ export class StructuralTextureBuilder {
     ctx.fillRect(0, 0, w, h);
     const oceanImg = ctx.getImageData(0, 0, w, h);
 
-    // ── Gaussian-blob-splatted continents ─────────────────────────────────
+    // ── continents: blob-splatted at a blur radius that scales with how
+    // uncertain/artistic the reconstruction is at this Ma. Crisp real
+    // coastlines (0/65 Ma) get a light 2-6px touch; deep-time approximations
+    // get the old 14-32px soft-blob treatment. ─────────────────────────────
     const continents = continentModel.getInterpolatedContinents(ma);
     const accumulated = new Float32Array(w * h);
+    const floorPx = lerp(2, 14, uncertainty);
+    const ceilPx = lerp(6, 32, uncertainty);
     for (const c of continents) {
       const aFrac = (c.alpha ?? 255) / 255.0;
       if (aFrac < 0.02) continue;
       for (const poly of c.polys) {
         if (poly.length < 3) continue;
-        const [minX, minY, maxX, maxY] = polyBoundingBoxPx(poly, w, h);
+        let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+        for (const [x, y] of poly) {
+          const px = x * w, py = y * h;
+          if (px < minX) minX = px; if (px > maxX) maxX = px;
+          if (py < minY) minY = py; if (py > maxY) maxY = py;
+        }
         const geoMean = Math.pow((maxX - minX + 1) * (maxY - minY + 1), 0.4);
-        const br = Math.max(14, Math.min(32, Math.round(geoMean * 0.30)));
+        const br = clamp(Math.round(geoMean * 0.30), floorPx, ceilPx);
         const radius = Math.max(1, Math.round(br / 2.2));
         splatPolyRegion(accumulated, poly, w, h, aFrac, radius);
       }
@@ -247,52 +281,42 @@ export class StructuralTextureBuilder {
     }
     ctx.putImageData(out, 0, 0);
 
-    // light full-image blur for colour-transition softening (matches blur_r=2.5)
-    ctx.filter = "blur(2.5px)";
+    // light full-image blur for colour-transition softening, also scaled down
+    // for recent times so present-day coastlines stay comparatively crisp
+    ctx.filter = `blur(${lerp(1.0, 2.5, uncertainty).toFixed(2)}px)`;
     ctx.drawImage(this.canvas, 0, 0);
     ctx.filter = "none";
 
-    // ── mountains ──────────────────────────────────────────────────────────
-    drawMountains(ctx, w, h, ma);
-
-    // ── Huronian ice cap (2050-2400 Ma; the only ice window entirely > 750 Ma) ─
-    if (ma >= 2050 && ma <= 2400) {
-      let frac = Math.max(0, 1.0 - Math.abs(ma - 2250) / 150.0);
-      frac = Math.max(0.30, Math.min(1, frac));
-      const capH = Math.max(5, Math.round(h * 0.08 + h * 0.38 * frac));
-      ctx.fillStyle = "rgba(255,255,255,0.843)";
-      ctx.fillRect(0, 0, w, capH);
-      ctx.fillStyle = "rgba(220,235,255,0.824)";
-      ctx.fillRect(0, h - capH, w, capH);
-    }
-
-    // ── deep-Precambrian terrain-noise / depth-dimming enhancement ─────────
+    // ── terrain noise + coastal depth-dimming, using the land mask we
+    // already computed (no need to re-derive it from output color, since
+    // we generated the composite ourselves and know exactly which pixels are
+    // land). Noise strength also scales with uncertainty: a light touch at
+    // present day, a fuller mottled "unknown ancient terrain" look far back. ─
     const img = ctx.getImageData(0, 0, w, h);
     const d = img.data;
-    const oceanMaskArr = new Uint8Array(w * h);
-    const landEffArr = new Uint8Array(w * h);
-    for (let i = 0, p = 0; i < w * h; i++, p += 4) {
-      const isOcean = (d[p + 2] - d[p]) > 35;
-      const brightSum = d[p] + d[p + 1] + d[p + 2];
-      const isIce = brightSum > 630;
-      oceanMaskArr[i] = (isOcean && !isIce) ? 1 : 0;
-      landEffArr[i] = (!isOcean && !isIce) ? 1 : 0;
-    }
     const coastMaskFloat = new Float32Array(w * h);
-    for (let i = 0; i < landEffArr.length; i++) coastMaskFloat[i] = landEffArr[i];
+    for (let i = 0; i < landMask.length; i++) coastMaskFloat[i] = landMask[i];
     const coastProx = boxBlur(coastMaskFloat, w, h, 8);
-    let anyLand = false;
     const noise = terrainNoise(ma, w, h);
-    for (let i = 0; i < landEffArr.length; i++) if (landEffArr[i]) { anyLand = true; break; }
+    const noiseAmp = lerp(0.06, 0.40, uncertainty);
     for (let i = 0, p = 0; i < w * h; i++, p += 4) {
       let factor = 1.0;
-      if (oceanMaskArr[i]) factor = 0.42 + 0.58 * coastProx[i];
-      else if (anyLand && landEffArr[i]) factor = noise[i];
+      if (!landMask[i]) factor = 0.55 + 0.45 * coastProx[i];
+      else factor = (1 - noiseAmp) + noiseAmp * 2 * noise[i];
       d[p] = clampByte(d[p] * factor);
       d[p + 1] = clampByte(d[p + 1] * factor);
       d[p + 2] = clampByte(d[p + 2] * factor);
     }
     ctx.putImageData(img, 0, 0);
+
+    // ── mountains (drawn crisply on top of the noised base) ─────────────────
+    drawMountains(ctx, w, h, ma);
+
+    // ── ice caps (all five glaciation windows now reachable) ────────────────
+    for (const cap of iceCapsFor(ma, h)) {
+      ctx.fillStyle = `rgba(${cap.color[0]},${cap.color[1]},${cap.color[2]},${cap.alpha})`;
+      ctx.fillRect(0, cap.y0, w, cap.y1 - cap.y0);
+    }
 
     return this.canvas;
   }
