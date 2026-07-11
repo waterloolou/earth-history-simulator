@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Earth History Simulator</title>
+<meta name="description" content="Zoom from the formation of Earth 4.5 billion years ago to recorded history, science, and culture -- on one map." />
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+<link rel="stylesheet" href="style.css" />
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
+  }
+}
+</script>
+</head>
+<body>
+
+<header id="app-header">
+  <h1>Earth History Simulator</h1>
+  <div id="header-readout">
+    <span id="time-readout">4300 Ma ago</span>
+    <span id="period-readout"></span>
+  </div>
+  <div id="header-hint">scroll timeline = zoom &middot; drag timeline = pan &middot; double-click period = drill in &middot; drag globe = rotate</div>
+</header>
+
+<main id="app-main">
+  <section id="viewport">
+    <div id="globe-view" class="viewport-mode"></div>
+    <div id="map-view" class="viewport-mode hidden"></div>
+    <div id="mode-toggle">
+      <button id="mode-globe-btn" class="mode-btn active" title="Deep time globe">Globe</button>
+      <button id="mode-map-btn" class="mode-btn" title="Historical / scientific event map">Map</button>
+    </div>
+    <div id="loading-overlay">Loading Earth data&hellip;</div>
+  </section>
+
+  <aside id="info-panel">
+    <div id="period-card">
+      <div id="period-badge"></div>
+      <h2 id="period-name">&mdash;</h2>
+      <div id="period-range"></div>
+      <p id="period-desc"></p>
+    </div>
+    <div id="event-detail" class="hidden">
+      <h2 id="event-title"></h2>
+      <div id="event-meta"></div>
+      <p id="event-desc"></p>
+      <a id="event-wiki-link" href="#" target="_blank" rel="noopener">Read more on Wikipedia &rarr;</a>
+    </div>
+    <div id="category-filters">
+      <label><input type="checkbox" data-cat="historical" checked /> Historical</label>
+      <label><input type="checkbox" data-cat="scientific" checked /> Scientific</label>
+      <label><input type="checkbox" data-cat="cultural" checked /> Cultural</label>
+    </div>
+  </aside>
+</main>
+
+<footer id="timeline-panel">
+  <canvas id="timeline-canvas"></canvas>
+  <button id="timeline-back-btn" class="hidden">&lsaquo; Back</button>
+  <button id="timeline-reset-btn">Reset</button>
+</footer>
+
+<script type="module" src="src/main.js"></script>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+</body>
+</html>

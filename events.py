@@ -101,6 +101,10 @@ def periods_as_events() -> list[Event]:
 def tol_as_events() -> list[Event]:
     """Wrap main._TOL_DATA (Tree of Life) as Events. Imports main lazily to avoid
     pulling in pygame/PIL/numpy for callers that only need geological data."""
+    # main.py calls pygame.display.set_mode() at import time; force SDL's no-op
+    # dummy driver so this works headless (CI runners have no real display).
+    os.environ.setdefault("SDL_VIDEODRIVER", "dummy")
+    os.environ.setdefault("SDL_AUDIODRIVER", "dummy")
     try:
         from main import _TOL_DATA
     except Exception:
