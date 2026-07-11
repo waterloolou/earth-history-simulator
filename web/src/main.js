@@ -62,6 +62,7 @@ function cacheEls() {
   els.periodRange = q("period-range");
   els.periodDesc = q("period-desc");
   els.eventDetail = q("event-detail");
+  els.eventDateKicker = q("event-date-kicker");
   els.eventTitle = q("event-title");
   els.eventMeta = q("event-meta");
   els.eventDesc = q("event-desc");
@@ -156,8 +157,11 @@ function updateInfoPanel(ma) {
 function showEventDetail(e) {
   if (!e) { els.eventDetail.classList.add("hidden"); return; }
   els.eventDetail.classList.remove("hidden");
+  // Date first, as a small kicker above the title -- the date is usually
+  // the first thing a reader wants to orient on.
+  els.eventDateKicker.textContent = formatEventDate(e.time);
   els.eventTitle.textContent = e.title;
-  els.eventMeta.textContent = `${formatEventDate(e.time)}${e.place && e.place.region ? " · " + e.place.region : ""}`;
+  els.eventMeta.textContent = e.place && e.place.region ? e.place.region : "";
   els.eventDesc.textContent = e.description || "";
   const url = (e.wiki && e.wiki.url) || `https://en.wikipedia.org/wiki/${encodeURIComponent(e.title)}`;
   els.eventWikiLink.href = url;

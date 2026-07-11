@@ -97,12 +97,88 @@ CATEGORIES = {
         "sitelink_min": 15,
         "title_template": "Death of {}",
     },
+
+    # ── Expanded coverage (see PLAN.md / commit history for the "every
+    # feasible Wikipedia page" ask). Each of these was feasibility-tested
+    # directly against WDQS before being added -- a couple of candidates
+    # (e.g. plain "building" with the wdt:P279* subclass closure) timed out
+    # and needed direct_instance_only instead; anything that still wasn't
+    # fast enough was left out entirely rather than forced in. ──────────────
+    "war": {
+        "category": "historical", "subtype": "war",
+        "class_qids": ["wd:Q198"], "date_prop": "wdt:P580",
+        "place_path": "wdt:P276/wdt:P625",
+        "sitelink_min": 8,
+    },
+    "election": {
+        "category": "historical", "subtype": "election",
+        "class_qids": ["wd:Q40231"], "date_prop": "wdt:P585",
+        "place_path": "wdt:P17/wdt:P625",
+        "sitelink_min": 6,
+    },
+    "assassination": {
+        "category": "historical", "subtype": "assassination",
+        "class_qids": ["wd:Q3882219"], "date_prop": "wdt:P585",
+        "place_path": "wdt:P276/wdt:P625",
+        "sitelink_min": 5,
+    },
+    # Space missions rarely have a clean place (launch sites aren't reliably
+    # modeled on the mission item itself) -- left with no place_path, so
+    # these populate the timeline but not the map. Still real coverage.
+    "space_mission": {
+        "category": "scientific", "subtype": "space_mission",
+        "class_qids": ["wd:Q2133344"], "date_prop": "wdt:P619",
+        "sitelink_min": 5,
+    },
+    "film": {
+        "category": "cultural", "subtype": "film",
+        "class_qids": ["wd:Q11424"], "date_prop": "wdt:P577",
+        "place_path": "wdt:P495/wdt:P625",  # country of origin's centroid
+        "sitelink_min": 60,
+    },
+    "book": {
+        "category": "cultural", "subtype": "book",
+        "class_qids": ["wd:Q571"], "date_prop": "wdt:P577",
+        "place_path": "wdt:P495/wdt:P625",
+        "sitelink_min": 30,
+    },
+    "album": {
+        "category": "cultural", "subtype": "album",
+        "class_qids": ["wd:Q482994"], "date_prop": "wdt:P577",
+        "place_path": "wdt:P495/wdt:P625",
+        "sitelink_min": 25,
+    },
+    "painting": {
+        "category": "cultural", "subtype": "painting",
+        "class_qids": ["wd:Q3305213"], "date_prop": "wdt:P571",
+        "place_path": "wdt:P276/wdt:P625",  # current location (usually a museum)
+        "sitelink_min": 10,
+    },
+    # "building" (wd:Q41176) has a very deep/broad subclass tree -- the usual
+    # wdt:P31/wdt:P279* pattern timed out in testing (~48s for a 20-row page,
+    # too slow to paginate reliably); direct_instance_only avoids the subclass
+    # closure and brought this down to ~3s.
+    "landmark": {
+        "category": "cultural", "subtype": "landmark",
+        "class_qids": ["wd:Q41176"], "date_prop": "wdt:P571",
+        "direct_instance_only": True,
+        "sitelink_min": 15,
+    },
+    "video_game": {
+        "category": "cultural", "subtype": "video_game",
+        "class_qids": ["wd:Q7889"], "date_prop": "wdt:P577",
+        "place_path": "wdt:P495/wdt:P625",
+        "sitelink_min": 20,
+    },
 }
 
 _COORD_RE = re.compile(r"Point\(([-\d.]+)\s+([-\d.]+)\)")
 
 
-_DATE_PROP_PID = {"wdt:P585": "P585", "wdt:P575": "P575", "wdt:P569": "P569", "wdt:P570": "P570"}
+_DATE_PROP_PID = {
+    "wdt:P585": "P585", "wdt:P575": "P575", "wdt:P569": "P569", "wdt:P570": "P570",
+    "wdt:P580": "P580", "wdt:P619": "P619", "wdt:P577": "P577", "wdt:P571": "P571",
+}
 
 
 def _build_query(spec: dict, offset: int) -> str:

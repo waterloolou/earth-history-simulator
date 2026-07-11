@@ -23,10 +23,16 @@ const ICONS = Object.fromEntries(
 export class MapView {
   constructor(containerEl) {
     this.container = containerEl;
-    this.map = L.map(containerEl, { worldCopyJump: true }).setView([20, 10], 2);
+    // minZoom: 2 -- prevents zooming out past a single world view (below
+    // zoom 2 the tile layer starts showing mostly empty space/repeated
+    // copies rather than anything more useful). worldCopyJump still allows
+    // continuous horizontal panning/wrapping at that zoom, so this only
+    // stops "zooming out past the map", not east-west panning.
+    this.map = L.map(containerEl, { worldCopyJump: true, minZoom: 2 }).setView([20, 10], 2);
     L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
       maxZoom: 19,
+      minZoom: 2,
     }).addTo(this.map);
 
     // chunkedLoading spreads large marker inserts across animation frames so
@@ -89,9 +95,13 @@ export class MapView {
   _popupHtml(e) {
     const dateStr = formatEventDate(e.time);
     const wikiUrl = (e.wiki && e.wiki.url) || `https://en.wikipedia.org/wiki/${encodeURIComponent(e.title)}`;
+    // Date first (as a small "kicker" above the title), not buried in the
+    // meta line below it -- the date is usually the first thing a reader
+    // wants to orient on, especially skimming a cluster of pins.
     return `<div class="event-popup">
+       <div class="date-kicker">${escapeHtml(dateStr)}</div>
        <h3>${escapeHtml(e.title)}</h3>
-       <div class="meta">${escapeHtml(dateStr)} &middot; ${escapeHtml(e.place.region || "")}</div>
+       ${e.place.region ? `<div class="meta">${escapeHtml(e.place.region)}</div>` : ""}
        <p>${escapeHtml(e.description || "")}</p>
        <a href="${wikiUrl}" target="_blank" rel="noopener">Read more on Wikipedia &rarr;</a>
      </div>`;

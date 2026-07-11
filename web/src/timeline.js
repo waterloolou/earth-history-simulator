@@ -174,19 +174,29 @@ export class Timeline {
     let newLo = pivotMa - (pivotMa - this.loMa) / factor;
     let newHi = pivotMa + (this.hiMa - pivotMa) / factor;
     if (newHi - newLo < MIN_SPAN_MA) return;
-    if (newHi > this.fullHiMa) newHi = this.fullHiMa;
-    newLo = Math.max(newLo, -1e12); // allow future dates in principle; no hard floor
+    [newLo, newHi] = this._clampWindow(newLo, newHi);
     this._animateTo(newLo, newHi);
   }
 
+  /** Keep the window within [0, fullHiMa] -- there's no data before the
+   * formation of Earth or after the present, so zooming/panning out can
+   * never go further than that full range (the same bounds Reset uses),
+   * and never past it into negative ("future") Ma either. */
+  _clampWindow(lo, hi) {
+    // Never wider than the full 0..fullHiMa range -- that IS "fully zoomed
+    // out"; a wheel-tick past that point re-centers on the full range
+    // instead of opening up empty space beyond it.
+    if (hi - lo >= this.fullHiMa) return [0, this.fullHiMa];
+    if (hi > this.fullHiMa) { lo -= hi - this.fullHiMa; hi = this.fullHiMa; }
+    if (lo < 0) { hi -= lo; lo = 0; }
+    // Re-check after the shift above (a span very close to fullHiMa can
+    // overshoot the other edge once shifted back in).
+    if (hi > this.fullHiMa) hi = this.fullHiMa;
+    return [lo, hi];
+  }
+
   panByMa(deltaMa) {
-    let newLo = this.loMa + deltaMa;
-    let newHi = this.hiMa + deltaMa;
-    if (newHi > this.fullHiMa) {
-      const overshoot = newHi - this.fullHiMa;
-      newHi -= overshoot;
-      newLo -= overshoot;
-    }
+    const [newLo, newHi] = this._clampWindow(this.loMa + deltaMa, this.hiMa + deltaMa);
     // Panning is a direct-manipulation drag, not a discrete action -- follow
     // the pointer immediately rather than easing (easing here would make the
     // view visibly lag behind the mouse).
