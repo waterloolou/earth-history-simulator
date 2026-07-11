@@ -16,6 +16,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import sys
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
@@ -88,12 +89,22 @@ def export_tree_of_life(out_dir: str):
     print(f"Wrote {path} ({len(data)} clades)")
 
 
+_QID_TITLE_RE = re.compile(r"^Q\d+$")
+
+
 def export_events(out_dir: str):
     from events import periods_as_events, tol_as_events, load_discrete_events
 
     events = periods_as_events() + tol_as_events() + load_discrete_events()
     flat = []
+    skipped = 0
     for e in events:
+        # Drop discrete Wikidata items whose English label never resolved: their
+        # title is a bare QID (e.g. "Q471407"), which is meaningless to a reader
+        # on the timeline and map. Geological/tree-of-life adapters are exempt.
+        if e.source == "wikidata" and (not e.title or _QID_TITLE_RE.match(e.title)):
+            skipped += 1
+            continue
         flat.append({
             "id": e.id, "title": e.title, "category": e.category, "subtype": e.subtype,
             "viz_mode": e.viz_mode,
@@ -112,7 +123,8 @@ def export_events(out_dir: str):
     path = os.path.join(out_dir, "events.json")
     with open(path, "w", encoding="utf-8") as fh:
         json.dump(flat, fh)
-    print(f"Wrote {path} ({len(flat)} events total)")
+    print(f"Wrote {path} ({len(flat)} events total"
+          + (f", skipped {skipped} unlabeled QID-only events)" if skipped else ")"))
 
 
 def export_plate_offset_texture(out_textures_dir: str, size: int = 180):
