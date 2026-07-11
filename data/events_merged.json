@@ -1421,9 +1421,9 @@
   "time": {
    "year": -1273,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.003299,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 34.555487,
@@ -2345,9 +2345,9 @@
   "time": {
    "year": -546,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.002572,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 38.666667,
@@ -2434,9 +2434,9 @@
   "time": {
    "year": -538,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.002564,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 33.181388888,
@@ -2465,9 +2465,9 @@
   "time": {
    "year": -524,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.00255,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 31.0416,
@@ -2786,9 +2786,9 @@
   "time": {
    "year": -479,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.002505,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 38.795833333,
@@ -3777,9 +3777,9 @@
   "time": {
    "year": -410,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.002436,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -3955,9 +3955,9 @@
   "time": {
    "year": -405,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.002431,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 39.033333333,
@@ -4497,9 +4497,9 @@
   "time": {
    "year": -375,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.002401,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 37.106821,
@@ -4973,9 +4973,9 @@
   "time": {
    "year": -337,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.002363,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 38.495,
@@ -5035,9 +5035,9 @@
   "time": {
    "year": -334,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.00236,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -5062,9 +5062,9 @@
   "time": {
    "year": -333,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.002359,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 40.228055555,
@@ -5213,9 +5213,9 @@
   "time": {
    "year": -330,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.002356,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 32.18922,
@@ -5275,9 +5275,9 @@
   "time": {
    "year": -328,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.002354,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 40.283333,
@@ -5337,9 +5337,9 @@
   "time": {
    "year": -325,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.002351,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 32.827777777,
@@ -5461,9 +5461,9 @@
   "time": {
    "year": -321,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.002347,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 39.516667,
@@ -7497,9 +7497,9 @@
   "time": {
    "year": -217,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.002243,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 44.138333333,
@@ -7528,9 +7528,9 @@
   "time": {
    "year": -217,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.002243,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 45.25,
@@ -7559,9 +7559,9 @@
   "time": {
    "year": -217,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.002243,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 44.9875,
@@ -7931,9 +7931,9 @@
   "time": {
    "year": -214,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.00224,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 40.9261111,
@@ -8148,9 +8148,9 @@
   "time": {
    "year": -211,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.002237,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 40.418055555,
@@ -9368,9 +9368,9 @@
   "time": {
    "year": -190,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.002216,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 38.103694,
@@ -9647,9 +9647,9 @@
   "time": {
    "year": -164,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.00219,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 31.8393,
@@ -9678,9 +9678,9 @@
   "time": {
    "year": -163,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.002189,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 31.589383,
@@ -9709,9 +9709,9 @@
   "time": {
    "year": -161,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.002187,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 31.664,
@@ -9740,9 +9740,9 @@
   "time": {
    "year": -160,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.002186,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 31.8333,
@@ -9771,9 +9771,9 @@
   "time": {
    "year": -159,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.002185,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 31.87608333,
@@ -10015,9 +10015,9 @@
   "time": {
    "year": -132,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.002158,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 39.335,
@@ -10197,9 +10197,9 @@
   "time": {
    "year": -107,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.002133,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -10561,9 +10561,9 @@
   "time": {
    "year": -82,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.002108,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 41.065864,
@@ -10623,9 +10623,9 @@
   "time": {
    "year": -81,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.002107,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 41.7,
@@ -11076,9 +11076,9 @@
   "time": {
    "year": -66,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.002092,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -11347,9 +11347,9 @@
   "time": {
    "year": -56,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.002082,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 50.77944,
@@ -11409,9 +11409,9 @@
   "time": {
    "year": -53,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.002079,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 50.783333,
@@ -11502,9 +11502,9 @@
   "time": {
    "year": -51,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.002077,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 47.083611111,
@@ -11533,9 +11533,9 @@
   "time": {
    "year": -51,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.002077,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 45.708333333,
@@ -11750,9 +11750,9 @@
   "time": {
    "year": -46,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.002072,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 40.3,
@@ -12191,9 +12191,9 @@
   "time": {
    "year": 9,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.002017,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 52.4075,
@@ -12636,9 +12636,9 @@
   "time": {
    "year": 73,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001953,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -12725,9 +12725,9 @@
   "time": {
    "year": 89,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001937,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -12752,9 +12752,9 @@
   "time": {
    "year": 101,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001925,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 45.5056,
@@ -13491,9 +13491,9 @@
   "time": {
    "year": 208,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001818,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 32.045,
@@ -13754,9 +13754,9 @@
   "time": {
    "year": 221,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001805,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 30.691944444,
@@ -14242,9 +14242,9 @@
   "time": {
    "year": 268,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001758,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 43.3,
@@ -14459,9 +14459,9 @@
   "time": {
    "year": 285,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001741,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -14788,9 +14788,9 @@
   "time": {
    "year": 324,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001702,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 40.2,
@@ -14943,9 +14943,9 @@
   "time": {
    "year": 353,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001673,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 44.459805555,
@@ -15036,9 +15036,9 @@
   "time": {
    "year": 357,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001669,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 48.598709,
@@ -15098,9 +15098,9 @@
   "time": {
    "year": 363,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001663,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -15388,9 +15388,9 @@
   "time": {
    "year": 378,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001648,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 48.0817,
@@ -15601,9 +15601,9 @@
   "time": {
    "year": 402,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001624,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 45.4333,
@@ -16719,9 +16719,9 @@
   "time": {
    "year": 530,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001496,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 37.18,
@@ -17218,9 +17218,9 @@
   "time": {
    "year": 552,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001474,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 43.233333333,
@@ -17249,9 +17249,9 @@
   "time": {
    "year": 552,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001474,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 40.65,
@@ -17280,9 +17280,9 @@
   "time": {
    "year": 554,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001472,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -17307,9 +17307,9 @@
   "time": {
    "year": 554,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001472,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 41.091666666,
@@ -17369,9 +17369,9 @@
   "time": {
    "year": 559,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001467,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 41.0,
@@ -17632,9 +17632,9 @@
   "time": {
    "year": 591,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001435,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 37.011555,
@@ -18073,9 +18073,9 @@
   "time": {
    "year": 625,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001401,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -18131,9 +18131,9 @@
   "time": {
    "year": 627,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001399,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -18313,9 +18313,9 @@
   "time": {
    "year": 630,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001396,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -18398,9 +18398,9 @@
   "time": {
    "year": 632,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001394,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -18425,9 +18425,9 @@
   "time": {
    "year": 632,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001394,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 24.8398,
@@ -18456,9 +18456,9 @@
   "time": {
    "year": 632,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001394,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 30.074942,
@@ -18518,9 +18518,9 @@
   "time": {
    "year": 632,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001394,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 14.21138889,
@@ -18638,9 +18638,9 @@
   "time": {
    "year": 633,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001393,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -18665,9 +18665,9 @@
   "time": {
    "year": 633,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001393,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -18692,9 +18692,9 @@
   "time": {
    "year": 633,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001393,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -18719,9 +18719,9 @@
   "time": {
    "year": 633,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001393,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 31.617778,
@@ -18750,9 +18750,9 @@
   "time": {
    "year": 633,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001393,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -18777,9 +18777,9 @@
   "time": {
    "year": 633,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001393,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -18866,9 +18866,9 @@
   "time": {
    "year": 633,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001393,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -18893,9 +18893,9 @@
   "time": {
    "year": 633,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001393,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -18920,9 +18920,9 @@
   "time": {
    "year": 633,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001393,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -19086,9 +19086,9 @@
   "time": {
    "year": 634,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001392,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -19233,9 +19233,9 @@
   "time": {
    "year": 634,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001392,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 34.2333,
@@ -19264,9 +19264,9 @@
   "time": {
    "year": 634,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001392,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 32.76015,
@@ -19295,9 +19295,9 @@
   "time": {
    "year": 634,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001392,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -19349,9 +19349,9 @@
   "time": {
    "year": 635,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001391,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 32.45,
@@ -19407,9 +19407,9 @@
   "time": {
    "year": 635,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001391,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -19492,9 +19492,9 @@
   "time": {
    "year": 637,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001389,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 34.2833,
@@ -19523,9 +19523,9 @@
   "time": {
    "year": 637,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001389,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 35.995833333,
@@ -19554,9 +19554,9 @@
   "time": {
    "year": 637,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001389,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 36.248333333,
@@ -19790,9 +19790,9 @@
   "time": {
    "year": 646,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.00138,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 30.412222222,
@@ -20459,9 +20459,9 @@
   "time": {
    "year": 685,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001341,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 36.84083333,
@@ -20614,9 +20614,9 @@
   "time": {
    "year": 691,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001335,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 33.823333,
@@ -20846,9 +20846,9 @@
   "time": {
    "year": 702,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001324,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 40.0234,
@@ -21446,9 +21446,9 @@
   "time": {
    "year": 731,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001295,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 39.293888888,
@@ -21721,9 +21721,9 @@
   "time": {
    "year": 737,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001289,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -21779,9 +21779,9 @@
   "time": {
    "year": 740,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001286,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -21806,9 +21806,9 @@
   "time": {
    "year": 741,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001285,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -21833,9 +21833,9 @@
   "time": {
    "year": 742,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001284,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -21860,9 +21860,9 @@
   "time": {
    "year": 742,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001284,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -22069,9 +22069,9 @@
   "time": {
    "year": 774,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001252,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -22247,9 +22247,9 @@
   "time": {
    "year": 788,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001238,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 37.4278,
@@ -22758,9 +22758,9 @@
   "time": {
    "year": 829,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001197,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -23722,9 +23722,9 @@
   "time": {
    "year": 878,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001148,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 51.440277777,
@@ -23981,9 +23981,9 @@
   "time": {
    "year": 888,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001138,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -24182,9 +24182,9 @@
   "time": {
    "year": 901,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001125,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -24414,9 +24414,9 @@
   "time": {
    "year": 915,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001111,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -24685,9 +24685,9 @@
   "time": {
    "year": 921,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001105,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 41.01224,
@@ -25424,9 +25424,9 @@
   "time": {
    "year": 970,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001056,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 41.4,
@@ -26009,9 +26009,9 @@
   "time": {
    "year": 998,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001028,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -26222,9 +26222,9 @@
   "time": {
    "year": 1002,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001024,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 41.7,
@@ -26826,9 +26826,9 @@
   "time": {
    "year": 1018,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001008,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 41.3256,
@@ -27058,9 +27058,9 @@
   "time": {
    "year": 1029,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000997,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 31.865972222,
@@ -27941,9 +27941,9 @@
   "time": {
    "year": 1063,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000963,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 37.78,
@@ -28738,9 +28738,9 @@
   "time": {
    "year": 1083,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000943,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 39.63472222,
@@ -28769,9 +28769,9 @@
   "time": {
    "year": 1084,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000942,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -29299,9 +29299,9 @@
   "time": {
    "year": 1101,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000925,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -29678,9 +29678,9 @@
   "time": {
    "year": 1111,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000915,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 39.233888888,
@@ -30197,9 +30197,9 @@
   "time": {
    "year": 1125,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000901,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -30460,9 +30460,9 @@
   "time": {
    "year": 1136,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.00089,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 52.096,
@@ -30890,9 +30890,9 @@
   "time": {
    "year": 1147,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000879,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -30948,9 +30948,9 @@
   "time": {
    "year": 1147,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000879,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -31126,9 +31126,9 @@
   "time": {
    "year": 1150,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000876,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -31211,9 +31211,9 @@
   "time": {
    "year": 1156,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.00087,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -33386,9 +33386,9 @@
   "time": {
    "year": 1205,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000821,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 41.0833,
@@ -33506,9 +33506,9 @@
   "time": {
    "year": 1206,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.00082,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -33533,9 +33533,9 @@
   "time": {
    "year": 1207,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000819,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 36.90812,
@@ -33649,9 +33649,9 @@
   "time": {
    "year": 1208,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000818,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 42.43333333,
@@ -33889,9 +33889,9 @@
   "time": {
    "year": 1211,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000815,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 58.363333333,
@@ -34226,9 +34226,9 @@
   "time": {
    "year": 1217,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000809,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 58.0575,
@@ -34466,9 +34466,9 @@
   "time": {
    "year": 1221,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000805,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 34.880833333,
@@ -34528,9 +34528,9 @@
   "time": {
    "year": 1222,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000804,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -34675,9 +34675,9 @@
   "time": {
    "year": 1225,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000801,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 40.119444,
@@ -35101,9 +35101,9 @@
   "time": {
    "year": 1237,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000789,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -36080,9 +36080,9 @@
   "time": {
    "year": 1259,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000767,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 40.816666666,
@@ -36142,9 +36142,9 @@
   "time": {
    "year": 1260,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000766,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -36200,9 +36200,9 @@
   "time": {
    "year": 1260,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000766,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 34.05,
@@ -36878,9 +36878,9 @@
   "time": {
    "year": 1274,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000752,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 33.618,
@@ -36940,9 +36940,9 @@
   "time": {
    "year": 1275,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000751,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 37.533333333,
@@ -38415,9 +38415,9 @@
   "time": {
    "year": 1305,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000721,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 41.028976944,
@@ -38597,9 +38597,9 @@
   "time": {
    "year": 1307,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000719,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 55.09,
@@ -38926,9 +38926,9 @@
   "time": {
    "year": 1315,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000711,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 54.48,
@@ -40072,9 +40072,9 @@
   "time": {
    "year": 1337,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000689,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 51.3667,
@@ -40347,9 +40347,9 @@
   "time": {
    "year": 1342,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000684,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -40436,9 +40436,9 @@
   "time": {
    "year": 1344,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000682,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -40494,9 +40494,9 @@
   "time": {
    "year": 1345,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000681,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 44.859444444,
@@ -40920,9 +40920,9 @@
   "time": {
    "year": 1352,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000674,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -40978,9 +40978,9 @@
   "time": {
    "year": 1354,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000672,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 40.4133,
@@ -42716,9 +42716,9 @@
   "time": {
    "year": 1401,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000625,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 52.506,
@@ -43316,9 +43316,9 @@
   "time": {
    "year": 1412,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000614,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -43370,9 +43370,9 @@
   "time": {
    "year": 1415,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000611,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -43521,9 +43521,9 @@
   "time": {
    "year": 1419,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000607,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 49.858055555,
@@ -44288,9 +44288,9 @@
   "time": {
    "year": 1430,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000596,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 49.414166666,
@@ -44319,9 +44319,9 @@
   "time": {
    "year": 1431,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000595,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -44896,9 +44896,9 @@
   "time": {
    "year": 1443,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000583,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -45809,9 +45809,9 @@
   "time": {
    "year": 1460,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000566,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 51.275,
@@ -46169,9 +46169,9 @@
   "time": {
    "year": 1463,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000563,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 42.24,
@@ -47350,9 +47350,9 @@
   "time": {
    "year": 1481,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000545,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 40.15,
@@ -47733,9 +47733,9 @@
   "time": {
    "year": 1494,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000532,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 28.438888888,
@@ -48364,9 +48364,9 @@
   "time": {
    "year": 1502,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000524,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 54.783333,
@@ -48550,9 +48550,9 @@
   "time": {
    "year": 1506,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.00052,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -48608,9 +48608,9 @@
   "time": {
    "year": 1508,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000518,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -49254,9 +49254,9 @@
   "time": {
    "year": 1516,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.00051,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -49428,9 +49428,9 @@
   "time": {
    "year": 1518,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000508,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -49540,9 +49540,9 @@
   "time": {
    "year": 1520,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000506,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -49931,9 +49931,9 @@
   "time": {
    "year": 1525,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000501,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 51.35583333,
@@ -50144,9 +50144,9 @@
   "time": {
    "year": 1528,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000498,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 24.7,
@@ -50384,9 +50384,9 @@
   "time": {
    "year": 1531,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000495,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -50473,9 +50473,9 @@
   "time": {
    "year": 1532,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000494,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -50674,9 +50674,9 @@
   "time": {
    "year": 1537,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000489,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": -13.258055555,
@@ -51966,9 +51966,9 @@
   "time": {
    "year": 1553,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000473,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -52171,9 +52171,9 @@
   "time": {
    "year": 1554,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000472,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 32.003861111,
@@ -52291,9 +52291,9 @@
   "time": {
    "year": 1556,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.00047,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 35.445083333,
@@ -52903,9 +52903,9 @@
   "time": {
    "year": 1565,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000461,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 52.124722,
@@ -53937,9 +53937,9 @@
   "time": {
    "year": 1573,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000453,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -53964,9 +53964,9 @@
   "time": {
    "year": 1573,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000453,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 52.0115769,
@@ -54231,9 +54231,9 @@
   "time": {
    "year": 1576,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.00045,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -54316,9 +54316,9 @@
   "time": {
    "year": 1576,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.00045,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 34.6311103,
@@ -54622,9 +54622,9 @@
   "time": {
    "year": 1580,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000446,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 35.02,
@@ -56328,9 +56328,9 @@
   "time": {
    "year": 1597,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000429,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 54.713,
@@ -57652,9 +57652,9 @@
   "time": {
    "year": 1613,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000413,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -58597,9 +58597,9 @@
   "time": {
    "year": 1625,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000401,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 46.2,
@@ -59503,9 +59503,9 @@
   "time": {
    "year": 1635,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000391,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 51.4308,
@@ -60185,9 +60185,9 @@
   "time": {
    "year": 1642,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000384,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 52.2603,
@@ -61258,9 +61258,9 @@
   "time": {
    "year": 1647,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000379,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 53.4494,
@@ -63673,9 +63673,9 @@
   "time": {
    "year": 1664,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000362,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 51.6833,
@@ -64234,9 +64234,9 @@
   "time": {
    "year": 1670,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000356,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -64288,9 +64288,9 @@
   "time": {
    "year": 1671,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000355,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -65372,9 +65372,9 @@
   "time": {
    "year": 1682,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000344,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -70115,9 +70115,9 @@
   "time": {
    "year": 1718,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000308,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -70200,9 +70200,9 @@
   "time": {
    "year": 1719,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000307,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 30.3478,
@@ -70548,9 +70548,9 @@
   "time": {
    "year": 1729,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000297,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -71240,9 +71240,9 @@
   "time": {
    "year": 1740,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000286,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -71828,9 +71828,9 @@
   "time": {
    "year": 1745,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000281,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -73133,9 +73133,9 @@
   "time": {
    "year": 1757,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000269,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 45.9421,
@@ -73257,9 +73257,9 @@
   "time": {
    "year": 1757,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000269,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -73346,9 +73346,9 @@
   "time": {
    "year": 1757,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000269,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 54.309166666,
@@ -73989,9 +73989,9 @@
   "time": {
    "year": 1758,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000268,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 14.6669,
@@ -74845,9 +74845,9 @@
   "time": {
    "year": 1760,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000266,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 52.5186,
@@ -75027,9 +75027,9 @@
   "time": {
    "year": 1761,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000265,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 51.3197,
@@ -75263,9 +75263,9 @@
   "time": {
    "year": 1762,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000264,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 40.726,
@@ -75511,9 +75511,9 @@
   "time": {
    "year": 1765,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000261,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 35.183333333,
@@ -83576,9 +83576,9 @@
   "time": {
    "year": 1796,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.00023,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 51.6,
@@ -83878,9 +83878,9 @@
   "time": {
    "year": 1797,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000229,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 36.516667,
@@ -86140,9 +86140,9 @@
   "time": {
    "year": 1804,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000222,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 57.046111111,
@@ -86233,9 +86233,9 @@
   "time": {
    "year": 1804,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000222,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 13.643972222,
@@ -91744,9 +91744,9 @@
   "time": {
    "year": 1812,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000214,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 24.466666666,
@@ -91775,9 +91775,9 @@
   "time": {
    "year": 1812,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000214,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 53.166666666,
@@ -91926,9 +91926,9 @@
   "time": {
    "year": 1813,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000213,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 41.913611111,
@@ -97378,9 +97378,9 @@
   "time": {
    "year": 1834,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000192,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -98435,9 +98435,9 @@
   "time": {
    "year": 1840,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000186,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 35.895555555,
@@ -99206,9 +99206,9 @@
   "time": {
    "year": 1843,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000183,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": -34.866944444,
@@ -99326,9 +99326,9 @@
   "time": {
    "year": 1845,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000181,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": -35.3776,
@@ -101265,9 +101265,9 @@
   "time": {
    "year": 1853,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000173,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -101478,9 +101478,9 @@
   "time": {
    "year": 1854,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000172,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 60.212222222,
@@ -103077,9 +103077,9 @@
   "time": {
    "year": 1861,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000165,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 10.767,
@@ -104534,9 +104534,9 @@
   "time": {
    "year": 1862,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000164,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -105305,9 +105305,9 @@
   "time": {
    "year": 1862,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000164,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 37.257222222,
@@ -106874,9 +106874,9 @@
   "time": {
    "year": 1863,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000163,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 38.96785,
@@ -114086,9 +114086,9 @@
   "time": {
    "year": 1876,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.00015,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 43.55,
@@ -116122,9 +116122,9 @@
   "time": {
    "year": 1884,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000142,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 25.976944444,
@@ -116814,9 +116814,9 @@
   "time": {
    "year": 1893,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000133,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -117332,9 +117332,9 @@
   "time": {
    "year": 1896,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.00013,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 13.483333333,
@@ -119167,9 +119167,9 @@
   "time": {
    "year": 1904,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000122,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -119643,9 +119643,9 @@
   "time": {
    "year": 1911,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000115,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -119856,9 +119856,9 @@
   "time": {
    "year": 1912,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000114,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 31.9033,
@@ -120375,9 +120375,9 @@
   "time": {
    "year": 1913,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000113,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -120727,9 +120727,9 @@
   "time": {
    "year": 1914,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000112,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 50.266667,
@@ -125230,9 +125230,9 @@
   "time": {
    "year": 1918,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000108,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -125284,9 +125284,9 @@
   "time": {
    "year": 1918,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000108,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -125311,9 +125311,9 @@
   "time": {
    "year": 1918,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000108,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 58.616666666,
@@ -125555,9 +125555,9 @@
   "time": {
    "year": 1918,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000108,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 45.85,
@@ -126202,9 +126202,9 @@
   "time": {
    "year": 1918,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000108,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -126492,9 +126492,9 @@
   "time": {
    "year": 1919,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000107,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -126666,9 +126666,9 @@
   "time": {
    "year": 1919,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000107,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -127022,9 +127022,9 @@
   "time": {
    "year": 1920,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000106,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -127706,9 +127706,9 @@
   "time": {
    "year": 1933,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 9.3e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -127760,9 +127760,9 @@
   "time": {
    "year": 1934,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 9.2e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -127787,9 +127787,9 @@
   "time": {
    "year": 1934,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 9.2e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -128302,9 +128302,9 @@
   "time": {
    "year": 1936,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 9e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 40.44083333,
@@ -128519,9 +128519,9 @@
   "time": {
    "year": 1937,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 8.9e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -128577,9 +128577,9 @@
   "time": {
    "year": 1937,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 8.9e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -128759,9 +128759,9 @@
   "time": {
    "year": 1938,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 8.8e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -129305,9 +129305,9 @@
   "time": {
    "year": 1939,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 8.7e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -130811,9 +130811,9 @@
   "time": {
    "year": 1941,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 8.5e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 55.8997,
@@ -131310,9 +131310,9 @@
   "time": {
    "year": 1941,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 8.5e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -131457,9 +131457,9 @@
   "time": {
    "year": 1941,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 8.5e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -132471,9 +132471,9 @@
   "time": {
    "year": 1942,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 8.4e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -132529,9 +132529,9 @@
   "time": {
    "year": 1942,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 8.4e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 21.0,
@@ -133435,9 +133435,9 @@
   "time": {
    "year": 1943,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 8.3e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -133613,9 +133613,9 @@
   "time": {
    "year": 1943,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 8.3e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -133729,9 +133729,9 @@
   "time": {
    "year": 1943,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 8.3e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": -6.154444444,
@@ -134325,9 +134325,9 @@
   "time": {
    "year": 1944,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 8.2e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -134805,9 +134805,9 @@
   "time": {
    "year": 1944,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 8.2e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 43.61194444,
@@ -135552,9 +135552,9 @@
   "time": {
    "year": 1945,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 8.1e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -135850,9 +135850,9 @@
   "time": {
    "year": 1945,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 8.1e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 21.963326758,
@@ -135943,9 +135943,9 @@
   "time": {
    "year": 1945,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 8.1e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -135970,9 +135970,9 @@
   "time": {
    "year": 1945,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 8.1e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 52.529806,
@@ -136214,9 +136214,9 @@
   "time": {
    "year": 1945,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 8.1e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 35.2932,
@@ -136388,9 +136388,9 @@
   "time": {
    "year": 1946,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 8e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -137116,9 +137116,9 @@
   "time": {
    "year": 1950,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 7.6e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -138017,9 +138017,9 @@
   "time": {
    "year": 1964,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 6.2e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 35.133333333,
@@ -138621,9 +138621,9 @@
   "time": {
    "year": 1968,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 5.8e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -140080,9 +140080,9 @@
   "time": {
    "year": 1983,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 4.3e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -140134,9 +140134,9 @@
   "time": {
    "year": 1984,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 4.2e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 31.5422,
@@ -141554,9 +141554,9 @@
   "time": {
    "year": 2001,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 2.5e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 42.96666667,
@@ -144182,9 +144182,9 @@
   "time": {
    "year": 2013,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 1.3e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 6.9,
@@ -144565,9 +144565,9 @@
   "time": {
    "year": 2014,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 1.2e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -144623,9 +144623,9 @@
   "time": {
    "year": 2014,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 1.2e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 31.4944,
@@ -144948,9 +144948,9 @@
   "time": {
    "year": 2015,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 1.1e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 12.3775,
@@ -145192,9 +145192,9 @@
   "time": {
    "year": 2015,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 1.1e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 36.658611111,
@@ -146888,9 +146888,9 @@
   "time": {
    "year": 2020,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 6e-06,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 39.76,
@@ -147318,9 +147318,9 @@
   "time": {
    "year": 2022,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 4e-06,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 46.756666666,
@@ -147442,9 +147442,9 @@
   "time": {
    "year": 2022,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 4e-06,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 47.1,
@@ -147473,9 +147473,9 @@
   "time": {
    "year": 2022,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 4e-06,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 48.983,
@@ -147504,9 +147504,9 @@
   "time": {
    "year": 2022,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 4e-06,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 48.99,
@@ -147593,9 +147593,9 @@
   "time": {
    "year": 2023,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 3e-06,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 31.6107,
@@ -147624,9 +147624,9 @@
   "time": {
    "year": 2023,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 3e-06,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 31.237222222,
@@ -147771,9 +147771,9 @@
   "time": {
    "year": 2023,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 3e-06,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 31.5,
@@ -148219,9 +148219,9 @@
   "time": {
    "year": -322,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.002348,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -148489,9 +148489,9 @@
   "time": {
    "year": -39,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.002065,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -148759,9 +148759,9 @@
   "time": {
    "year": 628,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001398,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 21.583305555,
@@ -149118,9 +149118,9 @@
   "time": {
    "year": 843,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001183,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -149253,9 +149253,9 @@
   "time": {
    "year": 880,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001146,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -149581,9 +149581,9 @@
   "time": {
    "year": 1082,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000944,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -149608,9 +149608,9 @@
   "time": {
    "year": 1091,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000935,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -149689,9 +149689,9 @@
   "time": {
    "year": 1127,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000899,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -149716,9 +149716,9 @@
   "time": {
    "year": 1135,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000891,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -149959,9 +149959,9 @@
   "time": {
    "year": 1157,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000869,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -150318,9 +150318,9 @@
   "time": {
    "year": 1214,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000812,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -150345,9 +150345,9 @@
   "time": {
    "year": 1219,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000807,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -150507,9 +150507,9 @@
   "time": {
    "year": 1230,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000796,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -150723,9 +150723,9 @@
   "time": {
    "year": 1256,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.00077,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 36.45,
@@ -151024,9 +151024,9 @@
   "time": {
    "year": 1270,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000756,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -151645,9 +151645,9 @@
   "time": {
    "year": 1326,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.0007,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -154076,9 +154076,9 @@
   "time": {
    "year": 1506,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.00052,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -154157,9 +154157,9 @@
   "time": {
    "year": 1512,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000514,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -154211,9 +154211,9 @@
   "time": {
    "year": 1516,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.00051,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -155550,9 +155550,9 @@
   "time": {
    "year": 1580,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000446,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -156472,9 +156472,9 @@
   "time": {
    "year": 1622,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000404,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -156499,9 +156499,9 @@
   "time": {
    "year": 1623,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000403,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -157124,9 +157124,9 @@
   "time": {
    "year": 1639,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000387,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -160327,9 +160327,9 @@
   "time": {
    "year": 1727,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000299,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -161149,9 +161149,9 @@
   "time": {
    "year": 1758,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000268,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -163310,9 +163310,9 @@
   "time": {
    "year": 1801,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000225,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -163773,9 +163773,9 @@
   "time": {
    "year": 1807,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000219,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 55.090833333,
@@ -165344,9 +165344,9 @@
   "time": {
    "year": 1822,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000204,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -167752,9 +167752,9 @@
   "time": {
    "year": 1858,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000168,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -168867,9 +168867,9 @@
   "time": {
    "year": 1867,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000159,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -169650,9 +169650,9 @@
   "time": {
    "year": 1878,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000148,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -170468,9 +170468,9 @@
   "time": {
    "year": 1885,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000141,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -174018,9 +174018,9 @@
   "time": {
    "year": 1919,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000107,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -176464,9 +176464,9 @@
   "time": {
    "year": 1930,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 9.6e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -178154,9 +178154,9 @@
   "time": {
    "year": 1940,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 8.6e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -178837,9 +178837,9 @@
   "time": {
    "year": 1945,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 8.1e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -182295,9 +182295,9 @@
   "time": {
    "year": 1966,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 6e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -187316,9 +187316,9 @@
   "time": {
    "year": 1992,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 3.4e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -188358,9 +188358,9 @@
   "time": {
    "year": 1996,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 3e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -189655,9 +189655,9 @@
   "time": {
    "year": 2002,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 2.4e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -189682,9 +189682,9 @@
   "time": {
    "year": 2002,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 2.4e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -189871,9 +189871,9 @@
   "time": {
    "year": 2003,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 2.3e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -193709,9 +193709,9 @@
   "time": {
    "year": -56,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.002082,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 50.77944,
@@ -194139,9 +194139,9 @@
   "time": {
    "year": 526,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.0015,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 36.23,
@@ -194321,9 +194321,9 @@
   "time": {
    "year": 627,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001399,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -194553,9 +194553,9 @@
   "time": {
    "year": 782,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.001244,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -194967,9 +194967,9 @@
   "time": {
    "year": 1084,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000942,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -195052,9 +195052,9 @@
   "time": {
    "year": 1096,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.00093,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 49.627,
@@ -195269,9 +195269,9 @@
   "time": {
    "year": 1182,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000844,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 41.0125,
@@ -195532,9 +195532,9 @@
   "time": {
    "year": 1260,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000766,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 34.05,
@@ -195772,9 +195772,9 @@
   "time": {
    "year": 1342,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000684,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -196012,9 +196012,9 @@
   "time": {
    "year": 1370,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000656,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 45.8353,
@@ -196275,9 +196275,9 @@
   "time": {
    "year": 1421,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000605,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -196573,9 +196573,9 @@
   "time": {
    "year": 1505,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000521,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -196600,9 +196600,9 @@
   "time": {
    "year": 1506,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.00052,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 38.708042,
@@ -197587,9 +197587,9 @@
   "time": {
    "year": 1593,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000433,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -198368,9 +198368,9 @@
   "time": {
    "year": 1657,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000369,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 35.7357,
@@ -199038,9 +199038,9 @@
   "time": {
    "year": 1707,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000319,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 35.358,
@@ -200083,9 +200083,9 @@
   "time": {
    "year": 1780,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000246,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -200385,9 +200385,9 @@
   "time": {
    "year": 1791,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000235,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 43.9508,
@@ -200776,9 +200776,9 @@
   "time": {
    "year": 1808,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000218,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -200803,9 +200803,9 @@
   "time": {
    "year": 1809,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000217,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": -35.047,
@@ -201790,9 +201790,9 @@
   "time": {
    "year": 1834,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000192,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -202154,9 +202154,9 @@
   "time": {
    "year": 1842,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000184,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 53.551,
@@ -202874,9 +202874,9 @@
   "time": {
    "year": 1858,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000168,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 51.5073,
@@ -203954,9 +203954,9 @@
   "time": {
    "year": 1876,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.00015,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 41.9425,
@@ -205518,9 +205518,9 @@
   "time": {
    "year": 1894,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000132,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 38.850833333,
@@ -207233,9 +207233,9 @@
   "time": {
    "year": 1909,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000117,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 37.0,
@@ -207566,9 +207566,9 @@
   "time": {
    "year": 1911,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000115,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 25.5394,
@@ -207810,9 +207810,9 @@
   "time": {
    "year": 1912,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000114,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 41.73194444,
@@ -208445,9 +208445,9 @@
   "time": {
    "year": 1915,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000111,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -208735,9 +208735,9 @@
   "time": {
    "year": 1918,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000108,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -208905,9 +208905,9 @@
   "time": {
    "year": 1918,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000108,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -208959,9 +208959,9 @@
   "time": {
    "year": 1918,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000108,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 46.5833,
@@ -209354,9 +209354,9 @@
   "time": {
    "year": 1919,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000107,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -209532,9 +209532,9 @@
   "time": {
    "year": 1920,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000106,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -209559,9 +209559,9 @@
   "time": {
    "year": 1920,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000106,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 53.13333333,
@@ -209679,9 +209679,9 @@
   "time": {
    "year": 1920,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000106,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -209915,9 +209915,9 @@
   "time": {
    "year": 1921,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000105,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -210159,9 +210159,9 @@
   "time": {
    "year": 1923,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000103,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -210511,9 +210511,9 @@
   "time": {
    "year": 1925,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000101,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -211014,9 +211014,9 @@
   "time": {
    "year": 1928,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 9.8e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 11.006944,
@@ -212357,9 +212357,9 @@
   "time": {
    "year": 1933,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 9.3e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 36.342777777,
@@ -212535,9 +212535,9 @@
   "time": {
    "year": 1933,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 9.3e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 36.8583,
@@ -213158,9 +213158,9 @@
   "time": {
    "year": 1936,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 9e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 40.50472222,
@@ -213429,9 +213429,9 @@
   "time": {
    "year": 1937,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 8.9e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 44.411944444,
@@ -213460,9 +213460,9 @@
   "time": {
    "year": 1937,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 8.9e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 19.631,
@@ -213584,9 +213584,9 @@
   "time": {
    "year": 1938,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 8.8e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -213611,9 +213611,9 @@
   "time": {
    "year": 1938,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 8.8e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -213638,9 +213638,9 @@
   "time": {
    "year": 1938,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 8.8e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -213696,9 +213696,9 @@
   "time": {
    "year": 1938,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 8.8e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -213870,9 +213870,9 @@
   "time": {
    "year": 1939,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 8.7e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -213897,9 +213897,9 @@
   "time": {
    "year": 1939,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 8.7e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -214164,9 +214164,9 @@
   "time": {
    "year": 1940,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 8.6e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 50.986667,
@@ -214795,9 +214795,9 @@
   "time": {
    "year": 1941,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 8.5e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 53.687777777,
@@ -215994,9 +215994,9 @@
   "time": {
    "year": 1943,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 8.3e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -216226,9 +216226,9 @@
   "time": {
    "year": 1943,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 8.3e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -216373,9 +216373,9 @@
   "time": {
    "year": 1943,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 8.3e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 36.7909,
@@ -217957,9 +217957,9 @@
   "time": {
    "year": 1945,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 8.1e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 51.378875,
@@ -218170,9 +218170,9 @@
   "time": {
    "year": 1945,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 8.1e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -218197,9 +218197,9 @@
   "time": {
    "year": 1945,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 8.1e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 45.66961944,
@@ -218290,9 +218290,9 @@
   "time": {
    "year": 1945,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 8.1e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -218874,9 +218874,9 @@
   "time": {
    "year": 1947,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 7.9e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -218928,9 +218928,9 @@
   "time": {
    "year": 1947,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 7.9e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -219133,9 +219133,9 @@
   "time": {
    "year": 1947,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 7.9e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -219551,9 +219551,9 @@
   "time": {
    "year": 1948,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 7.8e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 33.02861111,
@@ -220310,9 +220310,9 @@
   "time": {
    "year": 1950,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 7.6e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -220875,9 +220875,9 @@
   "time": {
    "year": 1952,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 7.4e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 51.516666666,
@@ -222029,9 +222029,9 @@
   "time": {
    "year": 1959,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 6.7e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -222393,9 +222393,9 @@
   "time": {
    "year": 1961,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 6.5e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -222679,9 +222679,9 @@
   "time": {
    "year": 1962,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 6.4e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 47.47,
@@ -223128,9 +223128,9 @@
   "time": {
    "year": 1964,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 6.2e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": -6.150114,
@@ -223345,9 +223345,9 @@
   "time": {
    "year": 1964,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 6.2e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -223519,9 +223519,9 @@
   "time": {
    "year": 1965,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 6.1e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -223813,9 +223813,9 @@
   "time": {
    "year": 1966,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 6e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 10.533,
@@ -223902,9 +223902,9 @@
   "time": {
    "year": 1966,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 6e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -223960,9 +223960,9 @@
   "time": {
    "year": 1967,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 5.9e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 29.591666666,
@@ -224788,9 +224788,9 @@
   "time": {
    "year": 1969,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 5.7e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -224815,9 +224815,9 @@
   "time": {
    "year": 1969,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 5.7e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 34.09388889,
@@ -225558,9 +225558,9 @@
   "time": {
    "year": 1970,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 5.6e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 34.08333333,
@@ -225589,9 +225589,9 @@
   "time": {
    "year": 1971,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 5.5e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -226487,9 +226487,9 @@
   "time": {
    "year": 1972,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 5.4e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 48.179694,
@@ -226607,9 +226607,9 @@
   "time": {
    "year": 1972,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 5.4e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -226816,9 +226816,9 @@
   "time": {
    "year": 1973,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 5.3e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -226990,9 +226990,9 @@
   "time": {
    "year": 1973,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 5.3e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 59.3332,
@@ -227776,9 +227776,9 @@
   "time": {
    "year": 1974,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 5.2e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -229565,9 +229565,9 @@
   "time": {
    "year": 1977,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 4.9e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 50.934798,
@@ -230308,9 +230308,9 @@
   "time": {
    "year": 1978,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 4.8e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -230722,9 +230722,9 @@
   "time": {
    "year": 1979,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 4.7e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -231140,9 +231140,9 @@
   "time": {
    "year": 1980,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 4.6e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 33.247778,
@@ -231202,9 +231202,9 @@
   "time": {
    "year": 1980,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 4.6e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -231283,9 +231283,9 @@
   "time": {
    "year": 1980,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 4.6e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 38.9603,
@@ -231639,9 +231639,9 @@
   "time": {
    "year": 1981,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 4.5e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 36.198133,
@@ -231817,9 +231817,9 @@
   "time": {
    "year": 1981,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 4.5e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 40.016,
@@ -232533,9 +232533,9 @@
   "time": {
    "year": 1982,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 4.4e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -233102,9 +233102,9 @@
   "time": {
    "year": 1983,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 4.3e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -235432,9 +235432,9 @@
   "time": {
    "year": 1987,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 3.9e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": -29.089723,
@@ -236109,9 +236109,9 @@
   "time": {
    "year": 1988,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 3.8e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -237514,9 +237514,9 @@
   "time": {
    "year": 1991,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 3.5e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -237661,9 +237661,9 @@
   "time": {
    "year": 1991,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 3.5e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 44.88,
@@ -239516,9 +239516,9 @@
   "time": {
    "year": 1992,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 3.4e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 44.39,
@@ -239667,9 +239667,9 @@
   "time": {
    "year": 1992,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 3.4e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 54.15305556,
@@ -239698,9 +239698,9 @@
   "time": {
    "year": 1992,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 3.4e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 43.835555555,
@@ -240337,9 +240337,9 @@
   "time": {
    "year": 1993,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 3.3e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 44.201944444,
@@ -240697,9 +240697,9 @@
   "time": {
    "year": 1993,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 3.3e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 2.13,
@@ -242613,9 +242613,9 @@
   "time": {
    "year": 1995,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 3.1e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 44.1,
@@ -243368,9 +243368,9 @@
   "time": {
    "year": 1996,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 3e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -243395,9 +243395,9 @@
   "time": {
    "year": 1996,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 3e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 36.295555555,
@@ -244428,9 +244428,9 @@
   "time": {
    "year": 1997,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 2.9e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 36.648265277,
@@ -245051,9 +245051,9 @@
   "time": {
    "year": 1998,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 2.8e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -245705,9 +245705,9 @@
   "time": {
    "year": 1999,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 2.7e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -245732,9 +245732,9 @@
   "time": {
    "year": 1999,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 2.7e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -245848,9 +245848,9 @@
   "time": {
    "year": 1999,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 2.7e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -246026,9 +246026,9 @@
   "time": {
    "year": 1999,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 2.7e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -246324,9 +246324,9 @@
   "time": {
    "year": 1999,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 2.7e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 43.228,
@@ -246355,9 +246355,9 @@
   "time": {
    "year": 1999,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 2.7e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -246382,9 +246382,9 @@
   "time": {
    "year": 1999,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 2.7e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 43.3506,
@@ -246413,9 +246413,9 @@
   "time": {
    "year": 1999,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 2.7e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 10.6052,
@@ -248263,9 +248263,9 @@
   "time": {
    "year": 2001,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 2.5e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 36.65671389,
@@ -249146,9 +249146,9 @@
   "time": {
    "year": 2002,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 2.4e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -249289,9 +249289,9 @@
   "time": {
    "year": 2002,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 2.4e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -249688,9 +249688,9 @@
   "time": {
    "year": 2002,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 2.4e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -250984,9 +250984,9 @@
   "time": {
    "year": 2004,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 2.2e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -251274,9 +251274,9 @@
   "time": {
    "year": 2004,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 2.2e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 43.18417,
@@ -252284,9 +252284,9 @@
   "time": {
    "year": 2005,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 2.1e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -253104,9 +253104,9 @@
   "time": {
    "year": 2006,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 2e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -253367,9 +253367,9 @@
   "time": {
    "year": 2006,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 2e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -253847,9 +253847,9 @@
   "time": {
    "year": 2006,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 2e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -254958,9 +254958,9 @@
   "time": {
    "year": 2007,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 1.9e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -255225,9 +255225,9 @@
   "time": {
    "year": 2007,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 1.9e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -255341,9 +255341,9 @@
   "time": {
    "year": 2007,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 1.9e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 17.972,
@@ -257184,9 +257184,9 @@
   "time": {
    "year": 2008,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 1.8e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -257211,9 +257211,9 @@
   "time": {
    "year": 2008,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 1.8e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -257420,9 +257420,9 @@
   "time": {
    "year": 2008,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 1.8e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": -26.902114591,
@@ -257795,9 +257795,9 @@
   "time": {
    "year": 2009,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 1.7e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -258155,9 +258155,9 @@
   "time": {
    "year": 2009,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 1.7e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": -17.4,
@@ -258399,9 +258399,9 @@
   "time": {
    "year": 2009,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 1.7e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": -26.1833,
@@ -258701,9 +258701,9 @@
   "time": {
    "year": 2009,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 1.7e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 12.35,
@@ -258945,9 +258945,9 @@
   "time": {
    "year": 2009,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 1.7e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -258972,9 +258972,9 @@
   "time": {
    "year": 2009,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 1.7e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -259367,9 +259367,9 @@
   "time": {
    "year": 2009,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 1.7e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -261512,9 +261512,9 @@
   "time": {
    "year": 2010,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 1.6e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -261717,9 +261717,9 @@
   "time": {
    "year": 2010,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 1.6e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -262123,9 +262123,9 @@
   "time": {
    "year": 2010,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 1.6e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -263796,9 +263796,9 @@
   "time": {
    "year": 2011,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 1.5e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -263997,9 +263997,9 @@
   "time": {
    "year": 2011,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 1.5e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 51.5909,
@@ -265023,9 +265023,9 @@
   "time": {
    "year": 2012,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 1.4e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -265050,9 +265050,9 @@
   "time": {
    "year": 2012,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 1.4e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 33.325,
@@ -265387,9 +265387,9 @@
   "time": {
    "year": 2012,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 1.4e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 45.4875,
@@ -266754,9 +266754,9 @@
   "time": {
    "year": 2013,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 1.3e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -267327,9 +267327,9 @@
   "time": {
    "year": 2013,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 1.3e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -267505,9 +267505,9 @@
   "time": {
    "year": 2013,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 1.3e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -267737,9 +267737,9 @@
   "time": {
    "year": 2013,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 1.3e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -269569,9 +269569,9 @@
   "time": {
    "year": 2014,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 1.2e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 36.366727777,
@@ -269627,9 +269627,9 @@
   "time": {
    "year": 2014,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 1.2e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -270045,9 +270045,9 @@
   "time": {
    "year": 2014,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 1.2e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -271601,9 +271601,9 @@
   "time": {
    "year": 2015,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 1.1e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 37.2668,
@@ -272596,9 +272596,9 @@
   "time": {
    "year": 2015,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 1.1e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -274215,9 +274215,9 @@
   "time": {
    "year": 2016,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 1e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 32.849,
@@ -274401,9 +274401,9 @@
   "time": {
    "year": 2016,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 1e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 56.665277777,
@@ -275276,9 +275276,9 @@
   "time": {
    "year": 2016,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 1e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -275303,9 +275303,9 @@
   "time": {
    "year": 2016,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 1e-05,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -276399,9 +276399,9 @@
   "time": {
    "year": 2017,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 9e-06,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -278134,9 +278134,9 @@
   "time": {
    "year": 2017,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 9e-06,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -278370,9 +278370,9 @@
   "time": {
    "year": 2017,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 9e-06,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 7.3369,
@@ -278618,9 +278618,9 @@
   "time": {
    "year": 2017,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 9e-06,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -279953,9 +279953,9 @@
   "time": {
    "year": 2018,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 8e-06,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -282524,9 +282524,9 @@
   "time": {
    "year": 2019,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 7e-06,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -283972,9 +283972,9 @@
   "time": {
    "year": 2019,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 7e-06,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 6.75,
@@ -285207,9 +285207,9 @@
   "time": {
    "year": 2020,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 6e-06,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 45.364722222,
@@ -285567,9 +285567,9 @@
   "time": {
    "year": 2020,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 6e-06,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": -20.43812,
@@ -287770,9 +287770,9 @@
   "time": {
    "year": 2021,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 5e-06,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -289930,9 +289930,9 @@
   "time": {
    "year": 2022,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 4e-06,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -289957,9 +289957,9 @@
   "time": {
    "year": 2022,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 4e-06,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 50.53744,
@@ -289988,9 +289988,9 @@
   "time": {
    "year": 2022,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 4e-06,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 47.1,
@@ -290313,9 +290313,9 @@
   "time": {
    "year": 2022,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 4e-06,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -291370,9 +291370,9 @@
   "time": {
    "year": 2022,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 4e-06,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -292605,9 +292605,9 @@
   "time": {
    "year": 2022,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 4e-06,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -294219,9 +294219,9 @@
   "time": {
    "year": 2023,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 3e-06,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -294722,9 +294722,9 @@
   "time": {
    "year": 2023,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 3e-06,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -294807,9 +294807,9 @@
   "time": {
    "year": 2023,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 3e-06,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 20.8824,
@@ -294838,9 +294838,9 @@
   "time": {
    "year": 2023,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 3e-06,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -294865,9 +294865,9 @@
   "time": {
    "year": 2023,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 3e-06,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -295047,9 +295047,9 @@
   "time": {
    "year": 2023,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 3e-06,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -295345,9 +295345,9 @@
   "time": {
    "year": 2023,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 3e-06,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 63.85,
@@ -295407,9 +295407,9 @@
   "time": {
    "year": 2023,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 3e-06,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 31.36,
@@ -295438,9 +295438,9 @@
   "time": {
    "year": 2023,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 3e-06,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -297548,9 +297548,9 @@
   "time": {
    "year": 2024,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 2e-06,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -298059,9 +298059,9 @@
   "time": {
    "year": 2024,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 2e-06,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": -17.4,
@@ -298887,9 +298887,9 @@
   "time": {
    "year": 2024,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 2e-06,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -299212,9 +299212,9 @@
   "time": {
    "year": 2024,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 2e-06,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 11.8409,
@@ -299243,9 +299243,9 @@
   "time": {
    "year": 2024,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 2e-06,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -299270,9 +299270,9 @@
   "time": {
    "year": 2024,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 2e-06,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 49.0,
@@ -300036,9 +300036,9 @@
   "time": {
    "year": 2024,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 2e-06,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -301565,9 +301565,9 @@
   "time": {
    "year": 2025,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 1e-06,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -302541,9 +302541,9 @@
   "time": {
    "year": 2025,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 1e-06,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -302684,9 +302684,9 @@
   "time": {
    "year": 2025,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 1e-06,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 10.625,
@@ -302715,9 +302715,9 @@
   "time": {
    "year": 2025,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 1e-06,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -303427,9 +303427,9 @@
   "time": {
    "year": 2026,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.0,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -307524,9 +307524,9 @@
   "time": {
    "year": 1505,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000521,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": -40.32,
@@ -308043,9 +308043,9 @@
   "time": {
    "year": 1542,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000484,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 19.0,
@@ -308074,9 +308074,9 @@
   "time": {
    "year": 1543,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000483,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": 24.766666666,
@@ -318229,9 +318229,9 @@
   "time": {
    "year": 1774,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000252,
-   "precision": "month"
+   "precision": "year"
   },
   "place": {
    "lat": -15.816666666,
@@ -319508,9 +319508,9 @@
   "time": {
    "year": 1780,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000246,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -320480,9 +320480,9 @@
   "time": {
    "year": 1782,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000244,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
@@ -332904,9 +332904,9 @@
   "time": {
    "year": 1784,
    "month": null,
-   "day": 1,
+   "day": null,
    "ma": 0.000242,
-   "precision": "month"
+   "precision": "year"
   },
   "place": null,
   "description": "",
