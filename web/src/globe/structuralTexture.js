@@ -237,7 +237,10 @@ function iceCapsFor(ma, h) {
 export class StructuralTextureBuilder {
   constructor() {
     this.canvas = makeCanvas(W_TEX, H_TEX);
-    this.ctx = this.canvas.getContext("2d");
+    // willReadFrequently: build() does several getImageData readbacks per frame
+    // (ocean base, composite re-read for noise) -- flag the context so the
+    // browser keeps it on a CPU-readback-friendly path instead of warning.
+    this.ctx = this.canvas.getContext("2d", { willReadFrequently: true });
   }
 
   /** Build the equirect texture for time `ma` (any value, 0-4500). Returns

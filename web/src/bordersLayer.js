@@ -11,6 +11,14 @@
 // without the crossfade (a hard swap reads more clearly for borders, where a
 // blended in-between shape would be actively misleading).
 
+// GPL-3.0 credit for the historical-basemaps border data (see
+// web/public/borders/ATTRIBUTION.md). Shown in Leaflet's attribution control
+// only while this mode is active, added/removed explicitly in show()/hide()
+// (a layer-level `attribution` option is not reliably surfaced for a GeoJSON
+// group, so we drive the control directly instead).
+const BORDERS_ATTRIBUTION =
+  'Borders: <a href="https://github.com/aourednik/historical-basemaps" target="_blank" rel="noopener">historical-basemaps</a> (GPL-3.0)';
+
 function hashColor(name) {
   let h = 0;
   for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) | 0;
@@ -55,9 +63,16 @@ export class BordersLayer {
   }
 
   async _getGeojson(year) {
-    if (this._geojsonCache.has(year)) return this._geojsonCache.get(year);
     const snap = this._nearestSnapshot(year);
     if (!snap) return null;
+    // Cache is keyed by snapshot year (not the raw query year), and every
+    // return goes through the same {gj, snapYear} shape -- an earlier version
+    // checked the cache with the raw `year` while storing under `snap.year`,
+    // so a rare exact-year hit returned the bare geojson instead of the wrapper
+    // and setYear() then rendered nothing / lost the current-year label.
+    if (this._geojsonCache.has(snap.year)) {
+      return { gj: this._geojsonCache.get(snap.year), snapYear: snap.year };
+    }
     const res = await fetch(`${this.bordersBase}/${snap.file}`);
     const gj = await res.json();
     this._geojsonCache.set(snap.year, gj);
@@ -107,12 +122,16 @@ export class BordersLayer {
   }
 
   show() {
+    if (this.visible) return;
     this.visible = true;
+    if (this.map.attributionControl) this.map.attributionControl.addAttribution(BORDERS_ATTRIBUTION);
     if (this.layer && !this.map.hasLayer(this.layer)) this.layer.addTo(this.map);
   }
 
   hide() {
+    if (!this.visible) return;
     this.visible = false;
+    if (this.map.attributionControl) this.map.attributionControl.removeAttribution(BORDERS_ATTRIBUTION);
     if (this.layer && this.map.hasLayer(this.layer)) this.map.removeLayer(this.layer);
   }
 
