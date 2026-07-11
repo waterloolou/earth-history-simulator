@@ -82,11 +82,47 @@ function uncertaintyFrac(ma) {
   return t * t * (3.0 - 2.0 * t);
 }
 
+/** Scanline-fill one polygon into a single-channel Float32 mask region (values
+ * 0/1). Vertices are given in [0,1] texture coords; they're scaled to whole-
+ * image px and offset by the region origin (x0,y0). Uses the even-odd rule,
+ * which matches canvas fill for the simple, non-self-intersecting continent/
+ * coastline polygons this app deals with. Replaces the old per-polygon canvas
+ * + getImageData rasterizer: at present day one build splats ~118 real
+ * Natural-Earth polygons, and 118 separate getImageData GPU read-backs cost
+ * ~78ms of a ~105ms build. A pure-JS scanline fill has no read-back; the ~1px
+ * of edge antialiasing lost is irrelevant since the mask is box-blurred and
+ * then hard-thresholded at 0.30 downstream. */
+function scanlineFill(mask, poly, w, h, x0, y0, sw, sh) {
+  const n = poly.length;
+  const vx = new Float64Array(n), vy = new Float64Array(n);
+  for (let i = 0; i < n; i++) { vx[i] = poly[i][0] * w - x0; vy[i] = poly[i][1] * h - y0; }
+  const xs = [];
+  for (let sy = 0; sy < sh; sy++) {
+    const yc = sy + 0.5;
+    xs.length = 0;
+    for (let i = 0, j = n - 1; i < n; j = i++) {
+      const yi = vy[i], yj = vy[j];
+      if ((yi <= yc && yj > yc) || (yj <= yc && yi > yc)) {
+        xs.push(vx[i] + (yc - yi) / (yj - yi) * (vx[j] - vx[i]));
+      }
+    }
+    if (xs.length < 2) continue;
+    xs.sort((a, b) => a - b);
+    const rowOff = sy * sw;
+    for (let k = 0; k + 1 < xs.length; k += 2) {
+      let xa = Math.round(xs[k]), xb = Math.round(xs[k + 1]) - 1;
+      if (xa < 0) xa = 0;
+      if (xb >= sw) xb = sw - 1;
+      for (let x = xa; x <= xb; x++) mask[rowOff + x] = 1;
+    }
+  }
+}
+
 /** Rasterize + blur one polygon into `accumulated` (a full-image w*h buffer),
- * doing the canvas allocation, getImageData, and box blur only inside the
- * polygon's bounding box padded by the blur's finite support (3*radius for a
- * 3-pass box blur) -- bit-identical to blurring the full image, but far
- * cheaper for a continent covering a fraction of the 720x360 map. */
+ * doing the scanline fill and box blur only inside the polygon's bounding box
+ * padded by the blur's finite support (3*radius for a 3-pass box blur) --
+ * bit-identical (post-threshold) to blurring the full image, but far cheaper
+ * for a continent covering a fraction of the 720x360 map. */
 function splatPolyRegion(accumulated, poly, w, h, aFrac, radius) {
   let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
   for (const [x, y] of poly) {
@@ -102,19 +138,8 @@ function splatPolyRegion(accumulated, poly, w, h, aFrac, radius) {
   const sw = x1 - x0, sh = y1 - y0;
   if (sw < 1 || sh < 1) return;
 
-  const c = makeCanvas(sw, sh);
-  const ctx = c.getContext("2d");
-  ctx.fillStyle = "#fff";
-  ctx.beginPath();
-  poly.forEach(([x, y], i) => {
-    const px = x * w - x0, py = y * h - y0;
-    if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
-  });
-  ctx.closePath();
-  ctx.fill();
-  const { data } = ctx.getImageData(0, 0, sw, sh);
   const mask = new Float32Array(sw * sh);
-  for (let i = 0, p = 0; i < mask.length; i++, p += 4) mask[i] = data[p] / 255;
+  scanlineFill(mask, poly, w, h, x0, y0, sw, sh);
 
   const blurred = boxBlur(mask, sw, sh, radius);
   for (let sy = 0; sy < sh; sy++) {
