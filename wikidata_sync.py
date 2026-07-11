@@ -168,13 +168,25 @@ def sync_category(name: str, spec: dict) -> list[dict]:
             seen_qids.add(qid)
 
             title = b.get("itemLabel", {}).get("value", qid)
+            # Skip items whose English label never resolved: the label service
+            # falls back to the bare QID (e.g. "Q471407"), which is meaningless
+            # on the timeline/map. (Wikipedia sitelink count can be met by
+            # non-English wikis alone, so unlabeled items do slip through.)
+            if re.fullmatch(r"Q\d+", title):
+                continue
             year, month, day = _parse_date(b["date"]["value"]) if "date" in b else (None, None, None)
             if year is None:
                 continue
             precision = _precision_label(int(b["datePrecision"]["value"])) if "datePrecision" in b else "year"
-            if precision != "day":
-                month = None
+            # Wikidata pads unknown components to 01 (e.g. a month-precision date
+            # comes back as YYYY-MM-01). Drop the padded components so we never
+            # overstate precision: keep month only for month/day precision, and
+            # keep day only for day precision. (These two conditions were
+            # previously swapped, which nulled the real month on month-precision
+            # events while keeping the meaningless padded day=1.)
             if precision not in ("day", "month"):
+                month = None
+            if precision != "day":
                 day = None
 
             place = None

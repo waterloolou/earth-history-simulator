@@ -101,7 +101,13 @@ export class GlobeView {
     for (const t of [bm, cloud, plateOffset]) {
       t.wrapS = THREE.RepeatWrapping;
       t.wrapT = THREE.ClampToEdgeWrapping;
-      t.colorSpace = THREE.SRGBColorSpace ?? t.colorSpace;
+      // Sample raw byte values with NO sRGB->linear decode. The custom
+      // ShaderMaterial composites in sRGB byte-space (mirroring main.py's uint8
+      // pipeline: rgb = tex_bytes * shade) and never re-encodes on output, so
+      // tagging these sRGB gamma-darkens the whole globe to near-black. It would
+      // also corrupt plate_offset.png, which stores displacement DATA, not color.
+      // This matches the Scotese keyframe textures, which are already left raw.
+      t.colorSpace = THREE.NoColorSpace ?? THREE.LinearSRGBColorSpace;
     }
     this._blueMarbleTex = bm;
     this._cloudTex = cloud;

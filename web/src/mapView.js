@@ -3,17 +3,20 @@
 
 import { CATEGORY_COLOR, formatEventDate } from "./events.js";
 
-function pinIcon(color) {
+function pinIcon(color, category) {
   return L.divIcon({
     className: "",
-    html: `<div class="event-pin" style="width:14px;height:14px;background:${color}"></div>`,
+    // role/aria-label give screen readers a meaningful pin instead of an empty
+    // colored div; the category name also disambiguates the color coding for
+    // colorblind users who can't distinguish the pin hues alone.
+    html: `<div class="event-pin" role="img" aria-label="${category} event" title="${category} event" style="width:14px;height:14px;background:${color}"></div>`,
     iconSize: [14, 14],
     iconAnchor: [7, 7],
   });
 }
 
 const ICONS = Object.fromEntries(
-  Object.entries(CATEGORY_COLOR).map(([cat, color]) => [cat, pinIcon(color)])
+  Object.entries(CATEGORY_COLOR).map(([cat, color]) => [cat, pinIcon(color, cat)])
 );
 
 export class MapView {
@@ -45,9 +48,11 @@ export class MapView {
     for (const e of events) {
       if (!e.place || e.place.lat == null || e.place.lon == null) continue;
       const icon = ICONS[e.category] || ICONS.historical;
-      const marker = L.marker([e.place.lat, e.place.lon], { icon });
+      // keyboard:true (Leaflet default) makes the marker Tab-focusable; alt gives
+      // it an accessible name announced on focus.
+      const marker = L.marker([e.place.lat, e.place.lon], { icon, keyboard: true, alt: e.title });
       // Popup HTML is built lazily on first open (not up front for every marker):
-      // for ~6.9k markers, eagerly building/escaping every popup string is pure
+      // for ~12k markers, eagerly building/escaping every popup string is pure
       // waste since almost none are ever opened.
       marker.bindPopup(() => this._popupHtml(e));
       marker.on("click", () => { if (this._onSelect) this._onSelect(e); });
