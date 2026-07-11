@@ -1,7 +1,7 @@
 // main.js -- app entry point: loads data, wires the timeline, mode dispatch
 // (globe vs map viewport), playback loop, and the info panel.
 
-import { loadAllData } from "./dataLoader.js";
+import { loadCoreData, loadEvents } from "./dataLoader.js";
 import { Timeline, MAP_HANDOFF_SPAN_MA } from "./timeline.js";
 import { MapView } from "./mapView.js";
 import { getPeriodAt, formatEventDate, formatMa } from "./events.js";
@@ -157,13 +157,12 @@ async function init() {
   cacheEls();
   bindControls();
 
-  const data = await loadAllData();
+  const data = await loadCoreData();
   periods = data.periods;
-  allEvents = data.events;
   currentMa = periods.length ? periods[0].start : 4500;
 
   timeline = new Timeline(els.timelineCanvas, periods);
-  timeline.setEvents(allEvents);
+  timeline.setEvents(allEvents); // empty for now; populated when events.json arrives
   timeline.onSeek((ma) => { currentMa = ma; });
   timeline.onWindowChange((win) => {
     els.timelineBackBtn.classList.toggle("hidden", timeline.zoomStack.length === 0);
@@ -190,6 +189,18 @@ async function init() {
   setMode(globeAvailable ? "globe" : "map");
   els.loadingOverlay.classList.add("hidden");
   requestAnimationFrame(tick);
+
+  // Events are not needed for the initial globe view (they only surface as
+  // timeline markers below ~3 Ma of span and in map mode), so fetch the large
+  // events.json in the background after the app is already interactive.
+  loadEvents()
+    .then((events) => {
+      allEvents = events;
+      timeline.setEvents(allEvents.filter(
+        (e) => activeCategories.has(e.category) || e.category === "geological_period"));
+      if (viewportMode === "map") refreshMapEvents();
+    })
+    .catch((exc) => console.error("Failed to load events.json:", exc));
 }
 
 init().catch((exc) => {

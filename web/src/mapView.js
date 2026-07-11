@@ -25,7 +25,10 @@ export class MapView {
       maxZoom: 19,
     }).addTo(this.map);
 
-    this.cluster = L.markerClusterGroup({ maxClusterRadius: 45 });
+    // chunkedLoading spreads large marker inserts across animation frames so
+    // setEvents() never blocks the main thread for a full second on the ~6.9k
+    // geolocated events (see addLayers bulk insert below).
+    this.cluster = L.markerClusterGroup({ maxClusterRadius: 45, chunkedLoading: true });
     this.map.addLayer(this.cluster);
     this._markersByEventId = new Map();
     this._onSelect = null;
@@ -38,24 +41,34 @@ export class MapView {
   setEvents(events) {
     this.cluster.clearLayers();
     this._markersByEventId.clear();
+    const markers = [];
     for (const e of events) {
       if (!e.place || e.place.lat == null || e.place.lon == null) continue;
       const icon = ICONS[e.category] || ICONS.historical;
       const marker = L.marker([e.place.lat, e.place.lon], { icon });
-      const dateStr = formatEventDate(e.time);
-      const wikiUrl = (e.wiki && e.wiki.url) || `https://en.wikipedia.org/wiki/${encodeURIComponent(e.title)}`;
-      marker.bindPopup(
-        `<div class="event-popup">
-           <h3>${escapeHtml(e.title)}</h3>
-           <div class="meta">${escapeHtml(dateStr)} &middot; ${escapeHtml(e.place.region || "")}</div>
-           <p>${escapeHtml(e.description || "")}</p>
-           <a href="${wikiUrl}" target="_blank" rel="noopener">Read more on Wikipedia &rarr;</a>
-         </div>`
-      );
+      // Popup HTML is built lazily on first open (not up front for every marker):
+      // for ~6.9k markers, eagerly building/escaping every popup string is pure
+      // waste since almost none are ever opened.
+      marker.bindPopup(() => this._popupHtml(e));
       marker.on("click", () => { if (this._onSelect) this._onSelect(e); });
-      this.cluster.addLayer(marker);
+      markers.push(marker);
       this._markersByEventId.set(e.id, marker);
     }
+    // Bulk insert -- markercluster's addLayers is dramatically faster than
+    // repeated addLayer (which re-clusters on every call) and, with
+    // chunkedLoading, yields to the event loop between chunks.
+    this.cluster.addLayers(markers);
+  }
+
+  _popupHtml(e) {
+    const dateStr = formatEventDate(e.time);
+    const wikiUrl = (e.wiki && e.wiki.url) || `https://en.wikipedia.org/wiki/${encodeURIComponent(e.title)}`;
+    return `<div class="event-popup">
+       <h3>${escapeHtml(e.title)}</h3>
+       <div class="meta">${escapeHtml(dateStr)} &middot; ${escapeHtml(e.place.region || "")}</div>
+       <p>${escapeHtml(e.description || "")}</p>
+       <a href="${wikiUrl}" target="_blank" rel="noopener">Read more on Wikipedia &rarr;</a>
+     </div>`;
   }
 
   focusOnYearRange(loYear, hiYear) {
