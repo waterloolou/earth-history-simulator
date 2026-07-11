@@ -131,14 +131,6 @@ function refreshMapEvents() {
   ));
 }
 
-function timelineEventFilter() {
-  // The timeline always shows markers for every category currently enabled
-  // via the checkboxes (when relevant) so switching modes doesn't require
-  // re-fetching -- category relevance to the *map* is handled separately in
-  // refreshMapEvents()/currentModeCategories().
-  return allEvents;
-}
-
 function updateInfoPanel(ma) {
   const p = getPeriodAt(periods, ma);
   if (!p) return;
@@ -280,7 +272,10 @@ async function init() {
   loadEvents()
     .then((events) => {
       allEvents = events;
-      timeline.setEvents(timelineEventFilter());
+      // The timeline shows markers for every loaded category regardless of
+      // the active mode/checkboxes -- category relevance to the *map* is
+      // handled separately in refreshMapEvents()/currentModeCategories().
+      timeline.setEvents(allEvents);
       if (MODE_BY_ID[activeModeId].kind === "map") refreshMapEvents();
     })
     .catch((exc) => console.error("Failed to load events:", exc));
