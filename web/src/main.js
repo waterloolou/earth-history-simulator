@@ -26,6 +26,18 @@ const els = {};
 
 function q(id) { return document.getElementById(id); }
 
+/** Rebuilding the map's marker layer (clearLayers + addLayers over
+ * potentially tens of thousands of events) is the dominant cost of any
+ * per-interaction refresh; debouncing it means a rapid zoom/pan gesture only
+ * pays that cost once it settles, instead of once per wheel-tick. */
+function debounce(fn, ms) {
+  let t = null;
+  return (...args) => {
+    clearTimeout(t);
+    t = setTimeout(() => fn(...args), ms);
+  };
+}
+
 function cacheEls() {
   els.globeContainer = q("globe-view");
   els.mapContainer = q("map-view");
@@ -168,11 +180,17 @@ async function init() {
   timeline = new Timeline(els.timelineCanvas, periods);
   timeline.setEvents(allEvents); // empty for now; populated when events.json arrives
   timeline.onSeek((ma) => { currentMa = ma; });
+  const debouncedRefreshMapEvents = debounce(refreshMapEvents, 200);
   timeline.onWindowChange((win) => {
     els.timelineBackBtn.classList.toggle("hidden", timeline.zoomStack.length === 0);
     const span = win.hiMa - win.loMa;
+    const wasMap = viewportMode === "map";
     setMode(span <= MAP_HANDOFF_SPAN_MA ? "map" : (viewportMode === "map" && span > MAP_HANDOFF_SPAN_MA ? "globe" : viewportMode));
-    if (viewportMode === "map") refreshMapEvents();
+    // setMode() already refreshes immediately on first entry into map mode
+    // (so there's no blank map); while continuing to zoom/pan within map
+    // mode, subsequent refreshes are debounced so a rapid gesture doesn't
+    // rebuild the marker layer once per wheel-tick.
+    if (viewportMode === "map" && wasMap) debouncedRefreshMapEvents();
   });
   timeline.onHoverEvent((e) => showEventDetail(e));
 

@@ -92,19 +92,33 @@ _QID_TITLE_RE = re.compile(r"^Q\d+$")
 
 
 def export_events(out_dir: str):
-    from events import periods_as_events, tol_as_events, load_discrete_events
+    """Write discrete (historical/scientific/cultural/...) events sharded by
+    category into out_dir/events/<category>.json, plus an events_index.json
+    manifest. Sharding lets the web app fetch categories in parallel and, in
+    the future, skip categories a given mode/filter doesn't need -- important
+    as the Wikidata-sourced dataset keeps growing (single-blob events.json was
+    already multiple MB with ~12k events). Geological periods and Tree-of-Life
+    clades are NOT included here: they're already exported in their native
+    shape by export_periods()/export_tree_of_life(), and every place that would
+    consume them from this file explicitly filters them back out (they carry
+    no map coordinates and no discrete-marker meaning), so duplicating them
+    here was always dead weight.
+    """
+    from events import load_discrete_events
 
-    events = periods_as_events() + tol_as_events() + load_discrete_events()
-    flat = []
+    events_dir = os.path.join(out_dir, "events")
+    os.makedirs(events_dir, exist_ok=True)
+
+    by_category: dict[str, list] = {}
     skipped = 0
-    for e in events:
+    for e in load_discrete_events():
         # Drop discrete Wikidata items whose English label never resolved: their
         # title is a bare QID (e.g. "Q471407"), which is meaningless to a reader
-        # on the timeline and map. Geological/tree-of-life adapters are exempt.
+        # on the timeline and map.
         if e.source == "wikidata" and (not e.title or _QID_TITLE_RE.match(e.title)):
             skipped += 1
             continue
-        flat.append({
+        by_category.setdefault(e.category, []).append({
             "id": e.id, "title": e.title, "category": e.category, "subtype": e.subtype,
             "viz_mode": e.viz_mode,
             "time": {"ma": e.time.ma, "year": e.time.year, "month": e.time.month,
@@ -119,10 +133,20 @@ def export_events(out_dir: str):
             "source": e.source,
             "extra": e.extra,
         })
-    path = os.path.join(out_dir, "events.json")
-    with open(path, "w", encoding="utf-8") as fh:
-        json.dump(flat, fh)
-    print(f"Wrote {path} ({len(flat)} events total"
+
+    index = {"categories": []}
+    total = 0
+    for category, items in sorted(by_category.items()):
+        fname = f"{category}.json"
+        with open(os.path.join(events_dir, fname), "w", encoding="utf-8") as fh:
+            json.dump(items, fh)
+        index["categories"].append({"id": category, "count": len(items), "file": f"events/{fname}"})
+        total += len(items)
+        print(f"Wrote {os.path.join(events_dir, fname)} ({len(items)} events)")
+
+    with open(os.path.join(out_dir, "events_index.json"), "w", encoding="utf-8") as fh:
+        json.dump(index, fh)
+    print(f"Wrote events_index.json ({total} events total across {len(by_category)} categories"
           + (f", skipped {skipped} unlabeled QID-only events)" if skipped else ")"))
 
 

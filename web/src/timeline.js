@@ -12,8 +12,14 @@ const EON_BANDS = [
 ];
 
 const MIN_SPAN_MA = 0.00002;          // floor: ~7 hours, effectively single-day resolution
-const MARKER_SPAN_THRESHOLD_MA = 3;    // below this span, plot discrete event markers
+// Below this span, plot discrete event markers. Deliberately just a few times
+// wider than MAP_HANDOFF_SPAN_MA (not, say, 3 Ma/3 million years) -- markers
+// are meant to preview the map handoff as you approach it, not render the
+// entire multi-thousand-event dataset onto one timeline the moment you're
+// merely somewhere inside the Quaternary.
+const MARKER_SPAN_THRESHOLD_MA = 0.05;   // ~50,000 years
 export const MAP_HANDOFF_SPAN_MA = 0.01; // ~10,000 years: mode auto-switches to map below this
+const MAX_MARKERS_DRAWN = 400; // hard cap on per-frame draw calls regardless of dataset size
 
 export class Timeline {
   constructor(canvas, periods) {
@@ -48,7 +54,33 @@ export class Timeline {
   onWindowChange(cb) { this._onWindowChange = cb; }
   onHoverEvent(cb) { this._onHoverEvent = cb; }
 
-  setEvents(events) { this.events = events; }
+  /** Store events sorted ascending by ma so render()'s hot path (called every
+   * animation frame) can binary-search the visible range instead of scanning
+   * the whole array -- with several thousand events this was the dominant
+   * cost of zooming into the fine-grained (<=3 Ma) marker view. */
+  setEvents(events) {
+    this.events = events.slice().sort((a, b) => a.time.ma - b.time.ma);
+  }
+
+  /** Index of the first event with time.ma >= ma (lower_bound). */
+  _lowerBound(ma) {
+    let lo = 0, hi = this.events.length;
+    while (lo < hi) {
+      const mid = (lo + hi) >> 1;
+      if (this.events[mid].time.ma < ma) lo = mid + 1; else hi = mid;
+    }
+    return lo;
+  }
+
+  /** Index one past the last event with time.ma <= ma (upper_bound). */
+  _upperBound(ma) {
+    let lo = 0, hi = this.events.length;
+    while (lo < hi) {
+      const mid = (lo + hi) >> 1;
+      if (this.events[mid].time.ma <= ma) lo = mid + 1; else hi = mid;
+    }
+    return lo;
+  }
 
   getWindow() { return { loMa: this.loMa, hiMa: this.hiMa }; }
 
@@ -239,13 +271,21 @@ export class Timeline {
       ctx.stroke();
     }
 
-    // discrete event markers at fine zoom
+    // discrete event markers at fine zoom -- binary-search the visible ma
+    // range instead of scanning the whole (multi-thousand-event) array, since
+    // this runs every animation frame while zoomed in.
     this._markerHitboxes = [];
     const span = this.hiMa - this.loMa;
     if (span <= MARKER_SPAN_THRESHOLD_MA) {
       const markerY = barY + barH + 22;
-      for (const e of this.events) {
-        if (e.time.ma < this.loMa || e.time.ma > this.hiMa) continue;
+      const startIdx = this._lowerBound(this.loMa);
+      const endIdx = this._upperBound(this.hiMa);
+      const count = endIdx - startIdx;
+      // Evenly sub-sample rather than truncate, so a dense cluster doesn't
+      // just hide everything after the first MAX_MARKERS_DRAWN.
+      const step = Math.max(1, Math.ceil(count / MAX_MARKERS_DRAWN));
+      for (let i = startIdx; i < endIdx; i += step) {
+        const e = this.events[i];
         if (!(e.category in CATEGORY_COLOR)) continue;
         if (e.category === "geological_period" || e.category === "tree_of_life") continue;
         const x = this.maToX(e.time.ma);

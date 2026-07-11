@@ -25,8 +25,29 @@ export async function loadCoreData() {
   return { periods, diversity, continents, treeOfLife };
 }
 
-export async function loadEvents() {
-  return fetchJson("public/data/events.json");
+let _eventsIndexPromise = null;
+
+/** The manifest of available event categories (id/count/file), fetched once
+ * and cached -- callers that only need to know what's available (e.g. a
+ * mode/category picker) don't need to pull any category's full event list. */
+export function loadEventsIndex() {
+  if (!_eventsIndexPromise) _eventsIndexPromise = fetchJson("public/data/events_index.json");
+  return _eventsIndexPromise;
+}
+
+/** Fetch discrete events, sharded by category (see scripts/export_data.py) so
+ * a growing Wikidata-sourced dataset doesn't mean one ever-larger blob: each
+ * category is its own file, fetched in parallel, so time-to-first-marker
+ * isn't gated on categories the caller doesn't need yet. Pass `categories` to
+ * fetch only a subset (e.g. a mode that only cares about "historical"); omit
+ * it to fetch everything the index lists. */
+export async function loadEvents(categories = null) {
+  const index = await loadEventsIndex();
+  const wanted = categories
+    ? index.categories.filter((c) => categories.includes(c.id))
+    : index.categories;
+  const shards = await Promise.all(wanted.map((c) => fetchJson(`public/data/${c.file}`)));
+  return shards.flat();
 }
 
 /** Kept for callers that want everything up front (unused by the app's hot
