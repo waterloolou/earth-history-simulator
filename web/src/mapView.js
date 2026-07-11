@@ -2,6 +2,7 @@
 // Leaflet (window.L) is loaded via classic <script> tags in index.html.
 
 import { CATEGORY_COLOR, formatEventDate } from "./events.js";
+import { BordersLayer } from "./bordersLayer.js";
 
 function pinIcon(color, category) {
   return L.divIcon({
@@ -35,11 +36,31 @@ export class MapView {
     this.map.addLayer(this.cluster);
     this._markersByEventId = new Map();
     this._onSelect = null;
+
+    this.borders = new BordersLayer(this.map);
   }
 
   onSelect(cb) { this._onSelect = cb; }
 
   invalidateSize() { this.map.invalidateSize(); }
+
+  /** Show/hide the event-pin cluster layer (the "Nations & Borders" mode
+   * hides pins entirely so the border polygons aren't obscured/competing). */
+  setPinsVisible(visible) {
+    if (visible) { if (!this.map.hasLayer(this.cluster)) this.map.addLayer(this.cluster); }
+    else { if (this.map.hasLayer(this.cluster)) this.map.removeLayer(this.cluster); }
+  }
+
+  setBordersVisible(visible) {
+    if (visible) this.borders.show(); else this.borders.hide();
+  }
+
+  /** Update the borders layer to the nearest available year, if it's
+   * currently visible. Safe/cheap to call every frame -- setYear() itself
+   * no-ops once the nearest snapshot hasn't changed. */
+  setBordersYear(year) {
+    if (this.borders.visible) this.borders.setYear(year);
+  }
 
   setEvents(events) {
     this.cluster.clearLayers();

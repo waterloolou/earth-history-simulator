@@ -1,6 +1,18 @@
 // events.js -- lookup helpers over the flattened events.json, mirroring the
 // Python events.py interface (get_events_in_range / events_near / get_event).
 
+// Matches events.py's PRESENT_YEAR -- the "year 0 Ma" convention used to
+// convert between astronomical year numbering and Ma-before-present.
+export const PRESENT_YEAR = 2026;
+
+export function maToYear(ma) {
+  return Math.round(PRESENT_YEAR - ma * 1_000_000);
+}
+
+export function yearToMa(year) {
+  return (PRESENT_YEAR - year) / 1_000_000;
+}
+
 export function getEventsInRange(events, loMa, hiMa, categories = null) {
   return events
     .filter((e) => (!categories || categories.includes(e.category)))
@@ -55,6 +67,7 @@ export const CATEGORY_COLOR = {
   historical: "#e8574a",
   scientific: "#3ec7de",
   cultural: "#c98be0",
+  people: "#f0a63a",
   geological_period: "#dcb734",
   tree_of_life: "#42d25a",
 };
@@ -63,4 +76,5 @@ export const CATEGORY_LABEL = {
   historical: "Historical",
   scientific: "Scientific",
   cultural: "Cultural",
+  people: "People",
 };

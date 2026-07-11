@@ -62,19 +62,66 @@ CATEGORIES = {
         "class_qids": [], "date_prop": "wdt:P575",
         "sitelink_min": 15,
     },
+    # People vastly outnumber every other category on Wikidata (~10M+ humans
+    # have a birth date) -- a FILTER(?sitelinks >= N) threshold times out at
+    # that scale no matter what else is joined against it (tested extensively;
+    # even a 1-year wdt:P569 date-range filter alone still hit WDQS's timeout
+    # once the sitelinks range filter was added). Restricting to specific
+    # notable-achievement classes first (Nobel laureates, Fields medalists,
+    # heads of state/government) keeps the candidate pool small (~1k-30k)
+    # *before* the sitelinks filter runs, which is fast. class_triple is a
+    # verbatim SPARQL pattern override (these aren't plain instance-of
+    # relationships) -- see _build_query(). Coordinates aren't on the person
+    # directly -- P625 lives on the place of birth/death (P19/P20), so
+    # place_path is a 2-hop property path instead of the direct wdt:P625 the
+    # other categories use.
+    "notable_birth": {
+        "category": "people", "subtype": "birth",
+        "class_triple": (
+            "{ ?item wdt:P166/wdt:P279* wd:Q7191 . }"       # Nobel Prize laureates
+            " UNION { ?item wdt:P166/wdt:P279* wd:Q102390 . }"  # Fields Medalists
+            " UNION { ?item p:P39 ?posStatement . ?posStatement ps:P39/wdt:P279* wd:Q48352 . }"  # heads of state
+        ),
+        "date_prop": "wdt:P569", "place_path": "wdt:P19/wdt:P625",
+        "sitelink_min": 15,
+        "title_template": "Birth of {}",
+    },
+    "notable_death": {
+        "category": "people", "subtype": "death",
+        "class_triple": (
+            "{ ?item wdt:P166/wdt:P279* wd:Q7191 . }"
+            " UNION { ?item wdt:P166/wdt:P279* wd:Q102390 . }"
+            " UNION { ?item p:P39 ?posStatement . ?posStatement ps:P39/wdt:P279* wd:Q48352 . }"
+        ),
+        "date_prop": "wdt:P570", "place_path": "wdt:P20/wdt:P625",
+        "sitelink_min": 15,
+        "title_template": "Death of {}",
+    },
 }
 
 _COORD_RE = re.compile(r"Point\(([-\d.]+)\s+([-\d.]+)\)")
 
 
-_DATE_PROP_PID = {"wdt:P585": "P585", "wdt:P575": "P575"}
+_DATE_PROP_PID = {"wdt:P585": "P585", "wdt:P575": "P575", "wdt:P569": "P569", "wdt:P570": "P570"}
 
 
 def _build_query(spec: dict, offset: int) -> str:
-    class_union = " UNION ".join(
-        f"{{ ?item wdt:P31/wdt:P279* {qid} . }}" for qid in spec["class_qids"]
-    ) if spec["class_qids"] else ""
+    if "class_triple" in spec:
+        # Verbatim override for relationships that aren't a plain instance-of
+        # (e.g. "held the position of head of state" is P39/ps:P39, not P31).
+        class_union = spec["class_triple"]
+    else:
+        # Humans are always asserted directly (wdt:P31 wd:Q5), never via a
+        # subclass tier -- skipping the wdt:P279* transitive-closure join
+        # (needed for something like "battle", which has many subclasses)
+        # keeps this query fast; with it, WDQS was timing out before
+        # returning even one page.
+        class_pattern = "wdt:P31/wdt:P279*" if not spec.get("direct_instance_only") else "wdt:P31"
+        class_union = " UNION ".join(
+            f"{{ ?item {class_pattern} {qid} . }}" for qid in spec["class_qids"]
+        ) if spec["class_qids"] else ""
     pid = _DATE_PROP_PID[spec["date_prop"]]
+    place_path = spec.get("place_path", "wdt:P625")
     # Query through the full statement node (p:/psv:) rather than the simple
     # wdt: shortcut so we get wikibase:timePrecision alongside the date value --
     # otherwise low-precision Wikidata dates (e.g. "just a year") come back
@@ -87,7 +134,7 @@ def _build_query(spec: dict, offset: int) -> str:
       ?dateStatement psv:{pid} ?dateNode .
       ?dateNode wikibase:timeValue ?date .
       ?dateNode wikibase:timePrecision ?datePrecision .
-      OPTIONAL {{ ?item wdt:P625 ?coord . }}
+      OPTIONAL {{ ?item {place_path} ?coord . }}
       OPTIONAL {{ ?item wdt:P18 ?image . }}
       ?item wikibase:sitelinks ?sitelinks .
       FILTER(?sitelinks >= {spec['sitelink_min']})
@@ -198,9 +245,11 @@ def sync_category(name: str, spec: dict) -> list[dict]:
 
             wiki_url = b.get("article", {}).get("value")
 
+            display_title = spec.get("title_template", "{}").format(title)
+
             events.append({
-                "id": f"wd-{qid.lower()}",
-                "title": title,
+                "id": f"wd-{spec['subtype']}-{qid.lower()}",
+                "title": display_title,
                 "category": spec["category"],
                 "subtype": spec["subtype"],
                 "viz_mode": "map",
