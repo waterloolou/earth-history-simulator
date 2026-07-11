@@ -1,6 +1,6 @@
 # Historical borders data attribution
 
-`*.geojson` (52 snapshots, 123,000 BCE - 2010 CE) and `manifest.json` are
+`*.geojson` (53 snapshots, 123,000 BCE - 2010 CE) and `manifest.json` are
 derived from the **historical-basemaps** project by Aurélien Ourednik
 (https://github.com/aourednik/historical-basemaps), licensed **GNU GPL v3**.
 
