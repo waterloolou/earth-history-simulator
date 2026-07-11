@@ -32,6 +32,7 @@ function cacheEls() {
   els.modeGlobeBtn = q("mode-globe-btn");
   els.modeMapBtn = q("mode-map-btn");
   els.loadingOverlay = q("loading-overlay");
+  els.globeCredits = q("globe-credits");
   els.timelineCanvas = q("timeline-canvas");
   els.timelineBackBtn = q("timeline-back-btn");
   els.timelineResetBtn = q("timeline-reset-btn");
@@ -55,6 +56,9 @@ function setMode(mode) {
   els.mapContainer.classList.toggle("hidden", mode !== "map");
   els.modeGlobeBtn.classList.toggle("active", mode === "globe");
   els.modeMapBtn.classList.toggle("active", mode === "map");
+  // Globe imagery credits only apply in globe mode; the Leaflet map carries its
+  // own CARTO/OSM attribution.
+  if (els.globeCredits) els.globeCredits.classList.toggle("hidden", mode !== "globe");
   if (mode === "map") {
     mapView.invalidateSize();
     refreshMapEvents();
