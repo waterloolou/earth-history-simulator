@@ -236,12 +236,28 @@ CONTINENTAL_SNAPSHOTS: dict = {
     ],
 
     # 1000 Ma -- Rodinia supercontinent
+    # 25-point polygon with two concave western bays matching standard reconstructions:
+    #   - Bay 1: between Kalahari/Congo and the India peninsula
+    #   - Bay 2: between the India peninsula and the Australia peninsula (NW)
+    # Clockwise from the Australia NW tip.
     1000: [
         dict(name="Rodinia", color=(128, 102, 52), polys=[_from_ll([
-            (-42,58),(-22,65),(5,62),(30,58),(58,52),(82,55),(105,58),(120,52),
-            (118,38),(102,22),(85,8),(74,-6),(66,-20),(60,-36),(54,-50),
-            (38,-60),(18,-65),(0,-62),(-18,-56),(-32,-48),(-42,-36),
-            (-48,-22),(-48,-8),(-44,8),(-42,22),(-42,36),(-42,48)])]),
+            # Northern coast: Australia NW → Siberia → N. China
+            (-32, 48),(-15, 54),(18, 58),(52, 58),(82, 52),
+            # Eastern coast: N. China → Baltica → W. Africa
+            (96, 40),(98, 26),(96, 10),(90, -4),(82, -18),
+            # Southern coast: W. Africa → Amazonia → Congo-São Francisco
+            (72, -36),(58, -52),(40, -62),(18, -60),
+            # South-west: Kalahari
+            (0, -52),(-15, -42),(-26, -28),
+            # Bay 1 (concave inward — between Kalahari and India):
+            (-20, -14),(-12, -4),
+            # India peninsula (westward lobe):
+            (-24, 6),(-34, 14),(-36, 24),
+            # Bay 2 (concave inward — between India and Australia):
+            (-22, 33),(-14, 40),
+            # Australia peninsula (westward lobe back to start):
+            (-28, 45)])]),
     ],
 
     # 700 Ma -- Rodinia breaking apart
