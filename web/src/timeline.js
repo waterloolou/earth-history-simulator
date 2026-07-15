@@ -2,7 +2,7 @@
 // pygame app's draw_timeline() but generalized to a windowed (tlLoMa/tlHiMa)
 // view model so it can zoom from the full 4.5 Gy span down to individual years.
 
-import { formatMa, CATEGORY_COLOR } from "./events.js";
+import { formatMa, CATEGORY_COLOR, maToYear, yearToMa } from "./events.js";
 
 const EON_BANDS = [
   { name: "Hadean", start: 4500, end: 4000 },
@@ -24,8 +24,43 @@ const MAX_MARKERS_DRAWN = 400; // hard cap on per-frame draw calls regardless of
 const ANIM_MS = 260; // duration of eased zoom/pan/drill/reset transitions
 const OVERVIEW_H = 10; // height (px) of the "you are here" minimap strip
 
+// Below this span the date axis reads as calendar years/BCE-CE rather than
+// Ma/ka -- deliberately the same boundary as MARKER_SPAN_THRESHOLD_MA, since
+// that's also where individual years become the natural unit to reason in.
+const CALENDAR_TICK_THRESHOLD_MA = MARKER_SPAN_THRESHOLD_MA;
+const TARGET_TICK_COUNT = 6; // aim for roughly this many ticks across the visible span
+
 function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
 function lerp(a, b, t) { return a + (b - a) * t; }
+
+/** Standard "nice number" tick-interval chooser (1/2/5 x10^n) so tick
+ * spacing always lands on round numbers instead of awkward values like
+ * "every 833 years". Works in whatever unit `range` is expressed in --
+ * callers pass either Ma or calendar years. */
+function niceTickInterval(range, targetCount) {
+  const rough = range / targetCount;
+  if (!(rough > 0)) return 1;
+  const mag = Math.pow(10, Math.floor(Math.log10(rough)));
+  for (const step of [1, 2, 5]) {
+    if (mag * step >= rough) return mag * step;
+  }
+  return mag * 10;
+}
+
+/** Unlike formatMa (which picks ka/Ma/Ga from the value's own magnitude, fine
+ * for a single one-off playhead label), tick labels must pick their unit from
+ * the *interval* between ticks -- otherwise e.g. 100 Ma-apart ticks at
+ * 3600/3700/3800 Ma would all round to the same "4 Ga" and become
+ * indistinguishable. */
+function formatTickMa(ma, intervalMa) {
+  if (intervalMa < 1) return `${Math.round(ma * 1000)} ka`;
+  if (intervalMa < 1000) return `${Math.round(ma)} Ma`;
+  return `${Math.round(ma / 1000)} Ga`;
+}
+
+function formatTickYear(year) {
+  return year < 0 ? `${-year} BCE` : `${year} CE`;
+}
 
 /** Human-friendly "how much time is on screen" label, e.g. "~500 years",
  * "~2.3 Ma", "~380 million years". Mirrors formatMa's unit choices so the
@@ -356,7 +391,8 @@ export class Timeline {
       }
     }
 
-    // eon dividers
+    // eon dividers -- extend down through the date-axis ticks below so the
+    // divider still reads as one continuous guide line through that row.
     ctx.strokeStyle = "#34447a";
     ctx.fillStyle = "#aaafc3";
     ctx.font = "10px Segoe UI, sans-serif";
@@ -364,9 +400,11 @@ export class Timeline {
       if (eon.end > this.hiMa || eon.start < this.loMa) continue;
       const ex = this.maToX(Math.min(eon.start, this.hiMa));
       ctx.beginPath();
-      ctx.moveTo(ex, barY - 2); ctx.lineTo(ex, barY + barH + 14);
+      ctx.moveTo(ex, barY - 2); ctx.lineTo(ex, barY + barH + 30);
       ctx.stroke();
     }
+
+    this._drawTicks(ctx);
 
     // discrete event markers at fine zoom -- binary-search the visible ma
     // range instead of scanning the whole (multi-thousand-event) array, since
@@ -374,7 +412,12 @@ export class Timeline {
     this._markerHitboxes = [];
     const span = this.hiMa - this.loMa;
     if (span <= MARKER_SPAN_THRESHOLD_MA) {
-      const markerY = barY + barH + 22;
+      const markerY = barY + barH + 34;
+      // Stems start just below the date-tick label row, not from the top of
+      // the bar -- a full-height stem per marker would slice straight
+      // through the tick labels above once there are more than a handful of
+      // events in view, making the dates unreadable.
+      const stemTop = markerY - 12;
       const startIdx = this._lowerBound(this.loMa);
       const endIdx = this._upperBound(this.hiMa);
       const count = endIdx - startIdx;
@@ -388,7 +431,7 @@ export class Timeline {
         const x = this.maToX(e.time.ma);
         ctx.strokeStyle = CATEGORY_COLOR[e.category] || "#fff";
         ctx.beginPath();
-        ctx.moveTo(x, barY); ctx.lineTo(x, markerY);
+        ctx.moveTo(x, stemTop); ctx.lineTo(x, markerY);
         ctx.stroke();
         ctx.fillStyle = CATEGORY_COLOR[e.category] || "#fff";
         ctx.beginPath();
@@ -426,6 +469,54 @@ export class Timeline {
     ctx.fillText(spanLabel, w - ix - ctx.measureText(spanLabel).width, h - 6);
 
     this._drawOverview(ctx, w);
+  }
+
+  /** Date axis below the main period bar: "nice" round-number tick spacing
+   * (1/2/5 x10^n) that adapts to whatever span is currently visible, from
+   * billion-year (Ga) steps zoomed all the way out down to individual
+   * calendar years/BCE-CE once zoomed into recent history. This is the only
+   * place absolute dates are shown continuously along the timeline (the
+   * playhead label only shows the single current instant). */
+  _drawTicks(ctx) {
+    const barY = this._barY(), barH = this._barH();
+    const tickTop = barY + barH;
+    const tickBottom = tickTop + 6;
+    const labelY = tickBottom + 12;
+    const span = this.hiMa - this.loMa;
+
+    ctx.strokeStyle = "#454c76";
+    ctx.fillStyle = "#aaafc3";
+    ctx.font = "10px Segoe UI, sans-serif";
+    ctx.textAlign = "center";
+
+    const ticks = [];
+    if (span <= CALENDAR_TICK_THRESHOLD_MA) {
+      // Calendar regime: align ticks to round *year* boundaries (e.g. 1900,
+      // 1950, 2000), not round Ma fractions -- rounding in Ma near ma=0 would
+      // land ticks on odd years like 1994/2044 instead.
+      const loYear = maToYear(this.hiMa);
+      const hiYear = maToYear(this.loMa);
+      const interval = niceTickInterval(hiYear - loYear, TARGET_TICK_COUNT);
+      const first = Math.ceil(loYear / interval) * interval;
+      for (let y = first; y <= hiYear; y += interval) {
+        ticks.push({ ma: yearToMa(y), label: formatTickYear(y) });
+      }
+    } else {
+      const interval = niceTickInterval(span, TARGET_TICK_COUNT);
+      const first = Math.ceil(this.loMa / interval) * interval;
+      for (let m = first; m <= this.hiMa; m += interval) {
+        ticks.push({ ma: m, label: formatTickMa(m, interval) });
+      }
+    }
+
+    for (const t of ticks) {
+      const x = this.maToX(t.ma);
+      ctx.beginPath();
+      ctx.moveTo(x, tickTop); ctx.lineTo(x, tickBottom);
+      ctx.stroke();
+      ctx.fillText(t.label, x, labelY);
+    }
+    ctx.textAlign = "left";
   }
 
   /** Slim "you are here" strip above the main bar: the full 0..fullHiMa range
