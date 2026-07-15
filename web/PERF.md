@@ -10,7 +10,7 @@ same session**, not against the absolute figures below.
 
 ```bash
 python scripts/export_data.py --out web/public/data --textures-out web/public/textures
-cd web && python -m http.server 8899
+cd web && npm start
 ```
 
 Then, in a scratch dir *outside* the repo (so it doesn't pollute a commit):
