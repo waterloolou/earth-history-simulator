@@ -51,11 +51,35 @@ export class GlobeView {
     this.camera.lookAt(0, 0, 0);
 
     this.structuralBuilder = new StructuralTextureBuilder();
-    this._structuralCache = new Map(); // maBucket -> THREE.CanvasTexture
+    this._structuralCache = new Map(); // maBucket -> THREE.Texture
     this._lastStructuralBucket = null;
+    this._pendingBuildBucket = null; // bucket currently in flight on the worker, if any
+    this._buildReqId = 0;
 
     this._continentModel = null;
     this._cloudTex = null;
+
+    // Offload the structural texture build to a Worker (PERF.md's flagged
+    // follow-up): even bbox-restricted, a >750 Ma build is ~one whole frame,
+    // so a fast deep-time scrub on a low-end/mobile GPU could still drop
+    // frames on the main thread. Feature-detected -- browsers without Worker/
+    // OffscreenCanvas fall back to the original synchronous build below,
+    // same graceful-degradation philosophy as the globeAvailable fallback.
+    this._worker = null;
+    if (typeof Worker !== "undefined" && typeof OffscreenCanvas !== "undefined") {
+      try {
+        this._worker = new Worker(new URL("./structuralTexture.worker.js", import.meta.url), { type: "module" });
+        this._worker.onmessage = (ev) => this._onWorkerMessage(ev.data);
+        this._worker.onerror = (ev) => {
+          console.error("Structural texture worker failed, falling back to synchronous build:", ev.message);
+          this._worker = null;
+          this._pendingBuildBucket = null;
+        };
+      } catch (exc) {
+        console.error("Structural texture worker unavailable, using synchronous build:", exc);
+        this._worker = null;
+      }
+    }
 
     this._dummyTex = makeDummyTexture();
 
@@ -77,7 +101,12 @@ export class GlobeView {
 
   async load() {
     const continentsData = await fetch(`${this.dataBase}/continents.json`).then((r) => r.json());
+    // Built on the main thread too, even when the worker is active: it's the
+    // synchronous fallback if the worker ever errors out mid-session (see the
+    // constructor's onerror handler), and the cost is trivial (continents.json
+    // is ~120 KB gzip per PERF.md, this is just parsing it into the model).
     this._continentModel = new ContinentModel(continentsData);
+    if (this._worker) this._worker.postMessage({ type: "init", continentsData });
 
     const loader = new THREE.TextureLoader();
     const cloud = await loadTexture(loader, `${this.texturesBase}/cloud_layer.jpg`);
@@ -212,37 +241,82 @@ export class GlobeView {
     }
   }
 
-  _getStructuralTexture(ma) {
-    const bucket = Math.floor(ma / STRUCTURAL_CACHE_STEP) * STRUCTURAL_CACHE_STEP;
-    if (this._structuralCache.has(bucket)) return this._structuralCache.get(bucket);
+  /** Cache a built texture (from either build path) under its Ma bucket,
+   * evicting the oldest entry past STRUCTURAL_CACHE_MAX. Textures built from
+   * a transferred ImageBitmap (the worker path) own that bitmap and must
+   * close() it on eviction, not just dispose() the GPU-side texture -- an
+   * ImageBitmap is separate off-heap memory the GC won't reliably reclaim
+   * promptly on its own. */
+  _cacheStructuralTexture(bucket, tex) {
+    this._structuralCache.set(bucket, tex);
+    if (this._structuralCache.size > STRUCTURAL_CACHE_MAX) {
+      const oldestKey = this._structuralCache.keys().next().value;
+      const oldest = this._structuralCache.get(oldestKey);
+      if (oldest) {
+        if (typeof oldest.image?.close === "function") oldest.image.close();
+        oldest.dispose();
+      }
+      this._structuralCache.delete(oldestKey);
+    }
+  }
+
+  _makeTextureFromCanvasLike(source) {
+    const tex = new THREE.Texture(source);
+    tex.wrapS = THREE.RepeatWrapping;
+    tex.wrapT = THREE.ClampToEdgeWrapping;
+    tex.colorSpace = THREE.NoColorSpace ?? THREE.LinearSRGBColorSpace;
+    tex.needsUpdate = true;
+    return tex;
+  }
+
+  _onWorkerMessage(msg) {
+    if (msg.type !== "built") return;
+    const bucket = Math.floor(msg.ma / STRUCTURAL_CACHE_STEP) * STRUCTURAL_CACHE_STEP;
+    this._cacheStructuralTexture(bucket, this._makeTextureFromCanvasLike(msg.bitmap));
+    if (this._pendingBuildBucket === bucket) this._pendingBuildBucket = null;
+    // Deliberately not swapped into the uniform here -- setMa() re-checks the
+    // cache every frame regardless of which path filled it, so the very next
+    // call (next frame) picks this up if it's still the relevant bucket.
+  }
+
+  /** Synchronous fallback build path (no Worker/OffscreenCanvas support, or
+   * the worker errored out) -- unchanged from before the worker offload. */
+  _buildStructuralTextureSync(ma, bucket) {
     if (!this._continentModel) return null;
     const canvas = this.structuralBuilder.build(bucket, this._continentModel);
     const copy = document.createElement("canvas");
     copy.width = canvas.width; copy.height = canvas.height;
     copy.getContext("2d").drawImage(canvas, 0, 0);
-    const tex = new THREE.CanvasTexture(copy);
-    tex.wrapS = THREE.RepeatWrapping;
-    tex.wrapT = THREE.ClampToEdgeWrapping;
-    tex.colorSpace = THREE.NoColorSpace ?? THREE.LinearSRGBColorSpace;
-    tex.needsUpdate = true;
-    this._structuralCache.set(bucket, tex);
-    if (this._structuralCache.size > STRUCTURAL_CACHE_MAX) {
-      const oldestKey = this._structuralCache.keys().next().value;
-      this._structuralCache.get(oldestKey)?.dispose();
-      this._structuralCache.delete(oldestKey);
-    }
+    const tex = this._makeTextureFromCanvasLike(copy);
+    this._cacheStructuralTexture(bucket, tex);
     return tex;
   }
 
   /** Update all shader uniforms for the given Ma. At most one structural
-   * texture rebuild happens per call (matches the plan's throttling rule). */
+   * texture build is *started* per call (matches the plan's throttling
+   * rule) -- with the worker active, "started" and "finished" are decoupled:
+   * this keeps showing whatever's already in the uniform until the cache
+   * actually has the new bucket, rather than blocking the frame on it. */
   setMa(ma) {
     const u = this.material.uniforms;
 
     const bucket = Math.floor(ma / STRUCTURAL_CACHE_STEP) * STRUCTURAL_CACHE_STEP;
     if (bucket !== this._lastStructuralBucket) {
-      const tex = this._getStructuralTexture(ma);
-      if (tex) { u.uStructuralTex.value = tex; this._lastStructuralBucket = bucket; }
+      if (this._structuralCache.has(bucket)) {
+        u.uStructuralTex.value = this._structuralCache.get(bucket);
+        this._lastStructuralBucket = bucket;
+      } else if (this._worker) {
+        if (this._pendingBuildBucket !== bucket) {
+          this._pendingBuildBucket = bucket;
+          this._worker.postMessage({ type: "build", ma: bucket, requestId: ++this._buildReqId });
+        }
+        // _lastStructuralBucket intentionally left as-is: the uniform keeps
+        // showing the previous texture until _onWorkerMessage populates the
+        // cache and a later setMa() call (next frame) picks it up above.
+      } else {
+        const tex = this._buildStructuralTextureSync(ma, bucket);
+        if (tex) { u.uStructuralTex.value = tex; this._lastStructuralBucket = bucket; }
+      }
     }
 
     // Cloud opacity per era (matches main.py's cloud_opac branches) -- kept

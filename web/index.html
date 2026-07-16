@@ -29,15 +29,26 @@
     <span id="period-readout"></span>
   </div>
   <div id="header-hint">scroll or +/&minus; = zoom &middot; drag timeline = scrub &middot; shift-drag = pan &middot; double-click period = drill in &middot; drag globe = rotate</div>
+  <div id="header-actions">
+    <button id="help-btn" title="Show controls &amp; tips">?</button>
+    <button id="share-btn" title="Copy a link to this exact view">Share</button>
+  </div>
 </header>
 
 <main id="app-main">
   <section id="viewport">
     <div id="globe-view" class="viewport-mode"></div>
     <div id="map-view" class="viewport-mode hidden"></div>
+    <div id="tree-view" class="viewport-mode hidden">
+      <div id="tree-loading" class="hidden">Loading tree of life&hellip;</div>
+    </div>
     <div id="mode-toggle">
       <select id="mode-select" title="Choose what to display"></select>
       <div id="mode-desc"></div>
+    </div>
+    <div id="event-search">
+      <input id="search-input" type="text" placeholder="Search events&hellip;" autocomplete="off" aria-label="Search historical events" />
+      <div id="search-results" class="hidden" role="listbox"></div>
     </div>
     <div id="loading-overlay">Loading Earth data&hellip;</div>
     <div id="globe-credits">
@@ -48,6 +59,9 @@
   </section>
 
   <aside id="info-panel">
+    <div id="info-panel-handle" role="button" tabindex="0" aria-label="Show details">
+      <span id="info-panel-handle-chevron">&#9650;</span> Details
+    </div>
     <div id="period-card">
       <div id="period-badge"></div>
       <h2 id="period-name">&mdash;</h2>
@@ -55,11 +69,13 @@
       <p id="period-desc"></p>
     </div>
     <div id="event-detail" class="hidden">
+      <img id="event-image" class="hidden" alt="" />
       <div id="event-date-kicker"></div>
       <h2 id="event-title"></h2>
       <div id="event-meta"></div>
       <p id="event-desc"></p>
       <a id="event-wiki-link" href="#" target="_blank" rel="noopener">Read more on Wikipedia &rarr;</a>
+      <button id="tree-globe-btn" class="hidden">View the Deep-Time Globe at this era &rarr;</button>
     </div>
     <div id="category-filters">
       <div id="category-filters-label">Show categories:</div>
@@ -81,6 +97,30 @@
   </div>
   <button id="timeline-reset-btn" title="Reset to the full 4.5-billion-year view">Reset</button>
 </footer>
+
+<div id="toast" class="hidden" role="status" aria-live="polite"></div>
+
+<div id="help-overlay" class="hidden">
+  <div id="help-card" role="dialog" aria-modal="true" aria-labelledby="help-title">
+    <h2 id="help-title">Earth History Simulator</h2>
+    <p>Scrub from the formation of Earth 4.5 billion years ago down to individual days of recorded history, on one zoomable timeline.</p>
+    <h3>Controls</h3>
+    <ul>
+      <li><strong>Scroll</strong> or <strong>+ / &minus;</strong> &mdash; zoom the timeline (zooms toward the cursor/playhead)</li>
+      <li><strong>Drag</strong> the timeline &mdash; scrub through time</li>
+      <li><strong>Shift-drag</strong> (or right-drag) the timeline &mdash; pan without moving the playhead</li>
+      <li><strong>Double-click</strong> a period on the timeline &mdash; drill into just that span</li>
+      <li><strong>Drag</strong> the globe &mdash; rotate it (releases with inertia)</li>
+      <li><strong>Space</strong> &mdash; pause/resume playback</li>
+      <li><strong>&larr; / &rarr;</strong> &mdash; slow down / speed up playback</li>
+      <li><strong>W</strong> &mdash; toggle between the globe and the map</li>
+      <li><strong>R</strong> &mdash; reset to the full 4.5-billion-year view</li>
+    </ul>
+    <h3>Finding things</h3>
+    <p>Use the search box (top right) to jump straight to any historical, scientific, cultural, or biographical event. The <strong>Share</strong> button copies a link back to exactly what you're looking at.</p>
+    <button id="help-close-btn">Got it</button>
+  </div>
+</div>
 
 <script type="module" src="src/main.js"></script>
 

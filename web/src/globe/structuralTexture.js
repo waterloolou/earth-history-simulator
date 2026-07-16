@@ -26,7 +26,12 @@ const ICE_DARK = [220, 235, 255];
 function lerp(a, b, t) { return a + (b - a) * t; }
 function clamp(v, lo, hi) { return v < lo ? lo : (v > hi ? hi : v); }
 
+/** Works both on the main thread (HTMLCanvasElement, for the synchronous
+ * fallback path) and inside a Worker (OffscreenCanvas, for
+ * structuralTexture.worker.js) -- `document` doesn't exist in a Worker, so
+ * that alone is a reliable way to tell which context this is running in. */
 function makeCanvas(w, h) {
+  if (typeof document === "undefined") return new OffscreenCanvas(w, h);
   const c = document.createElement("canvas");
   c.width = w; c.height = h;
   return c;

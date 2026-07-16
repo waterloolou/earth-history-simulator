@@ -36,12 +36,27 @@ body { display: flex; flex-direction: column; }
 #period-readout { font-size: 15px; color: var(--lgray); }
 #header-hint { font-size: 11px; color: var(--gray); white-space: nowrap; }
 
+#header-actions { display: flex; gap: 8px; flex: 0 0 auto; }
+#header-actions button {
+  background: var(--panel); color: var(--lgray); border: 1px solid var(--border2);
+  border-radius: 6px; padding: 6px 12px; cursor: pointer; font-size: 12px; font-family: var(--font);
+}
+#header-actions button:hover { color: var(--white); border-color: var(--cyan); }
+#help-btn { padding: 6px 10px !important; font-weight: bold; }
+
 #app-main { flex: 1 1 auto; display: flex; min-height: 0; }
 
 #viewport { flex: 1 1 auto; position: relative; min-width: 0; background: #000; }
 .viewport-mode { position: absolute; inset: 0; }
 .viewport-mode.hidden { display: none; }
-#globe-view canvas, #map-view { width: 100%; height: 100%; }
+#globe-view canvas, #map-view, #tree-view canvas { width: 100%; height: 100%; }
+#tree-view { cursor: grab; }
+#tree-view:active { cursor: grabbing; }
+#tree-loading {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  color: var(--lgray); font-size: 14px; pointer-events: none;
+}
+#tree-loading.hidden { display: none; }
 
 #mode-toggle {
   position: absolute; top: 12px; left: 12px; z-index: 500; max-width: min(360px, 60vw);
@@ -53,6 +68,35 @@ body { display: flex; flex-direction: column; }
   padding: 6px 10px; cursor: pointer; font-size: 13px; font-weight: bold; font-family: var(--font);
 }
 #mode-desc { font-size: 11px; color: var(--lgray); line-height: 1.35; }
+
+#event-search {
+  position: absolute; top: 12px; right: 12px; z-index: 500; width: min(280px, 42vw);
+}
+#search-input {
+  width: 100%; background: rgba(12,16,38,0.88); color: var(--white); border: 1px solid var(--border);
+  border-radius: 8px; padding: 8px 10px; font-size: 13px; font-family: var(--font);
+}
+#search-input:focus { outline: none; border-color: var(--cyan); }
+#search-input::placeholder { color: var(--gray); }
+#search-results {
+  margin-top: 4px; max-height: min(360px, 60vh); overflow-y: auto; background: var(--panel2);
+  border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+}
+#search-results.hidden { display: none; }
+.search-result {
+  display: flex; flex-direction: column; gap: 2px; width: 100%; text-align: left;
+  background: none; border: none; border-bottom: 1px solid var(--border); color: var(--white);
+  padding: 8px 10px; cursor: pointer; font-family: var(--font);
+}
+.search-result:last-child { border-bottom: none; }
+.search-result:hover, .search-result:focus { background: var(--border); outline: none; }
+.search-result .sr-date { font-size: 10px; color: var(--gold); text-transform: uppercase; letter-spacing: 0.03em; }
+.search-result .sr-title { font-size: 13px; color: var(--lgray); }
+.search-empty { padding: 10px; font-size: 12px; color: var(--gray); }
+.search-heading {
+  padding: 8px 10px 4px; font-size: 10px; color: var(--gold); text-transform: uppercase;
+  letter-spacing: 0.04em; font-weight: bold;
+}
 
 #globe-credits {
   position: absolute; right: 8px; bottom: 6px; z-index: 500; max-width: 60%;
@@ -72,6 +116,7 @@ body { display: flex; flex-direction: column; }
   width: 300px; flex: 0 0 auto; background: var(--panel); border-left: 1px solid var(--border);
   padding: 14px; overflow-y: auto;
 }
+#info-panel-handle { display: none; } /* shown only in the mobile layout below */
 #period-card { border: 1px solid var(--border); border-radius: 8px; padding: 12px; background: var(--panel2); }
 #period-badge { height: 22px; border-radius: 4px; margin-bottom: 8px; }
 #period-name { margin: 0 0 4px; font-size: 22px; text-align: center; }
@@ -80,12 +125,24 @@ body { display: flex; flex-direction: column; }
 
 #event-detail { border: 1px solid var(--border); border-radius: 8px; padding: 12px; background: var(--panel2); margin-top: 12px; }
 #event-detail.hidden { display: none; }
+#event-image {
+  display: block; width: 100%; max-height: 150px; object-fit: cover; border-radius: 6px;
+  margin-bottom: 10px; background: var(--panel);
+}
+#event-image.hidden { display: none; }
 #event-date-kicker { font-size: 11px; font-weight: bold; color: var(--gold); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 4px; }
 #event-title { margin: 0 0 6px; font-size: 17px; color: var(--gold2); }
 #event-meta { font-size: 12px; color: var(--gray); margin-bottom: 8px; }
 #event-desc { font-size: 13px; line-height: 1.5; color: var(--lgray); }
 #event-wiki-link { display: inline-block; margin-top: 8px; color: var(--cyan); font-size: 13px; text-decoration: none; }
 #event-wiki-link:hover { text-decoration: underline; }
+#tree-globe-btn {
+  display: block; margin-top: 10px; background: var(--panel); color: var(--gold2);
+  border: 1px solid var(--border2); border-radius: 6px; padding: 6px 10px; cursor: pointer;
+  font-size: 12px; font-family: var(--font); text-align: left; width: 100%;
+}
+#tree-globe-btn:hover { border-color: var(--gold2); }
+#tree-globe-btn.hidden { display: none; }
 
 #category-filters { margin-top: 14px; font-size: 13px; color: var(--lgray); display: flex; flex-direction: column; gap: 6px; }
 #category-filters.hidden { display: none; }
@@ -118,6 +175,7 @@ body { display: flex; flex-direction: column; }
 /* Leaflet popup styling to match the app's dark theme */
 .leaflet-popup-content-wrapper { background: var(--panel2); color: var(--white); border-radius: 8px; }
 .leaflet-popup-tip { background: var(--panel2); }
+.event-popup .popup-thumb { display: block; width: 100%; max-height: 110px; object-fit: cover; border-radius: 6px; margin-bottom: 6px; }
 .event-popup .date-kicker { font-size: 10px; font-weight: bold; color: #b8860b; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 2px; }
 .event-popup h3 { margin: 0 0 4px; font-size: 15px; color: var(--gold2); }
 .event-popup .meta { font-size: 11px; color: var(--gray); margin-bottom: 6px; }
@@ -125,8 +183,71 @@ body { display: flex; flex-direction: column; }
 .event-popup a { color: var(--cyan); font-size: 12px; }
 .event-pin { border-radius: 50%; border: 2px solid rgba(255,255,255,0.85); box-shadow: 0 0 4px rgba(0,0,0,0.6); }
 
+#toast {
+  position: fixed; left: 50%; bottom: 148px; transform: translate(-50%, 8px);
+  background: var(--panel2); color: var(--white); border: 1px solid var(--border2);
+  border-radius: 8px; padding: 8px 16px; font-size: 13px; z-index: 2000;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+  opacity: 0; pointer-events: none; transition: opacity 0.2s ease, transform 0.2s ease;
+}
+#toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+#help-overlay {
+  position: fixed; inset: 0; z-index: 3000; background: rgba(2,4,12,0.72);
+  display: flex; align-items: center; justify-content: center; padding: 20px;
+}
+#help-overlay.hidden { display: none; }
+#help-card {
+  max-width: 480px; max-height: 84vh; overflow-y: auto; background: var(--panel2);
+  border: 1px solid var(--border2); border-radius: 12px; padding: 22px 26px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+}
+#help-card h2 { margin: 0 0 8px; font-size: 20px; color: var(--gold2); }
+#help-card h3 { margin: 16px 0 6px; font-size: 13px; color: var(--gold); text-transform: uppercase; letter-spacing: 0.04em; }
+#help-card p { font-size: 13px; line-height: 1.5; color: var(--lgray); margin: 0 0 6px; }
+#help-card ul { margin: 0; padding-left: 18px; font-size: 13px; line-height: 1.7; color: var(--lgray); }
+#help-card strong { color: var(--white); }
+#help-close-btn {
+  margin-top: 18px; background: var(--gold); color: #221a04; border: none; border-radius: 6px;
+  padding: 8px 18px; cursor: pointer; font-size: 13px; font-weight: bold; font-family: var(--font);
+}
+
 @media (max-width: 900px) {
-  #info-panel { display: none; }
+  /* height:auto + flex-wrap: on a narrow viewport time-readout/period-readout
+     don't fit #header-readout's row alongside the title and action buttons.
+     The old fixed height:64px let that overflow spill silently past the
+     header's own box (invisible on desktop, where it always fit) straight
+     into the viewport below, colliding with the search box's absolute
+     positioning there. Letting the header grow to fit its real content
+     fixes the collision at the source instead of chasing where it lands. */
+  #app-header { height: auto; min-height: 64px; flex-wrap: wrap; row-gap: 4px; padding: 8px 12px; }
   #app-header h1 { font-size: 16px; }
   #header-hint { display: none; }
+  #header-readout { flex: 1 1 100%; order: 3; justify-content: flex-start; gap: 10px; }
+  #period-readout { display: none; } /* same info is already in the period card below */
+  #time-readout { font-size: 15px; }
+  #event-search { width: min(220px, 50vw); top: 8px; right: 8px; }
+
+  /* Bottom sheet instead of a side panel: collapsed to just its handle by
+     default (period card/event detail/category legend all still reachable,
+     just not permanently on screen), tap the handle to expand. Height is
+     collapsed via max-height (not display:none) specifically so this stays a
+     normal, always-in-the-DOM element -- main.js doesn't need to know or
+     care whether it's on the mobile layout to keep updating it. */
+  #info-panel {
+    display: block; position: fixed; left: 0; right: 0; bottom: 132px;
+    width: auto; max-height: 46px; overflow: hidden; z-index: 800;
+    border-left: none; border-top: 1px solid var(--border);
+    border-radius: 12px 12px 0 0; padding: 0 14px 14px;
+    transition: max-height 0.25s ease;
+  }
+  #info-panel.expanded { max-height: 45vh; overflow-y: auto; }
+  #info-panel-handle {
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    height: 46px; margin: 0 -14px; padding: 0 14px; cursor: pointer;
+    font-size: 12px; color: var(--lgray); background: var(--panel);
+    position: sticky; top: 0; z-index: 1;
+  }
+  #info-panel-handle-chevron { display: inline-block; transition: transform 0.25s ease; }
+  #info-panel.expanded #info-panel-handle-chevron { transform: rotate(180deg); }
 }

@@ -59,6 +59,12 @@ export const MODES = [
     borders: true,
     description: "Political borders as they shift from ancient empires and kingdoms to today's countries.",
   },
+  {
+    id: "tree_of_life",
+    label: "Tree of Life",
+    kind: "tree",
+    description: "Every major lineage since LUCA, 3.8 billion years ago, as one branching diagram -- click a branch to jump the timeline to when it split off.",
+  },
 ];
 
 export const MODE_BY_ID = Object.fromEntries(MODES.map((m) => [m.id, m]));

@@ -104,6 +104,15 @@ export class Timeline {
     this._lastClickTime = 0;
     this._markerHitboxes = []; // {x, y, r, event}
     this._hoveringOverview = false;
+    this._lastHoverId = null;
+
+    // Touch state: single-finger drag = seek (mirrors mouse left-drag, the
+    // primary "scrub through time" gesture); two-finger pinch = zoom (mirrors
+    // wheel), anchored at wherever the pinch midpoint currently is so a
+    // combined pinch+drag gesture pans and zooms together, same as any map app.
+    this._touchMode = null; // "seek" | "pinch" | null
+    this._pinchStartDist = 0;
+    this._pinchStartWindow = null;
 
     this._bindEvents();
     this._resizeObserver = new ResizeObserver(() => this._syncCanvasSize());
@@ -246,6 +255,20 @@ export class Timeline {
     this._animateTo(period.end, period.start);
   }
 
+  /** Jump directly to a specific point in time at a given span (defaults to
+   * a span comfortably inside the map-handoff threshold, so a jump lands in
+   * map mode the same way jumpToPresent() does). Used by the event search
+   * box and by shared-link event focus, where the target is a specific
+   * discrete event rather than a period. */
+  jumpToEvent(ma, spanMa = MAP_HANDOFF_SPAN_MA * 0.6) {
+    this.zoomStack.push({ loMa: this.loMa, hiMa: this.hiMa });
+    const half = spanMa / 2;
+    let lo = ma - half, hi = ma + half;
+    if (lo < 0) { hi -= lo; lo = 0; }
+    if (hi > this.fullHiMa) { lo -= hi - this.fullHiMa; hi = this.fullHiMa; }
+    this._animateTo(Math.max(0, lo), hi);
+  }
+
   back() {
     const prev = this.zoomStack.pop();
     if (!prev) { this.reset(); return; }
@@ -320,9 +343,20 @@ export class Timeline {
         const rect = c.getBoundingClientRect();
         const x = ev.clientX - rect.left, y = ev.clientY - rect.top;
         this._hoveringOverview = y >= this._overviewY() && y <= this._overviewY() + OVERVIEW_H;
-        // hover detection for markers
+        // hover detection for markers -- this listener is on window (so drags
+        // that leave the canvas still track), meaning it fires on every mouse
+        // movement anywhere on the page. Only fire the callback when the
+        // hovered marker actually changes, not on every no-op "still nothing
+        // under the cursor" move: callers may do real work (DOM writes, array
+        // scans) in response, and firing unconditionally also meant moving the
+        // mouse anywhere right after an unrelated selection (e.g. a border-map
+        // click) would immediately re-trigger a "hover ended" callback.
         const hit = this._markerHitboxes.find((h) => Math.hypot(h.x - x, h.y - y) <= h.r + 2);
-        if (this._onHoverEvent) this._onHoverEvent(hit ? hit.event : null);
+        const hitId = hit ? hit.event.id : null;
+        if (hitId !== this._lastHoverId) {
+          this._lastHoverId = hitId;
+          if (this._onHoverEvent) this._onHoverEvent(hit ? hit.event : null);
+        }
         return;
       }
       const rect = c.getBoundingClientRect();
@@ -352,6 +386,76 @@ export class Timeline {
 
     window.addEventListener("mouseup", () => { this._dragging = false; });
     c.addEventListener("contextmenu", (ev) => ev.preventDefault());
+
+    // ── touch: preventDefault (not passive) so a gesture on this canvas never
+    // also triggers the browser's own page-pinch-zoom -- scoped to just this
+    // element, so pinch-zoom accessibility elsewhere on the page is untouched. ─
+    c.addEventListener("touchstart", (ev) => {
+      ev.preventDefault();
+      const rect = c.getBoundingClientRect();
+      if (ev.touches.length === 1) {
+        const t = ev.touches[0];
+        const x = t.clientX - rect.left, y = t.clientY - rect.top;
+
+        if (y >= this._overviewY() && y <= this._overviewY() + OVERVIEW_H) {
+          const centerMa = this._overviewXToMa(x);
+          const span = this.currentSpanMa();
+          let newLo = centerMa - span / 2, newHi = centerMa + span / 2;
+          if (newHi > this.fullHiMa) { newLo -= newHi - this.fullHiMa; newHi = this.fullHiMa; }
+          if (newLo < 0) { newHi -= newLo; newLo = 0; }
+          this._animateTo(newLo, newHi);
+          return;
+        }
+
+        const now = performance.now();
+        const isDoubleTap = now - this._lastClickTime < 320;
+        this._lastClickTime = now;
+        if (isDoubleTap && y >= this._barY() && y <= this._barY() + this._barH()) {
+          const ma = this.xToMa(x);
+          const period = this.periods.find((p) => ma <= p.start && ma >= p.end);
+          if (period) this.drillInto(period);
+          return;
+        }
+
+        this._touchMode = "seek";
+        const ma = this.xToMa(x);
+        this.currentMa = Math.min(this.fullHiMa, Math.max(0, ma));
+        if (this._onSeek) this._onSeek(this.currentMa);
+      } else if (ev.touches.length === 2) {
+        this._touchMode = "pinch";
+        this._pinchStartDist = touchDist(ev.touches);
+        this._pinchStartWindow = { loMa: this.loMa, hiMa: this.hiMa };
+      }
+    }, { passive: false });
+
+    c.addEventListener("touchmove", (ev) => {
+      ev.preventDefault();
+      const rect = c.getBoundingClientRect();
+      if (this._touchMode === "seek" && ev.touches.length === 1) {
+        const x = ev.touches[0].clientX - rect.left;
+        const ma = this.xToMa(x);
+        this.currentMa = Math.min(this.fullHiMa, Math.max(0, ma));
+        if (this._onSeek) this._onSeek(this.currentMa);
+      } else if (this._touchMode === "pinch" && ev.touches.length === 2) {
+        const dist = touchDist(ev.touches);
+        const mid = touchMid(ev.touches, rect);
+        const factor = dist / (this._pinchStartDist || dist);
+        const pivotMa = this.xToMa(mid.x);
+        const span = (this._pinchStartWindow.hiMa - this._pinchStartWindow.loMa) / factor;
+        const [newLo, newHi] = this._clampWindow(pivotMa - span / 2, pivotMa + span / 2);
+        this.loMa = newLo; this.hiMa = newHi;
+        this._animToLo = newLo; this._animToHi = newHi; this._animActive = false;
+        this._fireWindowChange();
+      }
+    }, { passive: false });
+
+    window.addEventListener("touchend", (ev) => {
+      // Dropping to one remaining finger mid-pinch would otherwise be read as
+      // a fresh single-finger "seek" from wherever that finger happens to be
+      // -- just end the gesture instead, matching how the mouse path always
+      // requires a new mousedown to start a new interaction.
+      if (ev.touches.length === 0) this._touchMode = null;
+    });
   }
 
   // ── drawing ──────────────────────────────────────────────────────────────
@@ -542,6 +646,17 @@ export class Timeline {
     ctx.lineWidth = this._hoveringOverview ? 2 : 1.5;
     ctx.strokeRect(vx0, oy - 1, vw, OVERVIEW_H + 2);
   }
+}
+
+function touchDist(touches) {
+  return Math.hypot(touches[0].clientX - touches[1].clientX, touches[0].clientY - touches[1].clientY);
+}
+
+function touchMid(touches, rect) {
+  return {
+    x: (touches[0].clientX + touches[1].clientX) / 2 - rect.left,
+    y: (touches[0].clientY + touches[1].clientY) / 2 - rect.top,
+  };
 }
 
 function clampPx(v, lo, hi) { return v < lo ? lo : (v > hi ? hi : v); }
