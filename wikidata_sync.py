@@ -57,6 +57,17 @@ CATEGORIES = {
     # exist the way "battle" or "treaty" do) -- P575 "time of discovery or
     # invention" is set directly on the discovered/invented thing's own item,
     # so its mere presence is the class signal here; class_qids is empty.
+    # That empty class filter is also this category's weak point: with no
+    # class to narrow the candidate set up front, WDQS has to do a much
+    # heavier scan than any other category here, and it reproducibly times
+    # out past the first page or two whenever the endpoint is under load
+    # (observed repeatedly during the 2026-07-15 refresh: 3 consecutive
+    # --category discovery runs got progressively further -- 387, then 387
+    # again, then 964 rows -- before timing out each time, well short of the
+    # ~2200+ rows a fully-clean run returns). If a refresh leaves this
+    # category visibly short, that's most likely why -- retrying later
+    # (including via the next scheduled run) usually recovers more of it
+    # rather than needing a query change.
     "discovery": {
         "category": "scientific", "subtype": "discovery",
         "class_qids": [], "date_prop": "wdt:P575",
@@ -210,7 +221,7 @@ def _build_query(spec: dict, offset: int) -> str:
     # padded to January 1st with no signal that day/month aren't meaningful,
     # which would silently overstate the precision of ancient/approximate events.
     return f"""
-    SELECT ?item ?itemLabel ?date ?datePrecision ?coord ?image ?sitelinks ?article WHERE {{
+    SELECT ?item ?itemLabel ?date ?datePrecision ?coord ?image ?sitelinks ?article ?description WHERE {{
       {class_union}
       ?item p:{pid} ?dateStatement .
       ?dateStatement psv:{pid} ?dateNode .
@@ -224,6 +235,7 @@ def _build_query(spec: dict, offset: int) -> str:
         ?article schema:about ?item ;
                  schema:isPartOf <https://en.wikipedia.org/> .
       }}
+      OPTIONAL {{ ?item schema:description ?description . FILTER(LANG(?description) = "en") }}
       SERVICE wikibase:label {{ bd:serviceParam wikibase:language "en". }}
     }}
     ORDER BY ?date
@@ -341,6 +353,13 @@ def sync_category(name: str, spec: dict) -> list[dict]:
 
             display_title = spec.get("title_template", "{}").format(title)
 
+            # Wikidata's short description (e.g. "1972 film by Francis Ford
+            # Coppola") -- a one-line gloss almost every item carries, but the
+            # query never asked for it before, so this field was always "".
+            description = b.get("description", {}).get("value", "")
+            if description:
+                description = description[0].upper() + description[1:]
+
             events.append({
                 "id": f"wd-{spec['subtype']}-{qid.lower()}",
                 "title": display_title,
@@ -353,7 +372,7 @@ def sync_category(name: str, spec: dict) -> list[dict]:
                     "precision": precision,
                 },
                 "place": place,
-                "description": "",
+                "description": description,
                 "image_url": b.get("image", {}).get("value"),
                 "color": None,
                 "wiki": {"title": title, "qid": qid, "url": wiki_url},
