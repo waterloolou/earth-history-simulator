@@ -82,10 +82,22 @@ def export_tree_of_life(out_dir: str):
          "color": list(color), "extinct_ma": extinct_ma}
         for (nid, label, first_ma, parent_id, color, extinct_ma) in _TOL_DATA
     ]
+
+    # Species leaves (species_sync.py, run manually/via the scheduled refresh,
+    # same cache-once pattern as the Wikidata events pipeline) attach onto the
+    # backbone above via parent_id. Optional -- the tree still exports fine
+    # (just without species) if this hasn't been synced yet.
+    species_path = os.path.join(_ROOT, "data", "species.json")
+    if os.path.exists(species_path):
+        with open(species_path, encoding="utf-8") as fh:
+            species = json.load(fh)
+        data.extend(species)
+        print(f"  + {len(species)} species from data/species.json")
+
     path = os.path.join(out_dir, "tree_of_life.json")
     with open(path, "w", encoding="utf-8") as fh:
         json.dump(data, fh)
-    print(f"Wrote {path} ({len(data)} clades)")
+    print(f"Wrote {path} ({len(data)} nodes)")
 
 
 _QID_TITLE_RE = re.compile(r"^Q\d+$")

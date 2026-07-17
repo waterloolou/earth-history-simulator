@@ -299,17 +299,40 @@ function selectEvent(e, { flyTo = false } = {}) {
 function selectTreeNode(node) {
   currentMa = node.first_ma;
   timeline.currentMa = node.first_ma;
-  const desc = node.extinct_ma > 0
-    ? `Branched off ${formatMa(node.first_ma)}. This lineage died out around ${formatMa(node.extinct_ma)}.`
-    : `Branched off ${formatMa(node.first_ma)}. Still alive today.`;
+  const timingBlurb = node.extinct_ma > 0
+    ? `Branch active from ${formatMa(node.first_ma)} until dying out around ${formatMa(node.extinct_ma)}.`
+    : `Branch active from ${formatMa(node.first_ma)} to today.`;
+  // Species (species_sync.py) carry a real Wikidata description/image/wiki
+  // link; the 34 hand-curated backbone clades don't have per-node prose, so
+  // fall back to a synthesized one from what the tree itself already knows.
+  const description = node.description ? `${node.description} ${timingBlurb}` : timingBlurb;
+  // ~4% of species passed the notability bar (real sitelinks elsewhere)
+  // but have no *English* Wikipedia article specifically -- guessing an
+  // en.wikipedia.org URL from the label for those would 404 more often
+  // than not. Their Wikidata item always exists (it's where every field
+  // on this node came from), so it's the honest fallback: always resolves,
+  // still gets you to the real subject. Only the 34 backbone clades (no
+  // `wiki` object at all) use the guessed-Wikipedia-URL path.
+  const wikiUrl = (node.wiki && node.wiki.url)
+    || (node.wiki && node.wiki.qid && `https://www.wikidata.org/wiki/${node.wiki.qid}`)
+    || `https://en.wikipedia.org/wiki/${encodeURIComponent(node.label)}`;
   showEventDetail({
     title: node.label,
     time: { ma: node.first_ma },
     place: { region: null },
-    description: desc,
-    wiki: { url: `https://en.wikipedia.org/wiki/${encodeURIComponent(node.label)}` },
+    description,
+    image_url: node.image_url,
+    wiki: { url: wikiUrl },
   });
   els.treeGlobeBtn.classList.remove("hidden");
+  // Species dots are meant to be a direct route to their Wikipedia (or, for
+  // the small slice without an English article, Wikidata) page -- open it
+  // immediately rather than making the click-then-find-the-link-in-the-
+  // panel detour the only way there. Backbone clades keep the click just
+  // selecting/jumping the timeline, same as before.
+  if (node.id.startsWith("sp-")) {
+    window.open(wikiUrl, "_blank", "noopener");
+  }
 }
 
 /** Lazily construct + load the Tree of Life view on first entry into that

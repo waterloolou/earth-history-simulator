@@ -63,7 +63,7 @@ export const MODES = [
     id: "tree_of_life",
     label: "Tree of Life",
     kind: "tree",
-    description: "Every major lineage since LUCA, 3.8 billion years ago, as one branching diagram -- click a branch to jump the timeline to when it split off.",
+    description: "Every major lineage since LUCA, 3.8 billion years ago -- zoom in on a branch to reveal thousands of notable species from Wikidata. Click any branch to jump the timeline to when it split off.",
   },
 ];
 
